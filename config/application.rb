@@ -31,5 +31,8 @@ module TodotxtUi
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.generators.assets = false
+    config.generators.helper = false
   end
 end

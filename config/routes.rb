@@ -3,5 +3,7 @@ Rails.application.routes.draw do
   # https://guides.rubyonrails.org/routing.html
 
   root 'todos#index'
-  resources 'todos', except: :show
+  resource 'todos', except: :show do
+    post :complete
+  end
 end

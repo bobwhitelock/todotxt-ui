@@ -1,31 +1,31 @@
 
 <div class="flex flex-wrap">
-  <% @todos.each do |todo| %>
+  <% @tasks.each do |task| %>
     <div class="flex flex-col justify-between rounded overflow-hidden shadow-lg w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
       <div>
         <div class="float-right px-1 py-2 text-gray-600">
-          <% todo.tags.each do |tag, value| %>
+          <% task.tags.each do |tag, value| %>
             <span class="px-1">
             <%= tag %>:<%= value %>
           </span>
         <% end %>
-          <%= todo.priority %>
+          <%= task.priority %>
         </div>
 
         <div class="px-6 py-1">
           <p class="text-gray-900 text-base">
-            <%= todo.text %>
+            <%= task.text %>
           </p>
         </div>
 
         <div class="px-6 py-1">
-          <% todo.projects.each do |project| %>
+          <% task.projects.each do |project| %>
             <span class="inline-block bg-gray-200 rounded-full text-sm font-semibold text-green-700 mr-2">
             <%= project %>
           </span>
         <% end %>
 
-          <% todo.contexts.each do |context| %>
+          <% task.contexts.each do |context| %>
             <span class="inline-block bg-gray-200 rounded-full text-sm font-semibold text-blue-700 mr-2">
             <%= context %>
           </span>
@@ -35,17 +35,17 @@
 
       <div class="flex justify-between">
         <span class="px-6 py-1 text-gray-600 self-end">
-          <%= todo.created_on %>
+          <%= task.created_on %>
         </span>
 
         <%# XXX Sort out icon sizing inconsistencies in below %>
         <span>
           <%= button_to(
-            todos_path,
+            tasks_path,
             {
               method: :delete,
               data: {confirm: 'Are you sure you want to delete this task?'},
-              params: {todo: todo.raw.strip},
+              params: {task: task.raw.strip},
               class: 'rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline',
               form_class: 'px-1 inline-block'
             }
@@ -66,9 +66,9 @@
           <% end %>
 
           <%= button_to(
-            complete_todos_path,
+            complete_tasks_path,
             {
-              params: {todo: todo.raw.strip},
+              params: {task: task.raw.strip},
               class: 'rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline',
               form_class: 'px-1 inline-block'
             }

@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see
   # https://guides.rubyonrails.org/routing.html
 
-  root 'todos#index'
-  resource 'todos', except: :show do
+  root 'tasks#index'
+  resource 'tasks', except: :show do
     post :complete
   end
 end

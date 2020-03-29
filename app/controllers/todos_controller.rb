@@ -10,19 +10,16 @@ class TodosController < ApplicationController
     end
   end
 
+  def destroy
+    find_todo_and do |todo|
+      todos.delete_if do |t|
+        t.raw == todo.raw
+      end
+    end
+  end
+
   def complete
-    raw_todo_to_complete = params[:todo]
-    todo_to_complete = todos.find do |todo|
-      todo.raw.strip == raw_todo_to_complete
-    end
-
-    # XXX Flash a message in the else case, something has gone wrong
-    if todo_to_complete
-      todo_to_complete.do!
-      Todo::File.write(todo_file, todos)
-    end
-
-    redirect_to root_path
+    find_todo_and(&:do!)
   end
 
   private
@@ -33,5 +30,20 @@ class TodosController < ApplicationController
 
   def todo_file
     @_todo_file ||= ENV.fetch('TODO_FILE')
+  end
+
+  def find_todo_and
+    raw_todo = params[:todo]
+    todo_to_operate_on = todos.find do |todo|
+      todo.raw.strip == raw_todo
+    end
+
+    # XXX Flash a message in the else case, something has gone wrong
+    if todo_to_operate_on
+      yield todo_to_operate_on
+      todos.save!
+    end
+
+    redirect_back fallback_location: root_path
   end
 end

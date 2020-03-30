@@ -1,29 +1,35 @@
 
 <div class="flex flex-wrap text-4xl lg:text-lg">
   <div class="card bg-gray-300">
-    <% if @filters %>
-      Filters:
+    <div class="py-2">
+      <%= @total_tasks %> tasks (<%= @tasks.length %> shown)
+    </div>
 
-      <% @filters.each do |filter| %>
-        <% if filter.start_with?('+') %>
-          <span class="tag-pill text-green-700 bg-green-100">
-            <%= filter %>
-          </span>
-        <% elsif filter.start_with?('@') %>
-          <span class="tag-pill text-blue-700 bg-blue-100">
-            <%= filter %>
-          </span>
+    <div class="py-2">
+      <% if @filters %>
+        Filters:
+
+        <% @filters.each do |filter| %>
+          <% if filter.start_with?('+') %>
+            <span class="tag-pill text-green-700 bg-green-100">
+              <%= filter %>
+            </span>
+          <% elsif filter.start_with?('@') %>
+            <span class="tag-pill text-blue-700 bg-blue-100">
+              <%= filter %>
+            </span>
+          <% end %>
         <% end %>
+
+        <span class="text-3xl lg:text-sm">
+          <% if @filters.empty? %>
+            (None)
+          <% else %>
+            <%= link_to 'Clear', root_url, class: 'text-blue-800 hover:opacity-50' %>
+          <% end %>
+        </span>
       <% end %>
-
-      <span class="text-3xl lg:text-sm">
-        <% if @filters.empty? %>
-          (None)
-        <% else %>
-          <%= link_to 'Clear', root_url, class: 'text-blue-800 hover:opacity-50' %>
-        <% end %>
-      </span>
-    <% end %>
+    </div>
   </div>
 
   <% @tasks.each do |task| %>

@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   def index
     @filters = filters
+    @total_tasks = tasks.by_not_done.length
     @tasks = tasks_to_show.sort_by do |task|
       [
         # XXX Only show things due soon first?

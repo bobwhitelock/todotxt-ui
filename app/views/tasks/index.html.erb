@@ -20,13 +20,13 @@
 
         <div class="px-6 py-1">
           <% task.projects.each do |project| %>
-            <span class="inline-block bg-gray-200 rounded-full px-2 lg:px-1 my-1 lg:text-base font-semibold text-green-700 mr-2">
+            <span class="tag-pill text-green-700 bg-green-100">
             <%= project %>
           </span>
         <% end %>
 
           <% task.contexts.each do |context| %>
-            <span class="inline-block bg-gray-200 rounded-full px-2 lg:px-1 my-1 lg:text-base font-semibold text-blue-700 mr-2">
+            <span class="tag-pill text-blue-700 bg-blue-100">
             <%= context %>
           </span>
         <% end %>

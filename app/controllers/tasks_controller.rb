@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   def index
-    @tasks = tasks.by_not_done.sort_by do |task|
+    @filters = filters
+    @tasks = tasks_to_show.sort_by do |task|
       [
         # XXX Only show things due soon first?
         task.tags.fetch(:due, 'z'),
@@ -30,6 +31,24 @@ class TasksController < ApplicationController
 
   def todo_file
     @_todo_file ||= ENV.fetch('TODO_FILE')
+  end
+
+  def tasks_to_show
+    to_show = tasks.by_not_done
+
+    filters.each do |filter|
+      if filter.start_with?('+')
+        to_show = to_show.by_project(filter)
+      elsif filter.start_with?('@')
+        to_show = to_show.by_context(filter)
+      end
+    end
+
+    to_show
+  end
+
+  def filters
+    Array.wrap(params[:filters])
   end
 
   def find_task_and

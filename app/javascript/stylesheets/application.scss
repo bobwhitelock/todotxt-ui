@@ -1,6 +1,18 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 
+.card {
+  @apply rounded overflow-hidden shadow-lg w-full px-2;
+
+  @screen lg {
+    @apply w-1/4;
+  }
+
+  @screen xl {
+    @apply w-1/6;
+  }
+}
+
 .tag-pill {
   @apply inline-block rounded-full px-2 my-1 font-semibold mr-2;
 

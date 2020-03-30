@@ -6,9 +6,9 @@
         <div class="float-right px-1 py-2 text-gray-600">
           <% task.tags.each do |tag, value| %>
             <span class="px-1">
-            <%= tag %>:<%= value %>
-          </span>
-        <% end %>
+              <%= tag %>:<%= value %>
+            </span>
+          <% end %>
           <%= task.priority %>
         </div>
 
@@ -21,15 +21,15 @@
         <div class="px-6 py-1">
           <% task.projects.each do |project| %>
             <span class="tag-pill text-green-700 bg-green-100">
-            <%= project %>
-          </span>
-        <% end %>
+              <%= project %>
+            </span>
+          <% end %>
 
           <% task.contexts.each do |context| %>
             <span class="tag-pill text-blue-700 bg-blue-100">
-            <%= context %>
-          </span>
-        <% end %>
+              <%= context %>
+            </span>
+          <% end %>
         </div>
       </div>
 

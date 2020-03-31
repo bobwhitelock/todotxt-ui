@@ -1,5 +1,8 @@
 class TasksController < ApplicationController
   def index
+    # XXX Don't do this on every request to avoid blocking rendering page.
+    todo_repo.pull
+
     @filters = filters
     @total_tasks = tasks.by_not_done.length
     @tasks = tasks_to_show.sort_by do |task|
@@ -34,6 +37,25 @@ class TasksController < ApplicationController
     @_todo_file ||= ENV.fetch('TODO_FILE')
   end
 
+  def todo_repo
+    @_todo_repo ||=
+      begin
+        todo_dir = File.dirname(todo_file)
+        # XXX Handle this being nil, i.e. repo not found.
+        repo_dir = find_repo_root_dir(todo_dir)
+        Git.open(repo_dir)
+      end
+  end
+
+  def find_repo_root_dir(child_dir)
+    path = Pathname.new(child_dir)
+    until path.root?
+      git_path = path.join('.git')
+      return path if git_path.exist?
+      path = path.parent
+    end
+  end
+
   def tasks_to_show
     to_show = tasks.by_not_done
 
@@ -62,8 +84,19 @@ class TasksController < ApplicationController
     if task_to_operate_on
       yield task_to_operate_on
       tasks.save!
+      commit_and_push_todo_file
     end
 
     redirect_back fallback_location: root_path
+  end
+
+  def commit_and_push_todo_file
+    # XXX Do something clever to group multiple updates in quick succession -
+    # either debounce this function or use amend and force push in that
+    # situation (latter probably better as more robust).
+    todo_repo.add(todo_file)
+    todo_repo.commit('Automatically committed change from todotxt-ui')
+    # XXX Do this asynchronously to not block returning response.
+    todo_repo.push
   end
 end

@@ -43,7 +43,10 @@ class TasksController < ApplicationController
         todo_dir = File.dirname(todo_file)
         # XXX Handle this being nil, i.e. repo not found.
         repo_dir = find_repo_root_dir(todo_dir)
-        Git.open(repo_dir)
+        repo = Git.open(repo_dir)
+        repo.config('user.name', 'Todotxt UI')
+        repo.config('user.email', ENV.fetch('GIT_EMAIL'))
+        repo
       end
   end
 

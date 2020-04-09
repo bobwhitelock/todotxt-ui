@@ -2,6 +2,7 @@ class TasksController < ApplicationController
   def index
     # XXX Don't do this on every request to avoid blocking rendering page.
     todo_repo.pull
+    todo_repo.reset_hard('origin/master')
 
     @filters = filters
     @total_tasks = tasks.by_not_done.length

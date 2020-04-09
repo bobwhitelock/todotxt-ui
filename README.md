@@ -1,24 +1,54 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Todotxt UI
 
-Things you may want to cover:
+TODO actual documentation on other stuff.
 
-* Ruby version
+## Deployment Notes
 
-* System dependencies
+- Ubuntu 16.04 on Linode
+- Dokku 0.19.13
 
-* Configuration
 
-* Database creation
+### To setup for deployment
 
-* Database initialization
+Below took some bashing, so may be missing a step/need adjustment.
 
-* How to run the test suite
+```bash
+# Remote
+dokku apps:create todotxt
+dokku domains:add todotxt "$public_domain"
 
-* Services (job queues, cache servers, search engines, etc.)
+ssh-keygen -t rsa -b 4096 -C "$email_for_app" -f ~/.ssh/id_rsa -N ''
+# <add this to GitHub's https://github.com/settings/keys page>
 
-* Deployment instructions
+dokku storage:mount todotxt /root/.ssh/:/app/.ssh
+dokku storage:mount todotxt /var/lib/dokku/data/storage/todotxt/repo:/repo
+mkdir -p /var/lib/dokku/data/storage/todotxt
+cd !$
+git clone "$todo_repo_url" repo # Where `$todo_repo_url` is `.git` version of URL.
 
-* ...
+dokku config:set todotxt \
+  AUTH_USER="$auth_user" \
+  AUTH_PASSWORD="$auth_password" \
+  TODO_FILE=/repo/"$path_to_todo_file" \
+  # This env var is for Git itself - see
+  # https://github.com/ruby-git/ruby-git/issues/386#issuecomment-416081185.
+  GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '/app/.ssh/id_rsa'" \
+  GIT_EMAIL="$email_for_app"
+
+
+# Local
+git remote add prod dokku@li1514-40.members.linode.com:todotxt
+```
+
+Also:
+- Set up DNS to point to this instance at `$public_domain`
+
+TODO Document SSL things
+
+
+### To deploy
+
+```bash
+git push prod master
+```

@@ -17,6 +17,8 @@ Below took some bashing, so may be missing a step/need adjustment.
 # Remote
 dokku apps:create todotxt
 dokku domains:add todotxt "$public_domain"
+dokku domains:remove todotxt todotxt.li1514-40.members.linode.com
+dokku plugins:install letsencrypt
 
 ssh-keygen -t rsa -b 4096 -C "$email_for_app" -f ~/.ssh/id_rsa -N ''
 # <add this to GitHub's https://github.com/settings/keys page>
@@ -34,8 +36,10 @@ dokku config:set todotxt \
   # This env var is for Git itself - see
   # https://github.com/ruby-git/ruby-git/issues/386#issuecomment-416081185.
   GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '/app/.ssh/id_rsa'" \
-  GIT_EMAIL="$email_for_app"
+  GIT_EMAIL="$email_for_app" \
+  DOKKU_LETSENCRYPT_EMAIL=bob.whitelock1+todotxt@gmail.com
 
+dokku letsencrypt todotxt
 
 # Local
 git remote add prod dokku@li1514-40.members.linode.com:todotxt

@@ -11,7 +11,8 @@ class TasksController < ApplicationController
         # XXX Only show things due soon first?
         task.tags.fetch(:due, 'z'),
         task.priority || 'Z',
-        task.created_on
+        task.created_on || 100.years.from_now,
+        task.raw
       ]
     end
   end

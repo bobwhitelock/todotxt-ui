@@ -3,7 +3,8 @@ Rails.application.routes.draw do
   # https://guides.rubyonrails.org/routing.html
 
   root 'tasks#index'
-  resource 'tasks', except: :show do
+  get '/new' => 'tasks#new'
+  resource 'tasks', except: [:show, :new] do
     post :complete
   end
 end

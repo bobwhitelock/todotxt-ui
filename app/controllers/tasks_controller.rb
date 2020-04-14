@@ -15,6 +15,24 @@ class TasksController < ApplicationController
         task.raw
       ]
     end
+    @subtitle = "#{@tasks.size} tasks"
+  end
+
+  def new
+    @subtitle = 'Add Tasks'
+  end
+
+  def create
+    today = Time.now.strftime('%F')
+
+    new_tasks = params[:tasks].lines.map(&:strip).reject(&:empty?)
+    new_tasks.each do |task|
+      task_with_timestamp = "#{today} #{task}"
+      tasks << task_with_timestamp
+    end
+
+    save_and_push_tasks unless new_tasks.empty?
+    redirect_to root_path
   end
 
   def destroy
@@ -88,11 +106,15 @@ class TasksController < ApplicationController
     # XXX Flash a message in the else case, something has gone wrong
     if task_to_operate_on
       yield task_to_operate_on
-      tasks.save!
-      commit_and_push_todo_file
+      save_and_push_tasks
     end
 
     redirect_back fallback_location: root_path
+  end
+
+  def save_and_push_tasks
+    tasks.save!
+    commit_and_push_todo_file
   end
 
   def commit_and_push_todo_file

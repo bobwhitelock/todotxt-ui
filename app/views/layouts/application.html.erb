@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Todo List &mdash; <%= @tasks.size %> tasks</title>
+    <title>Todo List &mdash; <%= @subtitle %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -11,7 +11,7 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
+  <body class="bg-gray-200">
     <%= yield %>
   </body>
 </html>

@@ -30,6 +30,33 @@
         </span>
       <% end %>
     </div>
+
+    <div class="flex justify-between">
+      <%# Empty element so button gets flexed to right, and in consistent way to %>
+      <%# buttons on other cards. %>
+      <span></span>
+
+      <%= button_to(
+        new_path,
+        {
+          class: 'rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline',
+          form_class: 'px-1 inline-block',
+          method: 'get'
+        }
+      ) do %>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="fill-current text-green-300 h-12 w-12"
+        >
+          <rect width="18" height="18" x="3" y="3" class="primary" rx="2"/>
+          <path
+            class="text-green-600"
+            d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"
+          />
+        </svg>
+      <% end %>
+    </div>
   </div>
 
   <% @tasks.each do |task| %>
@@ -75,6 +102,7 @@
         </span>
 
         <%# XXX Sort out icon sizing inconsistencies in below %>
+        <%# XXX DRY up all these SVG buttons %>
         <span>
           <%= button_to(
             tasks_path,

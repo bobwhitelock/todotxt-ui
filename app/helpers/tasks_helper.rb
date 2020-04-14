@@ -18,6 +18,8 @@ module TasksHelper
       'bg-orange-200'
     when 'C'
       'bg-yellow-200'
+    else
+      'bg-white'
     end
   end
 end

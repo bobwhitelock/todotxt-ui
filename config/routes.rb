@@ -4,7 +4,8 @@ Rails.application.routes.draw do
 
   root 'tasks#index'
   get '/new' => 'tasks#new'
-  resource 'tasks', except: [:show, :new] do
+  get '/edit' => 'tasks#edit'
+  resource 'tasks', except: [:show, :new, :edit] do
     post :complete
   end
 end

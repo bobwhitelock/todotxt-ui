@@ -35,16 +35,29 @@ class TasksController < ApplicationController
     redirect_to root_path
   end
 
+  def edit
+    @subtitle = 'Edit Task'
+    @task = params[:task]
+  end
+
+  def update
+    find_task_and do |task|
+      delete_matching_task(task)
+      tasks << params[:new_task]
+    end
+    redirect_to root_path
+  end
+
   def destroy
     find_task_and do |task|
-      tasks.delete_if do |t|
-        t.raw == task.raw
-      end
+      delete_matching_task(task)
     end
+    redirect_back fallback_location: root_path
   end
 
   def complete
     find_task_and(&:do!)
+    redirect_back fallback_location: root_path
   end
 
   private
@@ -108,8 +121,6 @@ class TasksController < ApplicationController
       yield task_to_operate_on
       save_and_push_tasks
     end
-
-    redirect_back fallback_location: root_path
   end
 
   def save_and_push_tasks
@@ -125,5 +136,11 @@ class TasksController < ApplicationController
     todo_repo.commit('Automatically committed change from todotxt-ui')
     # XXX Do this asynchronously to not block returning response.
     todo_repo.push
+  end
+
+  def delete_matching_task(task)
+    tasks.delete_if do |t|
+      t.raw == task.raw
+    end
   end
 end

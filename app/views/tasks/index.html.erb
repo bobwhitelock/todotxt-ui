@@ -130,6 +130,35 @@
           <% end %>
 
           <%= button_to(
+            edit_path,
+            {
+              method: :get,
+              params: {task: task.raw.strip},
+              class: 'rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline',
+              form_class: 'px-1 inline-block'
+            }
+          ) do %>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="fill-current h-12 w-12"
+            >
+              <path
+                class="text-gray-500"
+                d="M4 14a1 1 0 0 1 .3-.7l11-11a1 1 0 0 1 1.4 0l3 3a1 1 0 0 1 0 1.4l-11 11a1 1 0 0 1-.7.3H5a1 1 0 0 1-1-1v-3z"
+              />
+              <rect
+                width="20"
+                height="2"
+                x="2"
+                y="20"
+                class="text-gray-600"
+                rx="1"
+              />
+            </svg>
+          <% end %>
+
+          <%= button_to(
             complete_tasks_path,
             {
               params: {task: task.raw.strip},

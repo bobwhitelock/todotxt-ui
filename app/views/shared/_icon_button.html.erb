@@ -1,0 +1,14 @@
+
+<%= button_to(
+  path,
+  {
+    class: 'rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline',
+    form_class: 'px-1 inline-block',
+    params: defined?(task) ? {task: task.raw.strip} : {},
+    # Need to use local_assigns here as `method` is already a method on `Object`.
+    method: local_assigns[:method] || :post,
+    data: defined?(confirm) ? {confirm: confirm} : {}
+  }
+) do %>
+  <%= yield %>
+<% end %>

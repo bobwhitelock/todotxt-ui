@@ -1,4 +1,10 @@
 module TasksHelper
+  def border_color_class(task)
+    if task.contexts.include?('@today')
+      'border-blue-300'
+    end
+  end
+
   def priority_text_class(task)
     case task.priority
     when 'A'

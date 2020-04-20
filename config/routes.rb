@@ -7,5 +7,7 @@ Rails.application.routes.draw do
   get '/edit' => 'tasks#edit'
   resource 'tasks', except: [:show, :new, :edit] do
     post :complete
+    post :schedule
+    post :unschedule
   end
 end

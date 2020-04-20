@@ -60,6 +60,22 @@ class TasksController < ApplicationController
     redirect_back fallback_location: root_path
   end
 
+  def schedule
+    find_task_and do |task|
+      delete_matching_task(task)
+      tasks << task.raw.strip + ' @today'
+    end
+    redirect_back fallback_location: root_path
+  end
+
+  def unschedule
+    find_task_and do |task|
+      delete_matching_task(task)
+      tasks << task.raw.gsub(/\s+@today\s+/, ' ').strip
+    end
+    redirect_back fallback_location: root_path
+  end
+
   private
 
   def tasks

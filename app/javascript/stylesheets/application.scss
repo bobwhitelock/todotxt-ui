@@ -2,7 +2,7 @@
 @import "tailwindcss/components";
 
 .card {
-  @apply rounded overflow-hidden shadow-lg w-full px-2;
+  @apply flex flex-col rounded overflow-hidden shadow-lg w-full px-2;
 
   @screen lg {
     @apply w-1/4;

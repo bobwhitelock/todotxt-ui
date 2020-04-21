@@ -16,6 +16,19 @@ module TasksHelper
     end
   end
 
+  def background_class(task)
+    priority_class = priority_background_class(task)
+    if priority_class
+      priority_class
+    elsif task.contexts.include?('@today')
+      'bg-blue-200'
+    else
+      'bg-white'
+    end
+  end
+
+  private
+
   def priority_background_class(task)
     case task.priority
     when 'A'
@@ -24,8 +37,6 @@ module TasksHelper
       'bg-orange-200'
     when 'C'
       'bg-yellow-200'
-    else
-      'bg-white'
     end
   end
 end

@@ -8,9 +8,9 @@ class TodoRepo
     repo.reset_hard('origin/master')
   end
 
-  def save_and_push
+  def save_and_push(message)
     tasks.save!
-    commit_and_push_todo_file
+    commit_and_push_todo_file(message)
   end
 
   private
@@ -41,12 +41,12 @@ class TodoRepo
     end
   end
 
-  def commit_and_push_todo_file
+  def commit_and_push_todo_file(message)
     # XXX Do something clever to group multiple updates in quick succession -
     # either debounce this function or use amend and force push in that
     # situation (latter probably better as more robust).
     repo.add(todo_file)
-    repo.commit('Automatically committed change from todotxt-ui')
+    repo.commit("#{message} - Todotxt UI")
     # XXX Do this asynchronously to not block returning response.
     repo.push
   end

@@ -31,7 +31,7 @@ class TasksController < ApplicationController
       tasks << task_with_timestamp
     end
 
-    todo_repo.save_and_push unless new_tasks.empty?
+    todo_repo.save_and_push('Tasks created') unless new_tasks.empty?
     redirect_to root_path
   end
 
@@ -41,7 +41,7 @@ class TasksController < ApplicationController
   end
 
   def update
-    find_task_and do |task|
+    find_task_and('Task updated') do |task|
       delete_matching_task(task)
       tasks << params[:new_task]
     end
@@ -49,19 +49,19 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    find_task_and do |task|
+    find_task_and('Task deleted') do |task|
       delete_matching_task(task)
     end
     redirect_back fallback_location: root_path
   end
 
   def complete
-    find_task_and(&:do!)
+    find_task_and('Task completed', &:do!)
     redirect_back fallback_location: root_path
   end
 
   def schedule
-    find_task_and do |task|
+    find_task_and('Task added to today list') do |task|
       delete_matching_task(task)
       tasks << task.raw.strip + ' @today'
     end
@@ -69,7 +69,7 @@ class TasksController < ApplicationController
   end
 
   def unschedule
-    find_task_and do |task|
+    find_task_and('Task removed from today list') do |task|
       delete_matching_task(task)
       tasks << task.raw.gsub(/\s+@today\s+/, ' ').strip
     end
@@ -102,7 +102,7 @@ class TasksController < ApplicationController
     Array.wrap(params[:filters])
   end
 
-  def find_task_and
+  def find_task_and(message)
     raw_task = params[:task]
     task_to_operate_on = tasks.find do |task|
       task.raw.strip == raw_task
@@ -111,7 +111,7 @@ class TasksController < ApplicationController
     # XXX Flash a message in the else case, something has gone wrong
     if task_to_operate_on
       yield task_to_operate_on
-      todo_repo.save_and_push
+      todo_repo.save_and_push(message)
     end
   end
 

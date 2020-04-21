@@ -1,8 +1,7 @@
 class TasksController < ApplicationController
   def index
     # XXX Don't do this on every request to avoid blocking rendering page.
-    todo_repo.pull
-    todo_repo.reset_hard('origin/master')
+    todo_repo.pull_and_reset
 
     @filters = filters
     @total_tasks = tasks.by_not_done.length
@@ -32,7 +31,7 @@ class TasksController < ApplicationController
       tasks << task_with_timestamp
     end
 
-    save_and_push_tasks unless new_tasks.empty?
+    todo_repo.save_and_push unless new_tasks.empty?
     redirect_to root_path
   end
 
@@ -79,34 +78,10 @@ class TasksController < ApplicationController
 
   private
 
-  def tasks
-    @_tasks ||= Todo::List.new(todo_file)
-  end
-
-  def todo_file
-    @_todo_file ||= ENV.fetch('TODO_FILE')
-  end
+  delegate :tasks, to: :todo_repo
 
   def todo_repo
-    @_todo_repo ||=
-      begin
-        todo_dir = File.dirname(todo_file)
-        # XXX Handle this being nil, i.e. repo not found.
-        repo_dir = find_repo_root_dir(todo_dir)
-        repo = Git.open(repo_dir)
-        repo.config('user.name', 'Todotxt UI')
-        repo.config('user.email', ENV.fetch('GIT_EMAIL'))
-        repo
-      end
-  end
-
-  def find_repo_root_dir(child_dir)
-    path = Pathname.new(child_dir)
-    until path.root?
-      git_path = path.join('.git')
-      return path if git_path.exist?
-      path = path.parent
-    end
+    @_todo_repo ||= TodoRepo.new
   end
 
   def tasks_to_show
@@ -136,23 +111,8 @@ class TasksController < ApplicationController
     # XXX Flash a message in the else case, something has gone wrong
     if task_to_operate_on
       yield task_to_operate_on
-      save_and_push_tasks
+      todo_repo.save_and_push
     end
-  end
-
-  def save_and_push_tasks
-    tasks.save!
-    commit_and_push_todo_file
-  end
-
-  def commit_and_push_todo_file
-    # XXX Do something clever to group multiple updates in quick succession -
-    # either debounce this function or use amend and force push in that
-    # situation (latter probably better as more robust).
-    todo_repo.add(todo_file)
-    todo_repo.commit('Automatically committed change from todotxt-ui')
-    # XXX Do this asynchronously to not block returning response.
-    todo_repo.push
   end
 
   def delete_matching_task(task)

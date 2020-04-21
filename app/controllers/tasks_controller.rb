@@ -8,7 +8,7 @@ class TasksController < ApplicationController
     @total_tasks = tasks.by_not_done.length
     @tasks = tasks_to_show.sort_by do |task|
       [
-        task.contexts.include?('@today') ? 'a' : 'b',
+        task.today? ? 'a' : 'b',
         # XXX Only show things due soon first?
         task.tags.fetch(:due, 'z'),
         task.priority || 'Z',
@@ -120,7 +120,7 @@ class TasksController < ApplicationController
       end
     end
 
-    to_show
+    TaskDecorator.decorate_collection(to_show)
   end
 
   def filters

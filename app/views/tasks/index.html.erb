@@ -53,7 +53,7 @@
   </div>
 
   <% @tasks.each do |task| %>
-    <div class="card justify-between border-4 lg:border-2 <%= border_color_class(task) %> <%= background_class(task) %>">
+    <div class="card justify-between border-4 lg:border-2 <%= task.border_color_class %> <%= task.background_class %>">
       <div class="flex-grow">
         <div class="float-right px-1 py-2 text-gray-600">
           <% task.tags.each do |tag, value| %>
@@ -61,7 +61,7 @@
               <%= tag %>:<%= value %>
             </span>
           <% end %>
-          <span class="font-semibold <%= priority_text_class(task) %>">
+          <span class="font-semibold <%= task.priority_text_class %>">
             <%= task.priority %>
           </span>
         </div>
@@ -95,7 +95,7 @@
 
       <div class="flex justify-between">
         <%# XXX Sort out icon sizing inconsistencies in below %>
-        <% if task.contexts.include?('@today') %>
+        <% if task.today? %>
           <%= render 'shared/icon_button',
             path: unschedule_tasks_path,
             task: task do

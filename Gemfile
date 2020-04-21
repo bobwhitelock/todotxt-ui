@@ -42,3 +42,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'todo-txt'
 gem 'rinku'
 gem 'git'
+gem 'draper'

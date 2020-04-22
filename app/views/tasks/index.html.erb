@@ -53,7 +53,7 @@
   </div>
 
   <% @tasks.each do |task| %>
-    <div class="card justify-between border-2 <%= priority_background_class(task) %>">
+    <div class="card justify-between border-4 lg:border-2 <%= task.border_color_class %> <%= task.background_class %>">
       <div class="flex-grow">
         <div class="float-right px-1 py-2 text-gray-600">
           <% task.tags.each do |tag, value| %>
@@ -61,7 +61,7 @@
               <%= tag %>:<%= value %>
             </span>
           <% end %>
-          <span class="font-semibold <%= priority_text_class(task) %>">
+          <span class="font-semibold <%= task.priority_text_class %>">
             <%= task.priority %>
           </span>
         </div>
@@ -95,6 +95,47 @@
 
       <div class="flex justify-between">
         <%# XXX Sort out icon sizing inconsistencies in below %>
+        <% if task.today? %>
+          <%= render 'shared/icon_button',
+            path: unschedule_tasks_path,
+            task: task do
+          %>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="fill-current h-12 w-12"
+            >
+              <path
+                class="text-gray-500"
+                d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2zm0 5v10h14V9H5z"
+              />
+              <path
+                class="text-gray-600"
+                d="M7 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm10 0a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1zm-2 13H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2z"
+              />
+            </svg>
+          <% end %>
+        <% else %>
+          <%= render 'shared/icon_button',
+            path: schedule_tasks_path,
+            task: task do
+          %>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="fill-current h-12 w-12"
+            >
+              <path
+                class="text-gray-500"
+                d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2zm0 5v10h14V9H5z"
+              />
+              <path
+                class="text-gray-600"
+                d="M13 13h2a1 1 0 0 1 0 2h-2v2a1 1 0 0 1-2 0v-2H9a1 1 0 0 1 0-2h2v-2a1 1 0 0 1 2 0v2zM7 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm10 0a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1z"
+              />
+            </svg>
+          <% end %>
+        <% end %>
 
         <%= render 'shared/icon_button',
           path: tasks_path,

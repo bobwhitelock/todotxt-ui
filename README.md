@@ -48,11 +48,12 @@ git remote add prod dokku@li1514-40.members.linode.com:todotxt
 Also:
 - Set up DNS to point to this instance at `$public_domain`
 
-TODO Document SSL things
-
 
 ### To deploy
 
 ```bash
 git push prod master
+
+# Add any updates to `todotxt.crontab` to `/etc/cron.d/todotxt.crontab`
+# remotely.
 ```

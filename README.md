@@ -48,8 +48,6 @@ git remote add prod dokku@li1514-40.members.linode.com:todotxt
 Also:
 - Set up DNS to point to this instance at `$public_domain`
 
-TODO Document SSL things
-
 
 ### To deploy
 

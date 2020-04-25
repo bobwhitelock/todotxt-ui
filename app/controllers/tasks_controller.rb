@@ -31,7 +31,7 @@ class TasksController < ApplicationController
       tasks << task_with_timestamp
     end
 
-    todo_repo.save_and_push('Tasks created') unless new_tasks.empty?
+    todo_repo.save_and_push('Create task(s)') unless new_tasks.empty?
     redirect_to root_path
   end
 
@@ -41,7 +41,7 @@ class TasksController < ApplicationController
   end
 
   def update
-    find_task_and('Task updated') do |task|
+    find_task_and('Update task') do |task|
       delete_matching_task(task)
       tasks << params[:new_task]
     end
@@ -49,19 +49,19 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    find_task_and('Task deleted') do |task|
+    find_task_and('Delete task') do |task|
       delete_matching_task(task)
     end
     redirect_back fallback_location: root_path
   end
 
   def complete
-    find_task_and('Task completed', &:do!)
+    find_task_and('Complete task', &:do!)
     redirect_back fallback_location: root_path
   end
 
   def schedule
-    find_task_and('Task added to today list') do |task|
+    find_task_and('Add task to today list') do |task|
       delete_matching_task(task)
       tasks << task.raw.strip + ' @today'
     end
@@ -69,7 +69,7 @@ class TasksController < ApplicationController
   end
 
   def unschedule
-    find_task_and('Task removed from today list') do |task|
+    find_task_and('Remove task from today list') do |task|
       delete_matching_task(task)
       tasks << task.raw.gsub(/\s+@today\s+/, ' ').strip
     end

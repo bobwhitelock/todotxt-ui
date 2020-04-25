@@ -46,7 +46,7 @@ class TodoRepo
     # either debounce this function or use amend and force push in that
     # situation (latter probably better as more robust).
     repo.add(todo_file)
-    repo.commit("#{message} - Todotxt UI")
+    repo.commit(message)
     # XXX Do this asynchronously to not block returning response.
     repo.push
   end

@@ -54,6 +54,5 @@ Also:
 ```bash
 git push prod master
 
-# Add any updates to `todotxt.crontab` to `/etc/cron.d/todotxt.crontab`
-# remotely.
+# Add any updates to `todotxt.crontab` to `/etc/cron.d/todotxt` remotely.
 ```

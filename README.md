@@ -41,6 +41,9 @@ dokku config:set todotxt \
 
 dokku letsencrypt todotxt
 
+# And set this up so cron emails will be sent correctly.
+sudo apt-get install postfix
+
 # Local
 git remote add prod dokku@li1514-40.members.linode.com:todotxt
 ```

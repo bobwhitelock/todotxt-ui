@@ -8,7 +8,7 @@ namespace :todotxt do
       tasks = repo.tasks
 
       updates = {}
-      tasks.each do |task|
+      tasks.by_not_done.each do |task|
         task = TaskDecorator.new(task)
 
         if task.today?

@@ -1,22 +1,16 @@
 window.addEventListener('turbolinks:load', function() {
-  Array.from(document.getElementsByClassName('js-scroll-to-top')).forEach(
-    element => {
-      element.addEventListener('click', event => {
-        event.preventDefault();
-        scrollToTop();
-      });
-    },
-  );
-
-  Array.from(document.getElementsByClassName('js-scroll-to-bottom')).forEach(
-    element => {
-      element.addEventListener('click', event => {
-        event.preventDefault();
-        scrollToBottom();
-      });
-    },
-  );
+  addClassEventHandler('js-scroll-to-top', 'click', scrollToTop);
+  addClassEventHandler('js-scroll-to-bottom', 'click', scrollToBottom);
 });
+
+function addClassEventHandler(className, eventName, handlerFunction) {
+  Array.from(document.getElementsByClassName(className)).forEach(element => {
+    element.addEventListener(eventName, event => {
+      event.preventDefault();
+      handlerFunction();
+    });
+  });
+}
 
 function scrollToTop() {
   window.scrollTo(0, 0);

@@ -1,8 +1,12 @@
 
+<%# Using `button_to` here does mean we always generate a form, whether this is %>
+<%# needed for the button or not, but does at least mean these will all look %>
+<%# consistent. %>
 <%= button_to(
-  path,
+  local_assigns[:path],
   {
-    class: 'rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline',
+    # Need to use local_assigns here as `class` is a keyword.
+    class: "rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline #{local_assigns[:class] || ''}",
     form_class: 'px-1 inline-block',
     params: defined?(task) ? {task: task.raw.strip} : {},
     # Need to use local_assigns here as `method` is already a method on `Object`.

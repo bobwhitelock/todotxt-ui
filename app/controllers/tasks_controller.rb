@@ -20,6 +20,7 @@ class TasksController < ApplicationController
 
   def new
     @subtitle = 'Add Tasks'
+    @filters = filters
   end
 
   def create
@@ -32,11 +33,12 @@ class TasksController < ApplicationController
     end
 
     todo_repo.save_and_push('Create task(s)') unless new_tasks.empty?
-    redirect_to root_path
+    redirect_to root_path(filters: filters)
   end
 
   def edit
     @subtitle = 'Edit Task'
+    @filters = filters
     @task = params[:task]
   end
 
@@ -45,7 +47,7 @@ class TasksController < ApplicationController
       delete_matching_task(task)
       tasks << params[:new_task]
     end
-    redirect_to root_path
+    redirect_to root_path(filters: filters)
   end
 
   def destroy

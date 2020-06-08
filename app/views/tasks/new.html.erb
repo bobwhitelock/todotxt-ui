@@ -1,5 +1,5 @@
 
-<%= form_with url: tasks_path, class: 'container mx-auto my-6' do %>
+<%= form_with url: tasks_path(filters: @filters), class: 'container mx-auto my-6' do %>
   <%= text_area_tag(
     :tasks,
     '',

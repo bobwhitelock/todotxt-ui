@@ -8,7 +8,9 @@
     # Need to use local_assigns here as `class` is a keyword.
     class: "rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline #{local_assigns[:class] || ''}",
     form_class: 'px-1 inline-block',
-    params: defined?(task) ? {task: task.raw.strip} : {},
+    params: local_assigns.fetch(:params, {}).merge(
+      defined?(task) ? {task: task.raw.strip} : {}
+    ),
     # Need to use local_assigns here as `method` is already a method on `Object`.
     method: local_assigns[:method] || :post,
     data: defined?(confirm) ? {confirm: confirm} : {}

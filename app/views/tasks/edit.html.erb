@@ -1,7 +1,10 @@
 
 <%# XXX DRY up this and `app/views/tasks/new.html.erb` %>
 
-<%= form_with url: tasks_path, method: :patch, class: 'container mx-auto my-6' do %>
+<%= form_with url: tasks_path(filters: @filters),
+  method: :patch,
+  class: 'container mx-auto my-6' do
+%>
   <%= hidden_field_tag(:task, @task) %>
 
   <%= text_area_tag(

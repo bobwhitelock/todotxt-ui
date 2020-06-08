@@ -65,7 +65,10 @@
         </svg>
       <% end %>
 
-      <%= render 'shared/icon_button', path: new_path, method: 'get' do %>
+      <%= render 'shared/icon_button',
+        path: new_path,
+        method: 'get',
+        params: {filters: @filters} do %>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -190,7 +193,8 @@
         <%= render 'shared/icon_button',
           path: edit_path,
           task: task,
-          method: :get do
+          method: :get,
+          params: {filters: @filters} do
         %>
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,0 +1,23 @@
+
+<%= form_with url: tasks_path(filters: filters),
+  method: method,
+  class: 'container mx-auto my-6' do
+%>
+  <% if defined?(task) %>
+    <%= hidden_field_tag(:task, task) %>
+  <% end %>
+
+  <%= text_area_tag(
+    :tasks,
+    local_assigns[:task],
+    rows: '6',
+    class: 'w-full border-4 border-solid border-blue-200 rounded-lg',
+    autofocus: true
+  ) %>
+
+  <%= submit_tag(
+    submit_text,
+    class: 'w-full py-3 mt-2 rounded-lg text-white bg-green-600 hover:bg-green-800 focus:bg-green-800 font-bold cursor-pointer'
+  ) %>
+<% end %>
+

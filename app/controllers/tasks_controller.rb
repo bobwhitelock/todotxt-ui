@@ -45,7 +45,7 @@ class TasksController < ApplicationController
   def update
     find_task_and('Update task') do |task|
       delete_matching_task(task)
-      tasks << params[:new_task]
+      tasks << params[:tasks]
     end
     redirect_to root_path(filters: filters)
   end

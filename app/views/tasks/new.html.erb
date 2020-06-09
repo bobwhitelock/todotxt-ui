@@ -1,15 +1,6 @@
 
-<%= form_with url: tasks_path(filters: @filters), class: 'container mx-auto my-6' do %>
-  <%= text_area_tag(
-    :tasks,
-    '',
-    rows: '6',
-    class: 'w-full border-4 border-solid border-blue-200 rounded-lg',
-    autofocus: true
-  ) %>
-
-  <%= submit_tag(
-    'Add Tasks',
-    class: 'w-full py-3 mt-2 rounded-lg text-white bg-green-600 hover:bg-green-800 focus:bg-green-800 font-bold cursor-pointer'
-  ) %>
-<% end %>
+<%= render 'tasks/form',
+  method: :post,
+  filters: @filters,
+  submit_text: 'Add Tasks'
+%>

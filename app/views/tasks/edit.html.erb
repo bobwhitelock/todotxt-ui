@@ -1,22 +1,7 @@
 
-<%# XXX DRY up this and `app/views/tasks/new.html.erb` %>
-
-<%= form_with url: tasks_path(filters: @filters),
+<%= render 'tasks/form',
   method: :patch,
-  class: 'container mx-auto my-6' do
+  filters: @filters,
+  task: @task,
+  submit_text: 'Update Task'
 %>
-  <%= hidden_field_tag(:task, @task) %>
-
-  <%= text_area_tag(
-    :new_task,
-    @task,
-    rows: '6',
-    class: 'w-full border-4 border-solid border-blue-200 rounded-lg',
-    autofocus: true
-  ) %>
-
-  <%= submit_tag(
-    'Update Task',
-    class: 'w-full py-3 mt-2 rounded-lg text-white bg-green-600 hover:bg-green-800 focus:bg-green-800 font-bold cursor-pointer'
-  ) %>
-<% end %>

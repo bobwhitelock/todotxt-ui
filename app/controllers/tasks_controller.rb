@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :assign_filters
+  before_action :assign_filters, :assign_tags
 
   def index
     # XXX Don't do this on every request to avoid blocking rendering page.
@@ -103,6 +103,11 @@ class TasksController < ApplicationController
     @filters ||= Array.wrap(params[:filters])
   end
   alias_method :assign_filters, :filters
+
+  def assign_tags
+    @projects = todo_repo.all_projects
+    @contexts = todo_repo.all_contexts
+  end
 
   def find_task_and(message)
     raw_task = params[:task]

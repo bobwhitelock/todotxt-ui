@@ -3,6 +3,14 @@ class TodoRepo
     @_tasks ||= Todo::List.new(todo_file)
   end
 
+  def all_projects
+    extract_tag(:projects)
+  end
+
+  def all_contexts
+    extract_tag(:contexts)
+  end
+
   def pull_and_reset
     repo.pull
     repo.reset_hard('origin/master')
@@ -49,5 +57,9 @@ class TodoRepo
     repo.commit(message)
     # XXX Do this asynchronously to not block returning response.
     repo.push
+  end
+
+  def extract_tag(tag_type)
+    tasks.flat_map(&tag_type).uniq.map {|p| p[1..-1]}
   end
 end

@@ -7,6 +7,7 @@ require("@rails/ujs").start();
 require("turbolinks").start();
 
 import "../stylesheets/application.scss";
+import "../../../node_modules/tributejs/dist/tribute.css";
 import "../tasks";
 
 // Uncomment to copy all static images under ../images to the output folder and reference

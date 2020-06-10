@@ -35,7 +35,9 @@ function addTagsAutocompletion(className, projects, contexts) {
     collection: [
       { values: toTributeValues(projects), trigger: "+" },
       { values: toTributeValues(contexts), trigger: "@" }
-    ]
+    ],
+    noMatchTemplate: () => '<span class:"hidden"></span>'
+
     // XXX Enable once https://github.com/zurb/tribute/issues/495 is resolved.
     // spaceSelectsMatch: true
   });

@@ -1,6 +1,6 @@
-window.addEventListener('turbolinks:load', function() {
-  addClassEventHandler('js-scroll-to-top', 'click', scrollToTop);
-  addClassEventHandler('js-scroll-to-bottom', 'click', scrollToBottom);
+window.addEventListener("turbolinks:load", function() {
+  addClassEventHandler("js-scroll-to-top", "click", scrollToTop);
+  addClassEventHandler("js-scroll-to-bottom", "click", scrollToBottom);
 });
 
 function addClassEventHandler(className, eventName, handlerFunction) {

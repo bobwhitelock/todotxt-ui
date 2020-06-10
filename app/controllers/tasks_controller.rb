@@ -1,9 +1,10 @@
 class TasksController < ApplicationController
+  before_action :assign_filters
+
   def index
     # XXX Don't do this on every request to avoid blocking rendering page.
     todo_repo.pull_and_reset
 
-    @filters = filters
     @total_tasks = tasks.by_not_done.length
     @tasks = tasks_to_show.sort_by do |task|
       [
@@ -20,7 +21,6 @@ class TasksController < ApplicationController
 
   def new
     @subtitle = 'Add Tasks'
-    @filters = filters
   end
 
   def create
@@ -38,7 +38,6 @@ class TasksController < ApplicationController
 
   def edit
     @subtitle = 'Edit Task'
-    @filters = filters
     @task = params[:task]
   end
 
@@ -101,8 +100,9 @@ class TasksController < ApplicationController
   end
 
   def filters
-    Array.wrap(params[:filters])
+    @filters ||= Array.wrap(params[:filters])
   end
+  alias_method :assign_filters, :filters
 
   def find_task_and(message)
     raw_task = params[:task]

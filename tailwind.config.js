@@ -8,6 +8,10 @@ module.exports = {
       }
     }
   },
-  variants: {},
+  variants: {
+    backgroundColor: ["responsive", "hover", "focus", "disabled"],
+    cursor: ["responsive", "disabled"],
+    opacity: ["responsive", "hover", "focus", "disabled"]
+  },
   plugins: []
 };

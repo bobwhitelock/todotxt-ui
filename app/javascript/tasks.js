@@ -7,15 +7,39 @@ window.addEventListener("turbolinks:load", function() {
 
   addClassEventHandler("js-scroll-to-top", "click", scrollToTop);
   addClassEventHandler("js-scroll-to-bottom", "click", scrollToBottom);
+  addClassEventHandler(
+    "js-disable-submit-when-unchanged",
+    "input",
+    disableSubmitWhenUnchanged,
+    {
+      passThrough: {
+        submitButtonClass: "js-submit-button",
+        originalContentAttr: "data-original-content"
+      },
+      runOnAttach: true
+    }
+  );
 
   addTagsAutocompletion("js-autocomplete-tags", projects, contexts);
 });
 
-function addClassEventHandler(className, eventName, handlerFunction) {
+function addClassEventHandler(
+  className,
+  eventName,
+  handlerFunction,
+  options = {}
+) {
+  const { passThrough, runOnAttach } = options;
+
   Array.from(document.getElementsByClassName(className)).forEach(element => {
+    const runHandler = () => handlerFunction(element, passThrough);
+    if (runOnAttach) {
+      runHandler();
+    }
+
     element.addEventListener(eventName, event => {
       event.preventDefault();
-      handlerFunction();
+      runHandler();
     });
   });
 }
@@ -26,6 +50,23 @@ function scrollToTop() {
 
 function scrollToBottom() {
   window.scrollTo(0, document.body.scrollHeight);
+}
+
+function disableSubmitWhenUnchanged(
+  element,
+  { submitButtonClass, originalContentAttr }
+) {
+  const submitButtons = Array.from(
+    document.getElementsByClassName(submitButtonClass)
+  );
+  const originalContent = element.getAttribute(originalContentAttr);
+  submitButtons.forEach(button => {
+    if (element.value.trim() === originalContent.trim()) {
+      button.setAttribute("disabled", "");
+    } else {
+      button.removeAttribute("disabled");
+    }
+  });
 }
 
 function addTagsAutocompletion(className, projects, contexts) {

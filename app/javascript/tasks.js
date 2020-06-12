@@ -31,7 +31,7 @@ function addClassEventHandler(
 ) {
   const { passThrough, runOnAttach } = options;
 
-  Array.from(document.getElementsByClassName(className)).forEach(element => {
+  forEachWithClass(className, element => {
     const runHandler = () => handlerFunction(element, passThrough);
     if (runOnAttach) {
       runHandler();
@@ -56,11 +56,9 @@ function disableSubmitWhenUnchanged(
   element,
   { submitButtonClass, originalContentAttr }
 ) {
-  const submitButtons = Array.from(
-    document.getElementsByClassName(submitButtonClass)
-  );
   const originalContent = element.getAttribute(originalContentAttr);
-  submitButtons.forEach(button => {
+
+  forEachWithClass(submitButtonClass, button => {
     if (element.value.trim() === originalContent.trim()) {
       button.setAttribute("disabled", "");
     } else {
@@ -88,4 +86,8 @@ function addTagsAutocompletion(className, projects, contexts) {
 
 function toTributeValues(array) {
   return array.map(i => ({ key: i, value: i }));
+}
+
+function forEachWithClass(className, fn) {
+  Array.from(document.getElementsByClassName(className)).forEach(fn);
 }

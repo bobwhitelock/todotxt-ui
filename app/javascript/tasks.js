@@ -1,5 +1,12 @@
 import Tribute from "tributejs";
 
+import {
+  addClassEventHandler,
+  forEachWithClass,
+  scrollToBottom,
+  scrollToTop
+} from "framework";
+
 window.addEventListener("turbolinks:load", function() {
   const initialData = document.getElementById("js-initial-data");
   const projects = JSON.parse(initialData.getAttribute("data-projects"));
@@ -22,35 +29,6 @@ window.addEventListener("turbolinks:load", function() {
 
   addTagsAutocompletion("js-autocomplete-tags", projects, contexts);
 });
-
-function addClassEventHandler(
-  className,
-  eventName,
-  handlerFunction,
-  options = {}
-) {
-  const { passThrough, runOnAttach } = options;
-
-  forEachWithClass(className, element => {
-    const runHandler = () => handlerFunction(element, passThrough);
-    if (runOnAttach) {
-      runHandler();
-    }
-
-    element.addEventListener(eventName, event => {
-      event.preventDefault();
-      runHandler();
-    });
-  });
-}
-
-function scrollToTop() {
-  window.scrollTo(0, 0);
-}
-
-function scrollToBottom() {
-  window.scrollTo(0, document.body.scrollHeight);
-}
 
 function disableSubmitWhenUnchanged(
   element,
@@ -86,8 +64,4 @@ function addTagsAutocompletion(className, projects, contexts) {
 
 function toTributeValues(array) {
   return array.map(i => ({ key: i, value: i }));
-}
-
-function forEachWithClass(className, fn) {
-  Array.from(document.getElementsByClassName(className)).forEach(fn);
 }

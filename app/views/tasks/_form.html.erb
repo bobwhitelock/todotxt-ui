@@ -9,7 +9,7 @@
 
   <%= text_area_tag(
     :tasks,
-    local_assigns[:task],
+    local_assigns.fetch(:task, filters.join(' ')),
     rows: '6',
     class: 'w-full border-4 border-solid border-blue-200 rounded-lg js-tasks-form-textarea',
     autofocus: true,

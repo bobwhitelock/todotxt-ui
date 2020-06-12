@@ -12,22 +12,20 @@ window.addEventListener("turbolinks:load", function() {
   const projects = JSON.parse(initialData.getAttribute("data-projects"));
   const contexts = JSON.parse(initialData.getAttribute("data-contexts"));
 
+  const tasksFormTextarea = "js-tasks-form-textarea";
+  const tasksFormSubmit = "js-tasks-form-submit";
+
   addClassEventHandler("js-scroll-to-top", "click", scrollToTop);
   addClassEventHandler("js-scroll-to-bottom", "click", scrollToBottom);
-  addClassEventHandler(
-    "js-disable-submit-when-unchanged",
-    "input",
-    disableSubmitWhenUnchanged,
-    {
-      passThrough: {
-        submitButtonClass: "js-submit-button",
-        originalContentAttr: "data-original-content"
-      },
-      runOnAttach: true
-    }
-  );
+  addClassEventHandler(tasksFormTextarea, "input", disableSubmitWhenUnchanged, {
+    passThrough: {
+      submitButtonClass: tasksFormSubmit,
+      originalContentAttr: "data-original-content"
+    },
+    runOnAttach: true
+  });
 
-  addTagsAutocompletion("js-autocomplete-tags", projects, contexts);
+  addTagsAutocompletion(tasksFormTextarea, projects, contexts);
 });
 
 function disableSubmitWhenUnchanged(

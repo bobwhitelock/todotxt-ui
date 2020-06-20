@@ -5,6 +5,7 @@ namespace :todotxt do
     desc 'Automatically clear today list and bump `scheduled` tracking'
     task clear_today_list: :environment do
       repo = TodoRepo.new
+      repo.pull_and_reset
       tasks = repo.tasks
 
       updates = {}

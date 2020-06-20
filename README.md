@@ -44,6 +44,14 @@ dokku letsencrypt todotxt
 # And set this up so cron emails will be sent correctly.
 sudo apt-get install postfix
 
+# Configure logs to be sent to Papertrail - see
+# http://mikebian.co/sending-dokku-container-logs-to-papertrail/.
+dokku plugin:install https://github.com/michaelshobbs/dokku-logspout.git
+dokku logspout:server syslog+tls://$papertrail_endpoint
+dokku plugin:install https://github.com/michaelshobbs/dokku-hostname.git dokku-hostname
+dokku logspout:start
+dokku ps:rebuildall
+
 # Local
 git remote add prod dokku@li1514-40.members.linode.com:todotxt
 ```

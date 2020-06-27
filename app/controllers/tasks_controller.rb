@@ -3,7 +3,7 @@ class TasksController < ApplicationController
 
   def index
     # XXX Don't do this on every request to avoid blocking rendering page.
-    todo_repo.pull_and_reset
+    pull_and_reset
 
     @total_tasks = tasks.by_not_done.length
     @tasks = tasks_to_show.sort_by do |task|
@@ -24,6 +24,9 @@ class TasksController < ApplicationController
   end
 
   def create
+    # XXX Don't do this on every request to avoid blocking rendering page.
+    pull_and_reset
+
     today = Time.now.strftime('%F')
 
     new_tasks = params[:tasks].lines.map(&:strip).reject(&:empty?)
@@ -33,6 +36,7 @@ class TasksController < ApplicationController
     end
 
     todo_repo.save_and_push('Create task(s)') unless new_tasks.empty?
+    # XXX Avoid re-pulling immediately on redirect to index.
     redirect_to root_path(filters: filters)
   end
 
@@ -42,10 +46,14 @@ class TasksController < ApplicationController
   end
 
   def update
+    # XXX Don't do this on every request to avoid blocking rendering page.
+    pull_and_reset
+
     find_task_and('Update task') do |task|
       delete_matching_task(task)
       tasks << params[:tasks]
     end
+    # XXX Avoid re-pulling immediately on redirect to index.
     redirect_to root_path(filters: filters)
   end
 
@@ -79,7 +87,7 @@ class TasksController < ApplicationController
 
   private
 
-  delegate :tasks, to: :todo_repo
+  delegate :tasks, :pull_and_reset, to: :todo_repo
 
   def todo_repo
     @_todo_repo ||= TodoRepo.new

@@ -90,7 +90,7 @@ class TasksController < ApplicationController
   delegate :tasks, :pull_and_reset, to: :todo_repo
 
   def todo_repo
-    @_todo_repo ||= TodoRepo.new
+    @_todo_repo ||= TodoRepo.new(ENV.fetch('TODO_FILE'))
   end
 
   def tasks_to_show

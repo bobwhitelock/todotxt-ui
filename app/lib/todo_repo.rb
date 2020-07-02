@@ -1,4 +1,10 @@
 class TodoRepo
+  attr_reader :todo_file
+
+  def initialize(todo_file)
+    @todo_file = todo_file
+  end
+
   def tasks
     @_tasks ||= Todo::List.new(todo_file)
   end
@@ -21,11 +27,12 @@ class TodoRepo
     commit_and_push_todo_file(message)
   end
 
-  private
-
-  def todo_file
-    @_todo_file ||= ENV.fetch('TODO_FILE')
+  def commit_todo_file(message)
+    repo.add(todo_file)
+    repo.commit(message)
   end
+
+  private
 
   def repo
     @_repo ||=

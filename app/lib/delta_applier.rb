@@ -1,6 +1,4 @@
 class DeltaApplier
-  class UnknownDelta < StandardError; end
-
   def self.apply(deltas:, todo_repo:)
     deltas.each do |delta|
       case delta.type
@@ -48,7 +46,8 @@ class DeltaApplier
         todo_repo.tasks << task.gsub(/\s+@today\s+/, ' ').strip
         commit_message ='Remove task from today list'
       else
-        raise UnknownDelta
+        delta.update!(status: Delta::INVALID)
+        next
       end
 
       todo_repo.tasks.save!

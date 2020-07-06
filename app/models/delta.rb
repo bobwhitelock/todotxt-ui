@@ -23,7 +23,8 @@ class Delta < ApplicationRecord
     INVALID,
   ]
 
-  validates :type, presence: true, inclusion: { in: TYPES }
+  validates_presence_of :type
+  validates :type, inclusion: { in: TYPES }, unless: :invalid?
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates_presence_of(:arguments)
 

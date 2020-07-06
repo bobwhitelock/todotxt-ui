@@ -138,13 +138,14 @@ RSpec.describe DeltaApplier do
       expect(deltas_applied).to eq([true] * 3)
     end
 
-    it 'raises for unknown delta type' do
+    it 'handles unknown delta type; sets `invalid` status' do
       delta = build(:delta, type: 'unknown')
       todo_repo = mock_todo_repo
 
-      expect do
-        DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
-      end.to raise_error(DeltaApplier::UnknownDelta)
+      expect(todo_repo).not_to receive(:commit_todo_file)
+      DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
+
+      expect(delta.reload).to be_invalid
     end
 
     it 'handles all delta types with any arguments' do

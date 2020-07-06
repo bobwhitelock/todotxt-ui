@@ -6,6 +6,11 @@ RSpec.describe Delta do
     it do
       should validate_inclusion_of(:type).in_array( Delta::TYPES)
     end
+    context 'when status is `invalid`' do
+      subject { create(:delta, status: Delta::INVALID) }
+      it { should validate_presence_of(:type) }
+      it { should_not validate_inclusion_of(:type).in_array( Delta::TYPES) }
+    end
     it { should validate_presence_of(:status) }
     it do
       should validate_inclusion_of(:status).in_array( Delta::STATUSES)

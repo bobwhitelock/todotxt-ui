@@ -9,7 +9,7 @@ RSpec.describe DeltaApplier do
         :delta,
         type: Delta::ADD,
         arguments: ["some task\nanother task"],
-        applied: false
+        status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo('other task')
 
@@ -21,7 +21,7 @@ RSpec.describe DeltaApplier do
         '2020-06-06 some task',
         '2020-06-06 another task',
       ])
-      expect(delta.reload.applied).to be true
+      expect(delta.reload.status).to eq(Delta::APPLIED)
     end
 
     it 'handles `update` delta' do
@@ -29,7 +29,7 @@ RSpec.describe DeltaApplier do
         :delta,
         type: Delta::UPDATE,
         arguments: ['old task', 'new task'],
-        applied: false
+        status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo('other task', 'old task')
 
@@ -37,7 +37,7 @@ RSpec.describe DeltaApplier do
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ['other task', 'new task'])
-      expect(delta.reload.applied).to be true
+      expect(delta.reload.status).to eq(Delta::APPLIED)
     end
 
     it 'handles `delete` delta' do
@@ -45,7 +45,7 @@ RSpec.describe DeltaApplier do
         :delta,
         type: Delta::DELETE,
         arguments: ['some task'],
-        applied: false
+        status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo('other task', 'some task')
 
@@ -53,7 +53,7 @@ RSpec.describe DeltaApplier do
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ['other task'])
-      expect(delta.reload.applied).to be true
+      expect(delta.reload.status).to eq(Delta::APPLIED)
     end
 
     it 'handles `complete` delta' do
@@ -63,7 +63,7 @@ RSpec.describe DeltaApplier do
         :delta,
         type: Delta::COMPLETE,
         arguments: ['2020-05-05 some task'],
-        applied: false
+        status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo('other task', '2020-05-05 some task')
 
@@ -77,7 +77,7 @@ RSpec.describe DeltaApplier do
         'other task',
         'x 2020-06-06 2020-05-05 some task'
       ])
-      expect(delta.reload.applied).to be true
+      expect(delta.reload.status).to eq(Delta::APPLIED)
     end
 
     it 'handles `schedule` delta' do
@@ -85,7 +85,7 @@ RSpec.describe DeltaApplier do
         :delta,
         type: Delta::SCHEDULE,
         arguments: ['some task'],
-        applied: false
+        status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo('other task', 'some task')
 
@@ -93,7 +93,7 @@ RSpec.describe DeltaApplier do
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ['other task', 'some task @today'])
-      expect(delta.reload.applied).to be true
+      expect(delta.reload.status).to eq(Delta::APPLIED)
     end
 
     it 'handles `unschedule` delta' do
@@ -101,7 +101,7 @@ RSpec.describe DeltaApplier do
         :delta,
         type: Delta::UNSCHEDULE,
         arguments: ['some task @today @another-tag'],
-        applied: false
+        status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo('other task', 'some task @today @another-tag')
 
@@ -109,7 +109,7 @@ RSpec.describe DeltaApplier do
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ['other task', 'some task @another-tag'])
-      expect(delta.reload.applied).to be true
+      expect(delta.reload.status).to eq(Delta::APPLIED)
     end
 
     it 'handles multiple deltas' do
@@ -120,7 +120,7 @@ RSpec.describe DeltaApplier do
           :delta,
           type: Delta::ADD,
           arguments: ["some task #{i}"],
-          applied: false
+          status: Delta::UNAPPLIED
         )
       end
       todo_repo = mock_todo_repo('other task')
@@ -134,8 +134,8 @@ RSpec.describe DeltaApplier do
         '2020-06-06 some task 2',
         '2020-06-06 some task 3',
       ])
-      deltas_applied = deltas.map {|d| d.reload.applied}
-      expect(deltas_applied).to eq([true] * 3)
+      delta_statuses = deltas.map {|d| d.reload.status}
+      expect(delta_statuses).to eq([Delta::APPLIED] * 3)
     end
 
     it 'raises for unknown delta type' do

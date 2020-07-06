@@ -4,8 +4,8 @@ class CreateDeltas < ActiveRecord::Migration[6.0]
       t.timestamps null: false
 
       t.string :type, null: false
+      t.string :status, null: false, default: 'unapplied'
       t.jsonb :arguments, null: false
-      t.boolean :applied, null: false, default: false
     end
   end
 end

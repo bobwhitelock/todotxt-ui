@@ -2,6 +2,6 @@ FactoryBot.define do
   factory :delta do
     type { 'add' }
     arguments { ['something'] }
-    applied { false }
+    status { Delta::UNAPPLIED }
   end
 end

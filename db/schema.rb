@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 2020_07_01_101742) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "type", null: false
+    t.string "status", default: "unapplied", null: false
     t.jsonb "arguments", null: false
-    t.boolean "applied", default: false, null: false
   end
 
 end

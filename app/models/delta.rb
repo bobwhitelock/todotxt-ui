@@ -28,4 +28,10 @@ class Delta < ApplicationRecord
   validates_presence_of(:arguments)
 
   scope :pending, -> { where(status: UNAPPLIED).order('created_at') }
+
+  STATUSES.each do |status|
+    define_method "#{status}?" do
+      self.status == status
+    end
+  end
 end

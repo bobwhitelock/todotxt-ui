@@ -9,6 +9,17 @@ class TodoRepo
     @_tasks ||= Todo::List.new(todo_file)
   end
 
+  def reload
+    @_tasks = nil
+    self
+  end
+
+  def raw_tasks
+    tasks.map do |task|
+      task.respond_to?(:raw) ? task.raw.strip : task.strip
+    end
+  end
+
   def all_projects
     extract_tag(:projects)
   end
@@ -23,8 +34,9 @@ class TodoRepo
   end
 
   def save_and_push(message)
-    tasks.save!
-    commit_and_push_todo_file(message)
+    commit_todo_file(message)
+    # XXX Do this asynchronously to not block returning response.
+    repo.push
   end
 
   def commit_todo_file(message)
@@ -54,16 +66,6 @@ class TodoRepo
       return path if git_path.exist?
       path = path.parent
     end
-  end
-
-  def commit_and_push_todo_file(message)
-    # XXX Do something clever to group multiple updates in quick succession -
-    # either debounce this function or use amend and force push in that
-    # situation (latter probably better as more robust).
-    repo.add(todo_file)
-    repo.commit(message)
-    # XXX Do this asynchronously to not block returning response.
-    repo.push
   end
 
   def extract_tag(tag_type)

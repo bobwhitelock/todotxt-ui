@@ -39,6 +39,7 @@ end
 group :test do
   gem 'shoulda-matchers'
   gem 'factory_bot'
+  gem 'timecop'
   gem 'simplecov', require: false
 end
 

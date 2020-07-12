@@ -2,11 +2,8 @@ SimpleCov.start 'rails' do
   # Track branch as well as line coverage.
   enable_coverage :branch
 
-  # Track and group coverage of all Rake tasks (not working?).
-  add_group 'Rake tasks', 'lib/tasks'
-  track_files 'lib/tasks/**/*.rake'
-
-  # Track and group coverage of decorators.
+  track_files  '{app/**/*.rb,lib/**/*.rake}'
   add_group 'Decorators', 'app/decorators'
-  track_files 'app/decorators/**/*.rb'
+  add_group 'Libraries', 'app/lib'
+  add_group 'Rake tasks', 'lib/tasks'
 end

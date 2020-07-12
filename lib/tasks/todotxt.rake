@@ -37,5 +37,20 @@ namespace :todotxt do
         repo.save_and_push('Automatically clear today list')
       end
     end
+
+    desc 'Attempt to pull and then sync unapplied local Deltas to remote repo'
+    task sync_deltas: :environment do
+      repo = TodoRepo.new(ENV.fetch('TODO_FILE'))
+      deltas = Delta.pending
+
+      begin
+        repo.pull
+        DeltaApplier.apply(deltas: deltas, todo_repo: repo)
+        repo.push
+      rescue Git::GitExecuteError
+        deltas.update!(status: Delta::UNAPPLIED)
+        repo.reset_to_origin
+      end
+    end
   end
 end

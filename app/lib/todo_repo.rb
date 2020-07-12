@@ -1,5 +1,6 @@
 class TodoRepo
   attr_reader :todo_file
+  delegate :push, :pull, to: :repo
 
   def initialize(todo_file)
     @todo_file = todo_file
@@ -26,6 +27,11 @@ class TodoRepo
 
   def all_contexts
     extract_tag(:contexts)
+  end
+
+  def reset_to_origin
+    repo.fetch
+    repo.reset_hard('origin/master')
   end
 
   def pull_and_reset

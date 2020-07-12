@@ -24,19 +24,8 @@ class TasksController < ApplicationController
   end
 
   def create
-    # XXX Don't do this on every request to avoid blocking rendering page.
-    pull_and_reset
-
-    today = Time.now.strftime('%F')
-
-    new_tasks = params[:tasks].lines.map(&:strip).reject(&:empty?)
-    new_tasks.each do |task|
-      task_with_timestamp = "#{today} #{task}"
-      tasks << task_with_timestamp
-    end
-
-    todo_repo.save_and_push('Create task(s)') unless new_tasks.empty?
-    # XXX Avoid re-pulling immediately on redirect to index.
+    tasks = params[:tasks].strip
+    Delta.create!(type: Delta::ADD, arguments: [tasks]) unless tasks.empty?
     redirect_to root_path(filters: filters)
   end
 
@@ -46,48 +35,35 @@ class TasksController < ApplicationController
   end
 
   def update
-    # XXX Don't do this on every request to avoid blocking rendering page.
-    pull_and_reset
-
-    find_task_and('Update task') do |task|
-      delete_matching_task(task)
-      tasks << params[:tasks]
-    end
-    # XXX Avoid re-pulling immediately on redirect to index.
+    old_task = params[:task].strip
+    new_task = params[:tasks].strip
+    Delta.create!(type: Delta::UPDATE, arguments: [old_task, new_task])
     redirect_to root_path(filters: filters)
   end
 
   def destroy
-    find_task_and('Delete task') do |task|
-      delete_matching_task(task)
-    end
+    Delta.create!(type: Delta::DELETE, arguments: [params[:task]])
     redirect_back fallback_location: root_path
   end
 
   def complete
-    find_task_and('Complete task', &:do!)
+    Delta.create!(type: Delta::COMPLETE, arguments: [params[:task]])
     redirect_back fallback_location: root_path
   end
 
   def schedule
-    find_task_and('Add task to today list') do |task|
-      delete_matching_task(task)
-      tasks << task.raw.strip + ' @today'
-    end
+    Delta.create!(type: Delta::SCHEDULE, arguments: [params[:task]])
     redirect_back fallback_location: root_path
   end
 
   def unschedule
-    find_task_and('Remove task from today list') do |task|
-      delete_matching_task(task)
-      tasks << task.raw.gsub(/\s+@today\s+/, ' ').strip
-    end
+    Delta.create!(type: Delta::UNSCHEDULE, arguments: [params[:task]])
     redirect_back fallback_location: root_path
   end
 
   private
 
-  delegate :tasks, :pull_and_reset, to: :todo_repo
+  delegate :tasks, to: :todo_repo
 
   def todo_repo
     @_todo_repo ||= TodoRepo.new(ENV.fetch('TODO_FILE'))
@@ -115,24 +91,5 @@ class TasksController < ApplicationController
   def assign_tags
     @projects = todo_repo.all_projects
     @contexts = todo_repo.all_contexts
-  end
-
-  def find_task_and(message)
-    raw_task = params[:task]
-    task_to_operate_on = tasks.find do |task|
-      task.raw.strip == raw_task
-    end
-
-    # XXX Flash a message in the else case, something has gone wrong
-    if task_to_operate_on
-      yield task_to_operate_on
-      todo_repo.save_and_push(message)
-    end
-  end
-
-  def delete_matching_task(task)
-    tasks.delete_if do |t|
-      t.raw == task.raw
-    end
   end
 end

@@ -10,6 +10,30 @@ class TodoRepo
     @_tasks ||= Todo::List.new(todo_file)
   end
 
+  def add_task(raw_task)
+    tasks << Todo::Task.new(raw_task)
+  end
+
+  def delete_task(raw_task)
+    tasks.delete_if do |t|
+      t.raw.strip == raw_task
+    end
+  end
+
+  def replace_task(old_raw_task, new_raw_task)
+    # XXX Actually replace inline rather than deleting old and then adding
+    # (i.e. appending at bottom of file) new task.
+    delete_task(old_raw_task)
+    add_task(new_raw_task)
+  end
+
+  def complete_task(raw_task)
+    matching_task = tasks.find do |t|
+      t.raw.strip == raw_task
+    end
+    matching_task.do! if matching_task
+  end
+
   def reload
     @_tasks = nil
     self

@@ -70,10 +70,7 @@ RSpec.describe DeltaApplier do
       expect(todo_repo).to receive(:commit_todo_file).with('Complete task')
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      # XXX have to test just the reload here as todotxt gem handles `do!`
-      # weirdly - improve how this works to be more consistent - move all
-      # mutations tasks into TodoRepo?
-      expect(todo_repo.reload.raw_tasks).to eq([
+      expect_tasks_saved(todo_repo, [
         'other task',
         'x 2020-06-06 2020-05-05 some task'
       ])
@@ -180,8 +177,22 @@ RSpec.describe DeltaApplier do
     TodoRepo.new(temp_file.path)
   end
 
-  def expect_tasks_saved(todo_repo, tasks)
-    expect(todo_repo.raw_tasks).to eq(tasks)
-    expect(todo_repo.reload.raw_tasks).to eq(tasks)
+  def expect_tasks_saved(todo_repo, expected_raw_tasks)
+    # Assert given tasks are present in both the given TodoRepo, and a fresh
+    # TodoRepo created for the same todo_file (i.e. these tasks have also been
+    # saved to disk).
+    expect_tasks_equal(todo_repo, expected_raw_tasks)
+    expect_tasks_equal(fresh_todo_repo(todo_repo), expected_raw_tasks)
+  end
+
+  def expect_tasks_equal(todo_repo, expected_raw_tasks)
+    expected_tasks = expected_raw_tasks.map do |raw_task|
+      Todo::Task.new(raw_task)
+    end
+    expect(todo_repo.tasks).to eq(expected_tasks)
+  end
+
+  def fresh_todo_repo(todo_repo)
+    TodoRepo.new(todo_repo.todo_file)
   end
 end

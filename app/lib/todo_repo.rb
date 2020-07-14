@@ -34,17 +34,6 @@ class TodoRepo
     matching_task.do! if matching_task
   end
 
-  def reload
-    @_tasks = nil
-    self
-  end
-
-  def raw_tasks
-    tasks.map do |task|
-      task.respond_to?(:raw) ? task.raw.strip : task.strip
-    end
-  end
-
   def all_projects
     extract_tag(:projects)
   end

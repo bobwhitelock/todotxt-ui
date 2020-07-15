@@ -1,5 +1,7 @@
 class DeltaApplier
-  def self.apply(deltas:, todo_repo:)
+  # XXX Reconsider API here - change defaulting to true, maybe have 2 separate
+  # public methods rather than toggling on a flag.
+  def self.apply(deltas:, todo_repo:, commit: true)
     deltas.each do |delta|
       case delta.type
       when Delta::ADD
@@ -36,9 +38,11 @@ class DeltaApplier
         next
       end
 
-      todo_repo.tasks.save!
-      todo_repo.commit_todo_file(commit_message)
-      delta.update!(status: Delta::APPLIED)
+      if commit
+        todo_repo.tasks.save!
+        todo_repo.commit_todo_file(commit_message)
+        delta.update!(status: Delta::APPLIED)
+      end
     end
   end
 end

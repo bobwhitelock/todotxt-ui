@@ -2,8 +2,11 @@ class TasksController < ApplicationController
   before_action :assign_filters, :assign_tags
 
   def index
-    # XXX Don't do this on every request to avoid blocking rendering page.
-    pull_and_reset
+    DeltaApplier.apply(
+      todo_repo: todo_repo,
+      deltas: Delta.pending,
+      commit: false
+    )
 
     @total_tasks = tasks.by_not_done.length
     @tasks = tasks_to_show.sort_by do |task|

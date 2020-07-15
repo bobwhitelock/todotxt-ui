@@ -165,6 +165,28 @@ RSpec.describe DeltaApplier do
         end.not_to raise_error
       end
     end
+
+
+    # XXX test behaviour with/without committing better - do above tests in
+    # generic way so can reuse these in both situations, and actually check all
+    # behaviour still correct?
+    context 'when `commit: false` passed' do
+      it 'leaves todo repo on disk unchanged' do
+        Delta::TYPES.each do |type|
+          todo_repo = mock_todo_repo('some task')
+          delta = create(
+            :delta,
+            type: type,
+            arguments: ['some task', 'another arg']
+          )
+
+          expect(todo_repo.tasks).not_to receive(:save!)
+          expect(todo_repo).not_to receive(:commit_todo_file)
+          DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo, commit: false)
+          expect(delta.reload).to be_unapplied
+        end
+      end
+    end
   end
 
   def mock_todo_repo(*tasks)

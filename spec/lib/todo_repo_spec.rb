@@ -21,5 +21,13 @@ RSpec.describe TodoRepo do
 
       expect_tasks_saved(todo_repo, ['other task'])
     end
+
+    it 'works when tasks include arbitrary whitespace' do
+      todo_repo = mock_todo_repo('other task', '  old task ')
+
+      todo_repo.replace_task(' old task   ', '  new task  ')
+
+      expect_tasks_saved(todo_repo, ['other task', 'new task'])
+    end
   end
 end

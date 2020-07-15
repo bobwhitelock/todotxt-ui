@@ -23,8 +23,10 @@ class TodoRepo
   def replace_task(old_raw_task, new_raw_task)
     # XXX Actually replace inline rather than deleting old and then adding
     # (i.e. appending at bottom of file) new task.
-    delete_task(old_raw_task)
-    add_task(new_raw_task)
+    if tasks.map(&:raw).include?(old_raw_task)
+      delete_task(old_raw_task)
+      add_task(new_raw_task)
+    end
   end
 
   def complete_task(raw_task)

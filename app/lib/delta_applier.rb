@@ -31,7 +31,7 @@ class DeltaApplier
         commit_message = 'Add task to today list'
       when Delta::UNSCHEDULE
         task = delta.arguments.first
-        todo_repo.replace_task(task, task.gsub(/\s+@today\s+/, ' '))
+        todo_repo.replace_task(task, task.gsub(/\s+@today\s*/, ' '))
         commit_message ='Remove task from today list'
       else
         delta.update!(status: Delta::INVALID)

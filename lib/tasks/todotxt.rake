@@ -48,7 +48,7 @@ namespace :todotxt do
         DeltaApplier.apply(deltas: deltas, todo_repo: repo)
         repo.push
       rescue Git::GitExecuteError
-        deltas.update!(status: Delta::UNAPPLIED)
+        deltas.update(status: Delta::UNAPPLIED)
         repo.reset_to_origin
       end
     end

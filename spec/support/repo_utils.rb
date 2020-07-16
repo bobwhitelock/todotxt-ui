@@ -14,7 +14,7 @@ module RepoUtils
     # TodoRepo created for the same todo_file (i.e. these tasks have also been
     # saved to disk).
     expect_tasks_equal(todo_repo, expected_raw_tasks)
-    expect_tasks_equal(fresh_todo_repo(todo_repo), expected_raw_tasks)
+    expect_tasks_equal(TodoRepo.reload(todo_repo), expected_raw_tasks)
   end
 
   private
@@ -24,9 +24,5 @@ module RepoUtils
       Todo::Task.new(raw_task)
     end
     expect(todo_repo.tasks).to eq(expected_tasks)
-  end
-
-  def fresh_todo_repo(todo_repo)
-    TodoRepo.new(todo_repo.todo_file)
   end
 end

@@ -3,6 +3,8 @@ class DeltaApplier
   # public methods rather than toggling on a flag.
   def self.apply(deltas:, todo_repo:, commit: true)
     deltas.each do |delta|
+      original_raw_tasks = todo_repo.raw_tasks
+
       case delta.type
       when Delta::ADD
         today = Time.now.strftime('%F')
@@ -39,8 +41,13 @@ class DeltaApplier
       end
 
       if commit
+        # Need to save and then reload TodoRepo when checking if tasks have
+        # changed, as `todo-txt` Gem does not change raw tasks for all changes,
+        # e.g. a completed Task keeps the same raw version until it has been
+        # saved and reloaded from disk.
         todo_repo.tasks.save!
-        todo_repo.commit_todo_file(commit_message)
+        tasks_changed = TodoRepo.reload(todo_repo).raw_tasks != original_raw_tasks
+        todo_repo.commit_todo_file(commit_message) if tasks_changed
         delta.update!(status: Delta::APPLIED)
       end
     end

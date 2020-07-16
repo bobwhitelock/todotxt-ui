@@ -138,6 +138,18 @@ RSpec.describe DeltaApplier do
       expect(deltas_applied).to eq([true] * 3)
     end
 
+    it 'handles delta with no effect' do
+      # Update Delta with old task not present in repo should have no effect.
+      delta = create(:delta, type: Delta::UPDATE, arguments: ['foo', 'bar'])
+      todo_repo = mock_todo_repo('other task')
+
+      expect(todo_repo).not_to receive(:commit_todo_file)
+      DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
+
+      expect_tasks_saved(todo_repo, ['other task'])
+      expect(delta.reload).to be_applied
+    end
+
     it 'handles no deltas' do
       todo_repo = mock_todo_repo('other task')
 

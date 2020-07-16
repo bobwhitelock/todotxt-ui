@@ -6,8 +6,18 @@ class TodoRepo
     @todo_file = todo_file
   end
 
+  # Create a new TodoRepo from given TodoRepo, but with tasks reloaded fresh
+  # from disk.
+  def self.reload(other_todo_repo)
+    TodoRepo.new(other_todo_repo.todo_file)
+  end
+
   def tasks
     @_tasks ||= Todo::List.new(todo_file)
+  end
+
+  def raw_tasks
+    tasks.map { |task| task.raw.strip }
   end
 
   def add_task(raw_task)

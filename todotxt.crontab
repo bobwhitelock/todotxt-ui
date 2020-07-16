@@ -17,5 +17,6 @@ SHELL=/bin/bash
 ### PLACE ALL CRON TASKS BELOW
 
 0 5 * * * dokku dokku --rm run todotxt rake todotxt:cron:clear_today_list
+* * * * * dokku dokku --rm run todotxt rake todotxt:cron:sync_deltas
 
 ### PLACE ALL CRON TASKS ABOVE, DO NOT REMOVE THE WHITESPACE AFTER THIS LINE

@@ -1,6 +1,49 @@
 class TodoRepo
+  attr_reader :todo_file
+  delegate :push, :pull, to: :repo
+
+  def initialize(todo_file)
+    @todo_file = todo_file
+  end
+
+  # Create a new TodoRepo from given TodoRepo, but with tasks reloaded fresh
+  # from disk.
+  def self.reload(other_todo_repo)
+    TodoRepo.new(other_todo_repo.todo_file)
+  end
+
   def tasks
     @_tasks ||= Todo::List.new(todo_file)
+  end
+
+  def raw_tasks
+    tasks.map { |task| task.raw.strip }
+  end
+
+  def add_task(raw_task)
+    tasks << Todo::Task.new(raw_task.strip)
+  end
+
+  def delete_task(raw_task)
+    tasks.delete_if do |t|
+      t.raw.strip == raw_task.strip
+    end
+  end
+
+  def replace_task(old_raw_task, new_raw_task)
+    # XXX Actually replace inline rather than deleting old and then adding
+    # (i.e. appending at bottom of file) new task.
+    if tasks.map { |t| t.raw.strip }.include?(old_raw_task.strip)
+      delete_task(old_raw_task)
+      add_task(new_raw_task)
+    end
+  end
+
+  def complete_task(raw_task)
+    matching_task = tasks.find do |t|
+      t.raw.strip == raw_task.strip
+    end
+    matching_task.do! if matching_task
   end
 
   def all_projects
@@ -11,21 +54,28 @@ class TodoRepo
     extract_tag(:contexts)
   end
 
+  def reset_to_origin
+    repo.fetch
+    repo.reset_hard('origin/master')
+  end
+
   def pull_and_reset
     repo.pull
     repo.reset_hard('origin/master')
   end
 
   def save_and_push(message)
-    tasks.save!
-    commit_and_push_todo_file(message)
+    commit_todo_file(message)
+    # XXX Do this asynchronously to not block returning response.
+    repo.push
+  end
+
+  def commit_todo_file(message)
+    repo.add(todo_file)
+    repo.commit(message)
   end
 
   private
-
-  def todo_file
-    @_todo_file ||= ENV.fetch('TODO_FILE')
-  end
 
   def repo
     @_repo ||=
@@ -47,16 +97,6 @@ class TodoRepo
       return path if git_path.exist?
       path = path.parent
     end
-  end
-
-  def commit_and_push_todo_file(message)
-    # XXX Do something clever to group multiple updates in quick succession -
-    # either debounce this function or use amend and force push in that
-    # situation (latter probably better as more robust).
-    repo.add(todo_file)
-    repo.commit(message)
-    # XXX Do this asynchronously to not block returning response.
-    repo.push
   end
 
   def extract_tag(tag_type)

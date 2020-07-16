@@ -27,6 +27,7 @@ RSpec.describe DeltaApplier do
       expect(delta.reload).to be_applied
     end
 
+    # XXX also test update delta with only one argument is gracefully handled?
     it 'handles `update` delta' do
       delta = create(
         :delta,
@@ -203,5 +204,11 @@ RSpec.describe DeltaApplier do
       end
     end
 
+    # XXX improve handling of random whitespace everywhere - or, do this in
+    # spec for todo_repo (apart from schedule types, which are handled by
+    # DeltaApplier)
+    # XXX test no task found for all deltas - can do in generic way
+    # XXX handle delta with no arguments? So don't blow up in that case?
+    # XXX test every Delta works when multiple matching tasks?
   end
 end

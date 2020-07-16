@@ -39,6 +39,8 @@ class TasksController < ApplicationController
 
   def update
     old_task = params[:task].strip
+    # XXX Rename this parameter from frontend to something less confusing (like
+    # `new_task`)
     new_task = params[:tasks].strip
     Delta.create!(type: Delta::UPDATE, arguments: [old_task, new_task])
     redirect_to root_path(filters: filters)

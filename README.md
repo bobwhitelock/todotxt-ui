@@ -45,6 +45,12 @@ dokku letsencrypt todotxt
 # And set this up so cron emails will be sent correctly.
 sudo apt-get install postfix
 
+# Setup database.
+dokku plugin:install https://github.com/dokku/dokku-postgres.git
+dokku postgres:create todotxt-database
+dokku postgres:link todotxt-database todotxt
+dokku run todotxt rake db:setup
+
 # Configure logs to be sent to Papertrail - see
 # http://mikebian.co/sending-dokku-container-logs-to-papertrail/.
 dokku plugin:install https://github.com/michaelshobbs/dokku-logspout.git

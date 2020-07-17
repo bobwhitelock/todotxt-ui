@@ -53,9 +53,6 @@ dokku config:set todotxt \
 
 dokku letsencrypt todotxt
 
-# And set this up so cron emails will be sent correctly.
-sudo apt-get install postfix
-
 # Setup database.
 dokku plugin:install https://github.com/dokku/dokku-postgres.git
 dokku postgres:create todotxt-database

@@ -1,7 +1,18 @@
 
 # Todotxt UI
 
-TODO actual documentation on other stuff.
+## Development Notes
+
+Some steps may be missing ¯\\\_(ツ)\_/¯.
+
+```bash
+git clone https://github.com/bobwhitelock/todotxt-ui.git
+cd !$
+bundle install
+cp config/application{.example,}.yml # And modify env vars.
+rake db:setup
+bin/rails server -b '0.0.0.0'
+```
 
 ## Deployment Notes
 

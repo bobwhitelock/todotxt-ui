@@ -27,3 +27,6 @@ yarn-debug.log*
 
 # Ignore SimpleCov code coverage results.
 coverage/
+
+# Ignore application configuration.
+/config/application.yml

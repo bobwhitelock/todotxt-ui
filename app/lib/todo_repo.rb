@@ -85,7 +85,7 @@ class TodoRepo
         repo_dir = find_repo_root_dir(todo_dir)
         repo = Git.open(repo_dir)
         repo.config('user.name', 'Todotxt UI')
-        repo.config('user.email', ENV.fetch('GIT_EMAIL'))
+        repo.config('user.email', Figaro.env.GIT_EMAIL!)
         repo
       end
   end

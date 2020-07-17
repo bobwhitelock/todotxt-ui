@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   http_basic_authenticate_with(
-    name: ENV.fetch('AUTH_USER'),
-    password: ENV.fetch('AUTH_PASSWORD')
+    name: Figaro.env.AUTH_USER!,
+    password: Figaro.env.AUTH_PASSWORD!,
   )
 end

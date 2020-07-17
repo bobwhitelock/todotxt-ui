@@ -71,7 +71,7 @@ class TasksController < ApplicationController
   delegate :tasks, to: :todo_repo
 
   def todo_repo
-    @_todo_repo ||= TodoRepo.new(ENV.fetch('TODO_FILE'))
+    @_todo_repo ||= TodoRepo.new(Figaro.env.TODO_FILE!)
   end
 
   def tasks_to_show

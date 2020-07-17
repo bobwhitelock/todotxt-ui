@@ -108,6 +108,8 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
+    figaro (1.2.0)
+      thor (>= 0.14.0, < 2)
     git (1.7.0)
       rchardet (~> 1.8)
     globalid (0.4.2)
@@ -242,6 +244,7 @@ DEPENDENCIES
   byebug
   draper
   factory_bot
+  figaro
   git
   jbuilder (~> 2.7)
   listen (>= 3.0.5, < 3.2)

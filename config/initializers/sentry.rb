@@ -1,4 +1,4 @@
 
 Raven.configure do |config|
-  config.dsn = ENV['SENTRY_DSN']
+  config.dsn = Figaro.env.SENTRY_DSN
 end

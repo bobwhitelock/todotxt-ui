@@ -53,3 +53,4 @@ gem 'draper'
 gem 'sentry-raven'
 gem 'lograge'
 gem 'pg'
+gem "figaro"

@@ -64,12 +64,6 @@ class TodoRepo
     repo.reset_hard('origin/master')
   end
 
-  def save_and_push(message)
-    commit_todo_file(message)
-    # XXX Do this asynchronously to not block returning response.
-    repo.push
-  end
-
   def commit_todo_file(message)
     repo.add(todo_file)
     repo.commit(message)

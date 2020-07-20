@@ -34,7 +34,9 @@ namespace :todotxt do
       end
 
       unless updates.empty?
-        repo.save_and_push('Automatically clear today list')
+        repo.tasks.save!
+        repo.commit_todo_file('Automatically clear today list')
+        repo.push
       end
     end
 

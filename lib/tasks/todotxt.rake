@@ -49,7 +49,8 @@ namespace :todotxt do
         repo.pull
         DeltaApplier.apply(deltas: deltas, todo_repo: repo)
         repo.push
-      rescue Git::GitExecuteError
+      rescue Git::GitExecuteError => e
+        Rails.logger.warn "Git error in `sync_deltas`, resetting all Deltas: #{e}"
         deltas.update(status: Delta::UNAPPLIED)
         repo.reset_to_origin
       end

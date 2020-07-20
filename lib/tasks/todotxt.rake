@@ -1,7 +1,7 @@
 
 namespace :todotxt do
   namespace :cron do
-    # XXX Make this nicer and DRY up with `TasksController`.
+    # XXX Make this nicer and DRY up other parts of app.
     desc 'Automatically clear today list and bump `scheduled` tracking'
     task clear_today_list: :environment do
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)

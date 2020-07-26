@@ -38,48 +38,27 @@
       <span></span>
 
       <%= render 'shared/icon_button', class: 'js-scroll-to-top lg:hidden' do %>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="w-12 h-12 fill-current"
-        >
-          <circle cx="12" cy="12" r="10" class="text-gray-500"/>
-          <path
-            class="text-gray-600"
-            d="M14 12v5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-5H8a1 1 0 0 1-.7-1.7l4-4a1 1 0 0 1 1.4 0l4 4A1 1 0 0 1 16 12h-2z"
-            />
-        </svg>
+        <%= render 'icons/arrow_thick_up_circle',
+          background_class: "text-gray-500",
+          foreground_class: "text-gray-600"
+        %>
       <% end %>
 
       <%= render 'shared/icon_button', class: 'js-scroll-to-bottom lg:hidden' do %>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="w-12 h-12 fill-current"
-        >
-          <circle cx="12" cy="12" r="10" class="text-gray-500"/>
-          <path
-            class="text-gray-600"
-            d="M10 12V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5h2a1 1 0 0 1 .7 1.7l-4 4a1 1 0 0 1-1.4 0l-4-4A1 1 0 0 1 8 12h2z"
-          />
-        </svg>
+        <%= render 'icons/arrow_thick_down_circle',
+          background_class: "text-gray-500",
+          foreground_class: "text-gray-600"
+        %>
       <% end %>
 
       <%= render 'shared/icon_button',
         path: new_path,
         method: 'get',
         params: {filters: @filters} do %>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="w-12 h-12 text-green-300 fill-current"
-        >
-          <rect width="18" height="18" x="3" y="3" rx="2"/>
-          <path
-            class="text-green-600"
-            d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"
-          />
-        </svg>
+        <%= render 'icons/add_square',
+          background_class: "text-green-300",
+          foreground_class: "text-green-600"
+        %>
       <% end %>
     </div>
   </div>
@@ -131,40 +110,20 @@
             path: unschedule_tasks_path,
             task: task do
           %>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              class="w-12 h-12 fill-current"
-            >
-              <path
-                class="text-gray-500"
-                d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2zm0 5v10h14V9H5z"
-              />
-              <path
-                class="text-gray-600"
-                d="M7 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm10 0a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1zm-2 13H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2z"
-              />
-            </svg>
+            <%= render 'icons/calendar_remove',
+              background_class: "text-gray-500",
+              foreground_class: "text-gray-600"
+            %>
           <% end %>
         <% else %>
           <%= render 'shared/icon_button',
             path: schedule_tasks_path,
             task: task do
           %>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              class="w-12 h-12 fill-current"
-            >
-              <path
-                class="text-gray-500"
-                d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2zm0 5v10h14V9H5z"
-              />
-              <path
-                class="text-gray-600"
-                d="M13 13h2a1 1 0 0 1 0 2h-2v2a1 1 0 0 1-2 0v-2H9a1 1 0 0 1 0-2h2v-2a1 1 0 0 1 2 0v2zM7 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm10 0a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1z"
-              />
-            </svg>
+            <%= render 'icons/calendar_add',
+              background_class: "text-gray-500",
+              foreground_class: "text-gray-600"
+            %>
           <% end %>
         <% end %>
 
@@ -174,19 +133,10 @@
           method: :delete,
           confirm: 'Are you sure you want to delete this task?' do
         %>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            class="w-12 h-12 fill-current">
-            <path
-              class="text-gray-500"
-              d="M5 5h14l-.89 15.12a2 2 0 0 1-2 1.88H7.9a2 2 0 0 1-2-1.88L5 5zm5 5a1 1 0 0 0-1 1v6a1 1 0 0 0 2 0v-6a1 1 0 0 0-1-1zm4 0a1 1 0 0 0-1 1v6a1 1 0 0 0 2 0v-6a1 1 0 0 0-1-1z"
-            />
-            <path
-              class="text-gray-600"
-              d="M8.59 4l1.7-1.7A1 1 0 0 1 11 2h2a1 1 0 0 1 .7.3L15.42 4H19a1 1 0 0 1 0 2H5a1 1 0 1 1 0-2h3.59z"
-            />
-          </svg>
+          <%= render 'icons/trash',
+            top_class: "text-gray-600",
+            bottom_class: "text-gray-500"
+          %>
         <% end %>
 
         <%= render 'shared/icon_button',
@@ -195,36 +145,20 @@
           method: :get,
           params: {filters: @filters} do
         %>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            class="w-12 h-12 fill-current"
-          >
-            <path
-              class="text-gray-500"
-              d="M4 14a1 1 0 0 1 .3-.7l11-11a1 1 0 0 1 1.4 0l3 3a1 1 0 0 1 0 1.4l-11 11a1 1 0 0 1-.7.3H5a1 1 0 0 1-1-1v-3z"
-            />
-            <rect
-              width="20"
-              height="2"
-              x="2"
-              y="20"
-              class="text-gray-600"
-              rx="1"
-            />
-          </svg>
+          <%= render 'icons/edit',
+            top_class: "text-gray-500",
+            bottom_class: "text-gray-600"
+          %>
         <% end %>
 
         <%= render 'shared/icon_button',
           path: complete_tasks_path,
-          task: task do %>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            class="w-12 h-12 text-green-600 fill-current"
-            >
-            <path d="M10 14.59l6.3-6.3a1 1 0 0 1 1.4 1.42l-7 7a1 1 0 0 1-1.4 0l-3-3a1 1 0 0 1 1.4-1.42l2.3 2.3z"/>
-          </svg>
+          task: task do
+        %>
+          <%= render 'icons/check',
+            background_class: "hidden",
+            foreground_class: "text-green-600"
+          %>
         <% end %>
       </div>
     </div>

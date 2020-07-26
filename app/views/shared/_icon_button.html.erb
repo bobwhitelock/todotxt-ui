@@ -13,7 +13,9 @@
     ),
     # Need to use local_assigns here as `method` is already a method on `Object`.
     method: local_assigns[:method] || :post,
-    data: defined?(confirm) ? {confirm: confirm} : {}
+    data: local_assigns.fetch(:data, {}).merge(
+      defined?(confirm) ? {confirm: confirm} : {}
+    )
   }
 ) do %>
   <%= yield %>

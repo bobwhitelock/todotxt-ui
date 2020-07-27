@@ -1,14 +1,18 @@
 
-<% path_params = local_assigns.fetch(:params, {}).merge(
-  defined?(task) ? {task: task.raw.strip} : {}
-)
+<%
+  path_params = local_assigns.fetch(:params, {}).merge(
+    defined?(task) ? {task: task.raw.strip} : {}
+  )
+
+  method = local_assigns[:method] || :post
 %>
 
 <%= link_to(
   local_assigns[:path] && send(local_assigns[:path], path_params),
   {
     class: "rounded px-1 pb-1 inline-block hover:opacity-50 focus:opacity-50 focus:shadow-outline #{local_assigns[:class] || ''}",
-    method: local_assigns[:method] || :post,
+    method: method,
+    remote: method.to_sym != :get,
     data: local_assigns.fetch(:data, {}).merge(
       defined?(confirm) ? {confirm: confirm} : {}
     )

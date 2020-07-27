@@ -1,15 +1,13 @@
 
-<%# Using `button_to` here does mean we always generate a form, whether this is %>
-<%# needed for the button or not, but does at least mean these will all look %>
-<%# consistent. %>
-<%= button_to(
-  local_assigns[:path],
+<% path_params = local_assigns.fetch(:params, {}).merge(
+  defined?(task) ? {task: task.raw.strip} : {}
+)
+%>
+
+<%= link_to(
+  local_assigns[:path] && send(local_assigns[:path], path_params),
   {
-    class: "rounded hover:opacity-50 focus:opacity-50 focus:shadow-outline #{local_assigns[:class] || ''}",
-    form_class: 'px-1 inline-block',
-    params: local_assigns.fetch(:params, {}).merge(
-      defined?(task) ? {task: task.raw.strip} : {}
-    ),
+    class: "rounded px-1 pb-1 inline-block hover:opacity-50 focus:opacity-50 focus:shadow-outline #{local_assigns[:class] || ''}",
     method: local_assigns[:method] || :post,
     data: local_assigns.fetch(:data, {}).merge(
       defined?(confirm) ? {confirm: confirm} : {}

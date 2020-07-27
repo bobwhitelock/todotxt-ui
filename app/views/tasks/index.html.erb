@@ -52,7 +52,7 @@
       <% end %>
 
       <%= render 'shared/icon_button',
-        path: new_path,
+        path: :new_path,
         method: 'get',
         params: {filters: @filters} do %>
         <%= render 'icons/add_square',
@@ -107,7 +107,7 @@
       <div class="flex justify-between">
         <% if task.today? %>
           <%= render 'shared/icon_button',
-            path: unschedule_tasks_path,
+            path: :unschedule_tasks_path,
             task: task do
           %>
             <%= render 'icons/calendar_remove',
@@ -117,7 +117,7 @@
           <% end %>
         <% else %>
           <%= render 'shared/icon_button',
-            path: schedule_tasks_path,
+            path: :schedule_tasks_path,
             task: task do
           %>
             <%= render 'icons/calendar_add',
@@ -128,7 +128,7 @@
         <% end %>
 
         <%= render 'shared/icon_button',
-          path: tasks_path,
+          path: :tasks_path,
           task: task,
           method: :delete,
           confirm: 'Are you sure you want to delete this task?' do
@@ -140,7 +140,7 @@
         <% end %>
 
         <%= render 'shared/icon_button',
-          path: edit_path,
+          path: :edit_path,
           task: task,
           method: :get,
           params: {filters: @filters} do
@@ -152,7 +152,7 @@
         <% end %>
 
         <%= render 'shared/icon_button',
-          path: complete_tasks_path,
+          path: :complete_tasks_path,
           task: task do
         %>
           <%= render 'icons/check',

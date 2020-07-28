@@ -1,6 +1,8 @@
 
 # Todotxt UI
 
+![Tests](https://github.com/bobwhitelock/todotxt-ui/workflows/Tests/badge.svg)
+
 ## Development Notes
 
 Some steps may be missing ¯\\\_(ツ)\_/¯.

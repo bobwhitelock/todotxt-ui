@@ -51,10 +51,8 @@ function addTagsAutocompletion(className, projects, contexts) {
       { values: toTributeValues(projects), trigger: "+" },
       { values: toTributeValues(contexts), trigger: "@" }
     ],
-    noMatchTemplate: () => '<span class:"hidden"></span>'
-
-    // XXX Enable once https://github.com/zurb/tribute/issues/495 is resolved.
-    // spaceSelectsMatch: true
+    noMatchTemplate: () => '<span class:"hidden"></span>',
+    spaceSelectsMatch: true
   });
 
   tribute.attach(document.getElementsByClassName(className));

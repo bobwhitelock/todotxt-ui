@@ -80,7 +80,7 @@ Also:
 ### To deploy
 
 ```bash
-git push prod master
+git push -f prod HEAD:master
 
 # Add any updates to `todotxt.crontab` to `/etc/cron.d/todotxt` remotely.
 ```

@@ -27,7 +27,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    tasks = params[:tasks].strip
+    tasks = params[:new_task].strip
     Delta.create!(type: Delta::ADD, arguments: [tasks]) unless tasks.empty?
     redirect_to root_path(filters: filters)
   end
@@ -39,9 +39,7 @@ class TasksController < ApplicationController
 
   def update
     old_task = params[:task].strip
-    # XXX Rename this parameter from frontend to something less confusing (like
-    # `new_task`)
-    new_task = params[:tasks].strip
+    new_task = params[:new_task].strip
     Delta.create!(type: Delta::UPDATE, arguments: [old_task, new_task])
     redirect_to root_path(filters: filters)
   end

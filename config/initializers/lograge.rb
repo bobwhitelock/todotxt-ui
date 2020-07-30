@@ -11,5 +11,9 @@ if Rails.env.production?
         params: event.payload[:params].except(*param_exceptions),
       }
     end
+
+    config.lograge.custom_payload do |controller|
+      LogrageUtils.custom_payload_for(controller)
+    end
   end
 end

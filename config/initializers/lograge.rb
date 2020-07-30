@@ -13,7 +13,7 @@ if Rails.env.production?
     end
 
     config.lograge.custom_payload do |controller|
-      LogrageUtils.custom_payload_for(controller)
+      LogrageUtils.custom_payload_for(controller.request)
     end
   end
 
@@ -26,12 +26,19 @@ if Rails.env.production?
       def log_error(request, wrapper)
         exception = wrapper.exception
         if exception.is_a?(ActionController::RoutingError)
+          # TODO Would be nice if this could be done in such a way that we
+          # don't need to re-add all this data in a similar way to what Lograge
+          # does itself, while also retaining the benefit of this approach that
+          # 404s are still always handled as they would be normally (with a
+          # 'Routes' page in development etc.).
           data = {
             method: request.env['REQUEST_METHOD'],
             path: request.env['REQUEST_PATH'],
             status: wrapper.status_code,
             error: "#{exception.class.name}: #{exception.message}"
-          }
+          }.merge(
+            LogrageUtils.custom_payload_for(request)
+          )
           formatted_message = Lograge.formatter.(data)
           logger(request).send(Lograge.log_level, formatted_message)
         else

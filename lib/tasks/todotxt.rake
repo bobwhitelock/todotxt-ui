@@ -4,6 +4,8 @@ namespace :todotxt do
     # XXX Make this nicer and DRY up other parts of app.
     desc 'Automatically clear today list and bump `scheduled` tracking'
     task clear_today_list: :environment do
+      RakeLogger.info 'starting'
+
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
       repo.pull_and_reset
       tasks = repo.tasks
@@ -38,6 +40,8 @@ namespace :todotxt do
         repo.commit_todo_file('Automatically clear today list')
         repo.push
       end
+
+      RakeLogger.info "#{updates.length} tasks cleared"
     end
 
     desc 'Attempt to pull and then sync unapplied local Deltas to remote repo'
@@ -49,8 +53,9 @@ namespace :todotxt do
         repo.pull
         DeltaApplier.apply(deltas: deltas, todo_repo: repo)
         repo.push
+        RakeLogger.info "#{deltas.length} deltas applied" unless deltas.empty?
       rescue Git::GitExecuteError => e
-        Rails.logger.warn "Git error in `sync_deltas`, resetting all Deltas: #{e}"
+        RakeLogger.warn "Git error in `sync_deltas`, resetting all Deltas: #{e}"
         deltas.update(status: Delta::UNAPPLIED)
         repo.reset_to_origin
       end

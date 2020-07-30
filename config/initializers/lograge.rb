@@ -11,5 +11,33 @@ if Rails.env.production?
         params: event.payload[:params].except(*param_exceptions),
       }
     end
+
+    config.lograge.custom_payload do |controller|
+      LogrageUtils.custom_payload_for(controller)
+    end
+  end
+
+  # Patch so 404s are also shown concisely on a single line - from
+  # https://github.com/roidrage/lograge/issues/146#issuecomment-461632965.
+  module ActionDispatch
+    class DebugExceptions
+      alias old_log_error log_error
+
+      def log_error(request, wrapper)
+        exception = wrapper.exception
+        if exception.is_a?(ActionController::RoutingError)
+          data = {
+            method: request.env['REQUEST_METHOD'],
+            path: request.env['REQUEST_PATH'],
+            status: wrapper.status_code,
+            error: "#{exception.class.name}: #{exception.message}"
+          }
+          formatted_message = Lograge.formatter.(data)
+          logger(request).send(Lograge.log_level, formatted_message)
+        else
+          old_log_error request, wrapper
+        end
+      end
+    end
   end
 end

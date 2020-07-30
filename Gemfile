@@ -54,3 +54,5 @@ gem 'sentry-raven'
 gem 'lograge'
 gem 'pg'
 gem "figaro"
+gem 'geocoder'
+gem 'maxminddb'

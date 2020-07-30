@@ -44,8 +44,6 @@ function disableSubmitWhenUnchanged(
 }
 
 function addTagsAutocompletion(className, projects, contexts) {
-  // XXX Could also allow autocompleting tags only present for archived tasks,
-  // and distinguish these from current ones (by colour?)
   const tribute = new Tribute({
     collection: [
       { values: toTributeValues(projects), trigger: "+" },

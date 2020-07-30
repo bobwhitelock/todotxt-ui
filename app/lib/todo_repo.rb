@@ -31,8 +31,9 @@ class TodoRepo
   end
 
   def replace_task(old_raw_task, new_raw_task)
-    # XXX Actually replace inline rather than deleting old and then adding
-    # (i.e. appending at bottom of file) new task.
+    # TODO Actually replace inline rather than deleting old and then adding
+    # (i.e. appending at bottom of file) new task -
+    # https://github.com/bobwhitelock/todotxt-ui/issues/17.
     if tasks.map { |t| t.raw.strip }.include?(old_raw_task.strip)
       delete_task(old_raw_task)
       add_task(new_raw_task)
@@ -75,7 +76,7 @@ class TodoRepo
     @_repo ||=
       begin
         todo_dir = File.dirname(todo_file)
-        # XXX Handle this being nil, i.e. repo not found.
+        # TODO Handle this being nil, i.e. repo not found.
         repo_dir = find_repo_root_dir(todo_dir)
         repo = Git.open(repo_dir)
         repo.config('user.name', 'Todotxt UI')

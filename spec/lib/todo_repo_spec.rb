@@ -3,7 +3,7 @@ require 'support/repo_utils'
 
 RSpec.describe TodoRepo do
   include RepoUtils
-  # XXX Add tests for rest of behaviour of TodoRepo.
+  # TODO Add tests for rest of behaviour of TodoRepo.
 
   describe '#replace_task' do
     it 'replaces old task with new task' do

@@ -27,7 +27,7 @@ RSpec.describe DeltaApplier do
       expect(delta.reload).to be_applied
     end
 
-    # XXX also test update delta with only one argument is gracefully handled?
+    # TODO also test update delta with only one argument is gracefully handled?
     it 'handles `update` delta' do
       delta = create(
         :delta,
@@ -183,7 +183,7 @@ RSpec.describe DeltaApplier do
     end
 
 
-    # XXX test behaviour with/without committing better - do above tests in
+    # TODO test behaviour with/without committing better - do above tests in
     # generic way so can reuse these in both situations, and actually check all
     # behaviour still correct?
     context 'when `commit: false` passed' do
@@ -204,11 +204,11 @@ RSpec.describe DeltaApplier do
       end
     end
 
-    # XXX improve handling of random whitespace everywhere - or, do this in
+    # TODO improve handling of random whitespace everywhere - or, do this in
     # spec for todo_repo (apart from schedule types, which are handled by
     # DeltaApplier)
-    # XXX test no task found for all deltas - can do in generic way
-    # XXX handle delta with no arguments? So don't blow up in that case?
-    # XXX test every Delta works when multiple matching tasks?
+    # TODO test no task found for all deltas - can do in generic way
+    # TODO handle delta with no arguments? So don't blow up in that case?
+    # TODO test every Delta works when multiple matching tasks?
   end
 end

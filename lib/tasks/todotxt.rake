@@ -1,7 +1,7 @@
 
 namespace :todotxt do
   namespace :cron do
-    # XXX Make this nicer and DRY up other parts of app.
+    # TODO Make this nicer and DRY up with other parts of app.
     desc 'Automatically clear today list and bump `scheduled` tracking'
     task clear_today_list: :environment do
       RakeLogger.info 'starting'

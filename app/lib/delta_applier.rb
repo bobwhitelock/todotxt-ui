@@ -1,5 +1,5 @@
 class DeltaApplier
-  # XXX Reconsider API here - change defaulting to true, maybe have 2 separate
+  # TODO Reconsider API here - change defaulting to true, maybe have 2 separate
   # public methods rather than toggling on a flag.
   def self.apply(deltas:, todo_repo:, commit: true)
     deltas.each do |delta|

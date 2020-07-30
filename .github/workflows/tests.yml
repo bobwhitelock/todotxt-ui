@@ -65,10 +65,6 @@ jobs:
       - name: Yarn install
         run: yarn --frozen-lockfile
       - name: Run RSpec tests
-        # XXX Actually set other env vars if needed, maybe using example values
-        # from `config/application.example.yml`.
-        # env: # Or as an environment variable
-        #   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           bundle exec rake db:setup
           bundle exec rspec

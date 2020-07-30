@@ -12,7 +12,6 @@ class TasksController < ApplicationController
     @tasks = tasks_to_show.sort_by do |task|
       [
         task.today? ? 'a' : 'b',
-        # XXX Only show things due soon first?
         task.tags.fetch(:due, 'z'),
         task.priority || 'Z',
         task.created_on || 100.years.from_now,

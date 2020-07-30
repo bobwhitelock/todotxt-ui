@@ -9,9 +9,10 @@
     <%= stylesheet_pack_tag 'application', 'data-turbolinks-track': 'reload'  %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <script>
-      // XXX Handle this somewhere other than inlined here, and in more
+      // TODO Handle this somewhere other than inlined here, and in more
       // consistent style to other JS code - in `app/javascript/tasks.js`, use
-      // `js-` prefixes etc.
+      // `js-` prefixes etc. -
+      // https://github.com/bobwhitelock/todotxt-ui/issues/60.
       // From https://stackoverflow.com/a/51790464/2620402.
       const turbolinksPersistScroll = () => {
         const persistScrollDataAttribute = 'turbolinks-scroll'

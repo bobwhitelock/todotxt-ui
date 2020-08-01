@@ -109,7 +109,7 @@
           <%= render 'shared/icon_button',
             path: :unschedule_tasks_path,
             task: task,
-            data: {'turbolinks-scroll': true} do
+            class: 'js-turbolinks-persist-scroll' do
           %>
             <%= render 'icons/calendar_remove',
               background_class: "text-gray-500",
@@ -120,7 +120,7 @@
           <%= render 'shared/icon_button',
             path: :schedule_tasks_path,
             task: task,
-            data: {'turbolinks-scroll': true} do
+            class: 'js-turbolinks-persist-scroll' do
           %>
             <%= render 'icons/calendar_add',
               background_class: "text-gray-500",
@@ -134,7 +134,7 @@
           task: task,
           method: :delete,
           confirm: 'Are you sure you want to delete this task?',
-          data: {'turbolinks-scroll': true} do
+          class: 'js-turbolinks-persist-scroll' do
         %>
           <%= render 'icons/trash',
             top_class: "text-gray-600",
@@ -157,7 +157,7 @@
         <%= render 'shared/icon_button',
           path: :complete_tasks_path,
           task: task,
-          data: {'turbolinks-scroll': true} do
+          class: 'js-turbolinks-persist-scroll' do
         %>
           <%= render 'icons/check',
             background_class: "hidden",

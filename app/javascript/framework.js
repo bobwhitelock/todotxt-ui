@@ -1,3 +1,26 @@
+// Adapted from https://stackoverflow.com/a/51790464/2620402.
+export function turbolinksPersistScroll(persistScrollClass) {
+  let scrollPosition = null;
+  let enabled = false;
+
+  document.addEventListener("turbolinks:before-visit", () => {
+    if (enabled) {
+      scrollPosition = window.scrollY;
+    } else {
+      scrollPosition = null;
+    }
+    enabled = false;
+  });
+
+  document.addEventListener("turbolinks:load", () => {
+    addClassEventHandler(persistScrollClass, "click", () => (enabled = true));
+
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
+    }
+  });
+}
+
 export function addClassEventHandler(
   className,
   eventName,

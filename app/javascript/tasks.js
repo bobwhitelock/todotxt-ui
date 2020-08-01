@@ -1,11 +1,14 @@
 import Tribute from "tributejs";
 
 import {
+  turbolinksPersistScroll,
   addClassEventHandler,
   forEachWithClass,
   scrollToBottom,
   scrollToTop
 } from "framework";
+
+turbolinksPersistScroll("js-turbolinks-persist-scroll");
 
 window.addEventListener("turbolinks:load", function() {
   const initialData = document.getElementById("js-initial-data");

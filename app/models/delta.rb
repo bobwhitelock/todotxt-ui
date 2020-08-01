@@ -1,22 +1,22 @@
 class Delta < ApplicationRecord
-  ADD = 'add'
-  UPDATE = 'update'
-  DELETE = 'delete'
-  COMPLETE = 'complete'
-  SCHEDULE = 'schedule'
-  UNSCHEDULE = 'unschedule'
+  ADD = "add"
+  UPDATE = "update"
+  DELETE = "delete"
+  COMPLETE = "complete"
+  SCHEDULE = "schedule"
+  UNSCHEDULE = "unschedule"
   TYPES = [
     ADD,
     UPDATE,
     DELETE,
     COMPLETE,
     SCHEDULE,
-    UNSCHEDULE,
+    UNSCHEDULE
   ]
 
-  UNAPPLIED = 'unapplied'
-  APPLIED = 'applied'
-  INVALID = 'invalid'
+  UNAPPLIED = "unapplied"
+  APPLIED = "applied"
+  INVALID = "invalid"
   STATUSES = [
     # Unapplied = Delta's change has not yet been committed.
     UNAPPLIED,
@@ -26,15 +26,15 @@ class Delta < ApplicationRecord
     APPLIED,
     # Invalid = Delta is of an unknown type and so cannot be handled; maybe
     # other reasons in future.
-    INVALID,
+    INVALID
   ]
 
   validates_presence_of :type
-  validates :type, inclusion: { in: TYPES }, unless: :invalid?
-  validates :status, presence: true, inclusion: { in: STATUSES }
+  validates :type, inclusion: {in: TYPES}, unless: :invalid?
+  validates :status, presence: true, inclusion: {in: STATUSES}
   validates_presence_of(:arguments)
 
-  scope :pending, -> { where(status: UNAPPLIED).order('created_at') }
+  scope :pending, -> { where(status: UNAPPLIED).order("created_at") }
 
   STATUSES.each do |status|
     define_method "#{status}?" do

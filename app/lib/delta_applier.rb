@@ -28,12 +28,12 @@ class DeltaApplier
   private
 
   DELTA_COMMIT_MESSAGES = {
-    Delta::ADD => 'Create task(s)',
-    Delta::UPDATE => 'Update task',
-    Delta::DELETE => 'Delete task',
-    Delta::COMPLETE => 'Complete task',
-    Delta::SCHEDULE => 'Add task to today list',
-    Delta::UNSCHEDULE => 'Remove task from today list',
+    Delta::ADD => "Create task(s)",
+    Delta::UPDATE => "Update task",
+    Delta::DELETE => "Delete task",
+    Delta::COMPLETE => "Complete task",
+    Delta::SCHEDULE => "Add task to today list",
+    Delta::UNSCHEDULE => "Remove task from today list"
   }
 
   def commit_message
@@ -42,7 +42,7 @@ class DeltaApplier
 
   def handle_delta
     handle_message = "handle_#{delta.type}"
-    if respond_to?(handle_message, include_all=true)
+    if respond_to?(handle_message, include_all: true)
       send(handle_message)
     else
       handle_invalid_delta
@@ -50,7 +50,7 @@ class DeltaApplier
   end
 
   def handle_add
-    today = Time.now.strftime('%F')
+    today = Time.now.strftime("%F")
     new_tasks = delta.arguments.first.lines.map(&:strip).reject(&:empty?)
     new_tasks.each do |task|
       task_with_timestamp = "#{today} #{task}"
@@ -76,12 +76,12 @@ class DeltaApplier
 
   def handle_schedule
     task = delta.arguments.first
-    todo_repo.replace_task(task, task.strip + ' @today')
+    todo_repo.replace_task(task, task.strip + " @today")
   end
 
   def handle_unschedule
     task = delta.arguments.first
-    todo_repo.replace_task(task, task.gsub(/\s+@today\s*/, ' '))
+    todo_repo.replace_task(task, task.gsub(/\s+@today\s*/, " "))
   end
 
   def handle_invalid_delta

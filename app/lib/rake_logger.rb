@@ -1,4 +1,3 @@
-
 class RakeLogger
   # Delegate to Rails logger, but with all lines logged prefixed with full Rake
   # task name for current task.

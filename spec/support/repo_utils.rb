@@ -20,9 +20,9 @@ module RepoUtils
   private
 
   def expect_tasks_equal(todo_repo, expected_raw_tasks)
-    expected_tasks = expected_raw_tasks.map do |raw_task|
+    expected_tasks = expected_raw_tasks.map { |raw_task|
       Todo::Task.new(raw_task)
-    end
+    }
     expect(todo_repo.tasks).to eq(expected_tasks)
   end
 end

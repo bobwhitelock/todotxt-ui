@@ -9,20 +9,20 @@ class TasksController < ApplicationController
     )
 
     @total_tasks = tasks.by_not_done.length
-    @tasks = tasks_to_show.sort_by do |task|
+    @tasks = tasks_to_show.sort_by { |task|
       [
-        task.today? ? 'a' : 'b',
-        task.tags.fetch(:due, 'z'),
-        task.priority || 'Z',
+        task.today? ? "a" : "b",
+        task.tags.fetch(:due, "z"),
+        task.priority || "Z",
         task.created_on || 100.years.from_now,
         task.raw
       ]
-    end
+    }
     @subtitle = "#{@tasks.size} tasks"
   end
 
   def new
-    @subtitle = 'Add Tasks'
+    @subtitle = "Add Tasks"
   end
 
   def create
@@ -32,7 +32,7 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @subtitle = 'Edit Task'
+    @subtitle = "Edit Task"
     @task = params[:task]
   end
 
@@ -75,9 +75,9 @@ class TasksController < ApplicationController
     to_show = tasks.by_not_done
 
     filters.each do |filter|
-      if filter.start_with?('+')
+      if filter.start_with?("+")
         to_show = to_show.by_project(filter)
-      elsif filter.start_with?('@')
+      elsif filter.start_with?("@")
         to_show = to_show.by_context(filter)
       end
     end
@@ -88,7 +88,7 @@ class TasksController < ApplicationController
   def filters
     @filters ||= Array.wrap(params[:filters])
   end
-  alias_method :assign_filters, :filters
+  alias assign_filters filters
 
   def assign_tags
     @projects = todo_repo.all_projects

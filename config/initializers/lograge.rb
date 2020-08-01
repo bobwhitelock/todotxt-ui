@@ -1,14 +1,13 @@
-
 if Rails.env.production?
   Rails.application.configure do
     config.lograge.enabled = true
 
     # Also include parameters in line logged, apart from those already included
     # by default (see https://github.com/roidrage/lograge#what-it-doesnt-do).
-    param_exceptions = %w(controller action format)
+    param_exceptions = %w[controller action format]
     config.lograge.custom_options = lambda do |event|
       {
-        params: event.payload[:params].except(*param_exceptions),
+        params: event.payload[:params].except(*param_exceptions)
       }
     end
 
@@ -32,14 +31,14 @@ if Rails.env.production?
           # 404s are still always handled as they would be normally (with a
           # 'Routes' page in development etc.).
           data = {
-            method: request.env['REQUEST_METHOD'],
-            path: request.env['REQUEST_PATH'],
+            method: request.env["REQUEST_METHOD"],
+            path: request.env["REQUEST_PATH"],
             status: wrapper.status_code,
             error: "#{exception.class.name}: #{exception.message}"
           }.merge(
             LogrageUtils.custom_payload_for(request)
           )
-          formatted_message = Lograge.formatter.(data)
+          formatted_message = Lograge.formatter.call(data)
           logger(request).send(Lograge.log_level, formatted_message)
         else
           old_log_error request, wrapper

@@ -41,10 +41,10 @@ class TodoRepo
   end
 
   def complete_task(raw_task)
-    matching_task = tasks.find do |t|
+    matching_task = tasks.find { |t|
       t.raw.strip == raw_task.strip
-    end
-    matching_task.do! if matching_task
+    }
+    matching_task&.do!
   end
 
   def all_projects
@@ -57,7 +57,7 @@ class TodoRepo
 
   def reset_to_origin
     repo.fetch
-    repo.reset_hard('origin/master')
+    repo.reset_hard("origin/master")
   end
 
   def commit_todo_file(message)
@@ -74,8 +74,8 @@ class TodoRepo
         # TODO Handle this being nil, i.e. repo not found.
         repo_dir = find_repo_root_dir(todo_dir)
         repo = Git.open(repo_dir)
-        repo.config('user.name', 'Todotxt UI')
-        repo.config('user.email', Figaro.env.GIT_EMAIL!)
+        repo.config("user.name", "Todotxt UI")
+        repo.config("user.email", Figaro.env.GIT_EMAIL!)
         repo
       end
   end
@@ -83,13 +83,13 @@ class TodoRepo
   def find_repo_root_dir(child_dir)
     path = Pathname.new(child_dir)
     until path.root?
-      git_path = path.join('.git')
+      git_path = path.join(".git")
       return path if git_path.exist?
       path = path.parent
     end
   end
 
   def extract_tag(tag_type)
-    tasks.flat_map(&tag_type).uniq.map {|p| p[1..-1]}
+    tasks.flat_map(&tag_type).uniq.map { |p| p[1..-1] }
   end
 end

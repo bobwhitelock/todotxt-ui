@@ -1,6 +1,6 @@
 class TodoRepo
   attr_reader :todo_file
-  delegate :push, :pull, to: :repo
+  delegate :push, to: :repo
 
   def initialize(todo_file)
     @todo_file = todo_file
@@ -57,11 +57,6 @@ class TodoRepo
 
   def reset_to_origin
     repo.fetch
-    repo.reset_hard('origin/master')
-  end
-
-  def pull_and_reset
-    repo.pull
     repo.reset_hard('origin/master')
   end
 

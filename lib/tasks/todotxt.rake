@@ -7,7 +7,7 @@ namespace :todotxt do
       RakeLogger.info 'starting'
 
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
-      repo.pull_and_reset
+      repo.reset_to_origin
       tasks = repo.tasks
 
       updates = {}
@@ -44,13 +44,13 @@ namespace :todotxt do
       RakeLogger.info "#{updates.length} tasks cleared"
     end
 
-    desc 'Attempt to pull and then sync unapplied local Deltas to remote repo'
+    desc 'Attempt to sync unapplied local Deltas to remote repo'
     task sync_deltas: :environment do
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
       deltas = Delta.pending
 
       begin
-        repo.pull
+        repo.reset_to_origin
         DeltaApplier.apply(deltas: deltas, todo_repo: repo)
         repo.push
         RakeLogger.info "#{deltas.length} deltas applied" unless deltas.empty?

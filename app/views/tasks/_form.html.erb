@@ -1,7 +1,7 @@
 
 <%= form_with url: tasks_path(filters: filters),
   method: method,
-  class: 'container mx-auto my-6' do
+  class: 'container mx-auto my-6 px-4' do
 %>
   <% if defined?(task) %>
     <%= hidden_field_tag(:task, task) %>

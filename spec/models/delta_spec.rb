@@ -22,13 +22,13 @@ RSpec.describe Delta do
     end
 
     it "excludes applied deltas" do
-      delta = create(:delta, status: Delta::APPLIED)
+      create(:delta, status: Delta::APPLIED)
 
       expect(Delta.pending).to eq([])
     end
 
     it "excludes invalid deltas" do
-      delta = create(:delta, status: Delta::INVALID)
+      create(:delta, status: Delta::INVALID)
 
       expect(Delta.pending).to eq([])
     end

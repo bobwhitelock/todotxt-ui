@@ -308,5 +308,7 @@ RSpec.describe Todotxt::Parser do
 
   describe "space" do
     it { expect(subject.space).to parse(" ") }
+    # XXX Why doesn't this work?
+    # it { expect(subject.space).to parse("\t") }
   end
 end

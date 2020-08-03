@@ -1,6 +1,7 @@
 class Todotxt
   class Project
     attr_reader :value
+    alias to_s value
 
     def initialize(value)
       @value = value

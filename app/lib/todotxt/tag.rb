@@ -11,5 +11,9 @@ class Todotxt
     def ==(other_tag)
       other_tag.is_a?(Tag) && other_tag.key == key && other_tag.value == value
     end
+
+    def to_s
+      "#{key}:#{value}"
+    end
   end
 end

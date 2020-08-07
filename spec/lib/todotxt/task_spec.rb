@@ -1,6 +1,13 @@
 require "rails_helper"
+require "support/todotxt_helpers"
 
 RSpec.describe Todotxt::Task do
+  it "is comparable" do
+    task = create_task("foo")
+
+    expect(task).to be_a(Comparable)
+  end
+
   describe ".parse" do
     it "parses a simple todotxt task into a Task" do
       raw_task = "do things @home"
@@ -46,6 +53,25 @@ RSpec.describe Todotxt::Task do
   describe ".new" do
     it "is private" do
       expect(described_class).not_to respond_to(:new)
+    end
+  end
+
+  describe "#<=>" do
+    it "compares Tasks by their raw text" do
+      task = create_task("bbb")
+      earlier_task = create_task("aaa")
+      later_task = create_task("ccc")
+      equivalent_task = create_task("bbb")
+
+      expect(task <=> earlier_task).to eq(1)
+      expect(task <=> later_task).to eq(-1)
+      expect(task <=> equivalent_task).to eq(0)
+    end
+
+    it "returns nil when compare with a non-Task" do
+      task = create_task("my task")
+
+      expect(task <=> 5).to be nil
     end
   end
 end

@@ -1,5 +1,7 @@
 class Todotxt
   class Task
+    include Comparable
+
     def self.parse(raw_task)
       parser_output = Parser.new.parse(raw_task)
       transform_output = Transform.new.apply(parser_output)
@@ -13,6 +15,8 @@ class Todotxt
     attr_reader :priority
     attr_reader :completion_date
     attr_reader :creation_date
+
+    delegate :<=>, to: :raw
 
     def initialize(
       raw:,

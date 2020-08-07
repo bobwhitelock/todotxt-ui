@@ -20,9 +20,9 @@ RSpec.describe Todotxt::Task do
       expect(task.creation_date).to be nil
       expect(task.description).to eq("do things @home")
       expect(task.description_text).to eq("do things")
-      expect(task.contexts).to eq([Todotxt::Context.new("@home")])
+      expect(task.contexts).to eq(["@home"])
       expect(task.projects).to eq([])
-      expect(task.tags).to eq([])
+      expect(task.tags).to eq({})
       expect(task.raw).to eq(raw_task)
     end
 
@@ -39,14 +39,26 @@ RSpec.describe Todotxt::Task do
         "do things @home and other stuff +important +housework due:2020-08-09"
       )
       expect(task.description_text).to eq("do things and other stuff")
-      expect(task.contexts).to eq([Todotxt::Context.new("@home")])
-      expect(task.projects).to eq([
-        Todotxt::Project.new("+important"), Todotxt::Project.new("+housework")
-      ])
-      expect(task.tags).to eq([
-        Todotxt::Tag.new(key: "due", value: "2020-08-09")
-      ])
+      expect(task.contexts).to eq(["@home"])
+      expect(task.projects).to eq(["+important", "+housework"])
+      expect(task.tags).to eq(due: "2020-08-09")
       expect(task.raw).to eq(raw_task)
+    end
+
+    it "exposes parsed text as strings" do
+      raw_task = "(A) stuff @context +project tag_key:tag_value"
+
+      task = described_class.parse(raw_task)
+
+      expect(task.priority).to be_a(String)
+      expect(task.description).to be_a(String)
+      expect(task.description_text).to be_a(String)
+      expect(task.contexts.first).to be_a(String)
+      expect(task.projects.first).to be_a(String)
+      tag_key, tag_value = task.tags.first
+      # Tag key is actually a Symbol as this is nicer to work with.
+      expect(tag_key).to be_a(Symbol)
+      expect(tag_value).to be_a(String)
     end
   end
 
@@ -72,6 +84,14 @@ RSpec.describe Todotxt::Task do
       task = create_task("my task")
 
       expect(task <=> 5).to be nil
+    end
+  end
+
+  describe "#tags" do
+    it "provides a hash of Task tag keys to values" do
+      task = create_task("my task foo:bar baz:5")
+
+      expect(task.tags).to eq(foo: "bar", baz: "5")
     end
   end
 end

@@ -9,13 +9,13 @@ class Todotxt
     rule(description: sequence(:parts)) do
       {description: Transform.merge_words_in_parts(parts)}
     end
-    rule(word: simple(:word)) { Text.new(word) }
+    rule(word: simple(:word)) { Text.new(word.to_s) }
 
-    rule(project: simple(:value)) { Project.new(value) }
-    rule(context: simple(:value)) { Context.new(value) }
+    rule(project: simple(:value)) { Project.new(value.to_s) }
+    rule(context: simple(:value)) { Context.new(value.to_s) }
 
     rule(tag: {key: simple(:key), value: simple(:value)}) do
-      Tag.new(key: key, value: value)
+      Tag.new(key: key.to_s, value: value.to_s)
     end
 
     def self.merge_words_in_parts(parts)

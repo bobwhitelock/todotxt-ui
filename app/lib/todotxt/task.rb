@@ -3,6 +3,7 @@ class Todotxt
     include Comparable
 
     def self.parse(raw_task)
+      raw_task = raw_task.strip
       parser_output = Parser.new.parse(raw_task)
       transform_output = Transform.new.apply(parser_output)
 

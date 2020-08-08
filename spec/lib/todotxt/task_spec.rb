@@ -60,6 +60,14 @@ RSpec.describe Todotxt::Task do
       expect(tag_key).to be_a(Symbol)
       expect(tag_value).to be_a(String)
     end
+
+    it "trims any whitespace from passed raw task" do
+      raw_task = "   a messy task  \n"
+
+      task = described_class.parse(raw_task)
+
+      expect(task.raw).to eq("a messy task")
+    end
   end
 
   describe ".new" do

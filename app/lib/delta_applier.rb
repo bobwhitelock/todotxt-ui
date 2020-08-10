@@ -60,7 +60,7 @@ class DeltaApplier
 
   def handle_update
     old_task = delta.arguments.first
-    new_task = delta.arguments.second
+    new_task = delta.arguments.second.squish
     todo_repo.replace_task(old_task, new_task)
   end
 

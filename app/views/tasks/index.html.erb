@@ -1,6 +1,8 @@
 
-<div class="flex flex-wrap text-4xl lg:text-lg">
-  <div class="sticky top-0 bg-gray-300 card lg:static">
+<% grid_breakpoint = 'md' %>
+
+<div class="flex flex-wrap text-lg">
+  <div class="sticky top-0 bg-gray-300 card <%= grid_breakpoint %>:static">
     <div class="py-2">
       <%= @total_tasks %> tasks (<%= @tasks.length %> shown)
     </div>
@@ -21,7 +23,7 @@
           <% end %>
         <% end %>
 
-        <span class="text-3xl lg:text-sm">
+        <span class="text-sm">
           <% if @filters.empty? %>
             (None)
           <% else %>
@@ -37,14 +39,14 @@
       <%# buttons on other cards. %>
       <span></span>
 
-      <%= render 'shared/icon_button', class: 'js-scroll-to-top lg:hidden' do %>
+      <%= render 'shared/icon_button', class: "js-scroll-to-top #{grid_breakpoint}:hidden" do %>
         <%= render 'icons/arrow_thick_up_circle',
           background_class: "text-gray-500",
           foreground_class: "text-gray-600"
         %>
       <% end %>
 
-      <%= render 'shared/icon_button', class: 'js-scroll-to-bottom lg:hidden' do %>
+      <%= render 'shared/icon_button', class: "js-scroll-to-bottom #{grid_breakpoint}:hidden" do %>
         <%= render 'icons/arrow_thick_down_circle',
           background_class: "text-gray-500",
           foreground_class: "text-gray-600"
@@ -64,7 +66,7 @@
   </div>
 
   <% @tasks.each do |task| %>
-    <div class="card justify-between border-4 lg:border-2 <%= task.border_color_class %> <%= task.background_class %>">
+    <div class="card justify-between border-4 <%= grid_breakpoint %>:border-2 <%= task.border_color_class %> <%= task.background_class %>">
       <div class="flex-grow">
         <div class="float-right px-1 py-2 text-gray-600">
           <% task.tags.each do |tag, value| %>

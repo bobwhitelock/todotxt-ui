@@ -102,4 +102,142 @@ RSpec.describe Todotxt::Task do
       expect(task.tags).to eq(foo: "bar", baz: "5")
     end
   end
+
+  describe "#complete=" do
+    it "sets whether Task is complete" do
+      allow(Date).to receive(:today).and_return(Date.new(2020, 8, 10))
+      incomplete_task = create_task("my task")
+      complete_task = create_task("x 2020-07-05 my complete task")
+
+      incomplete_task.complete = true
+      complete_task.complete = false
+
+      expect(incomplete_task).to be_complete
+      expect(incomplete_task.raw).to eq("x 2020-08-10 my task")
+      expect(complete_task).not_to be_complete
+      expect(complete_task.raw).to eq("my complete task")
+    end
+  end
+
+  describe "#complete!" do
+    before :each do
+      allow(Date).to receive(:today).and_return(Date.new(2020, 8, 10))
+    end
+
+    it "sets incomplete Task to complete" do
+      incomplete_task = create_task("my task")
+
+      incomplete_task.complete!
+
+      expect(incomplete_task).to be_complete
+      expect(incomplete_task.raw).to eq("x 2020-08-10 my task")
+    end
+
+    it "leaves complete Task unchanged" do
+      complete_task = create_task("x 2020-07-05 my complete task")
+
+      complete_task.complete!
+
+      expect(complete_task).to be_complete
+      expect(complete_task.raw).to eq("x 2020-07-05 my complete task")
+    end
+  end
+
+  describe "#priority=" do
+    it "sets Task priority" do
+      task = create_task("my task")
+
+      task.priority = "B"
+
+      expect(task.priority).to eq("B")
+      expect(task.raw).to eq("(B) my task")
+    end
+  end
+
+  describe "#increase_priority" do
+    it "increases Task priority" do
+      task = create_task("(C) my task")
+
+      task.increase_priority
+
+      expect(task.priority).to eq("B")
+    end
+
+    it "does not increase Task priority when already at maximum" do
+      task = create_task("(A) my task")
+
+      task.increase_priority
+
+      expect(task.priority).to eq("A")
+    end
+
+    it "leaves Task without priority unchanged" do
+      task = create_task("my task")
+
+      task.increase_priority
+
+      expect(task.priority).to be nil
+      expect(task.raw).to eq("my task")
+    end
+  end
+
+  describe "#decrease_priority" do
+    it "decreases Task priority" do
+      task = create_task("(C) my task")
+
+      task.decrease_priority
+
+      expect(task.priority).to eq("D")
+    end
+
+    it "does not decrease Task priority when already at minimum" do
+      task = create_task("(Z) my task")
+
+      task.decrease_priority
+
+      expect(task.priority).to eq("Z")
+    end
+
+    it "leaves Task without priority unchanged" do
+      task = create_task("my task")
+
+      task.decrease_priority
+
+      expect(task.priority).to be nil
+      expect(task.raw).to eq("my task")
+    end
+  end
+
+  describe "#completion_date=" do
+    it "sets Task completion date" do
+      task = create_task("x my task")
+
+      task.completion_date = Date.new(2020, 8, 10)
+
+      expect(task.completion_date).to eq(Date.new(2020, 8, 10))
+      expect(task.raw).to eq("x 2020-08-10 my task")
+    end
+  end
+
+  describe "#creation_date=" do
+    it "sets Task creation date" do
+      task = create_task("my task")
+
+      task.creation_date = Date.new(2020, 8, 10)
+
+      expect(task.creation_date).to eq(Date.new(2020, 8, 10))
+      expect(task.raw).to eq("2020-08-10 my task")
+    end
+  end
+
+  describe "#description=" do
+    it "replaces current description with parsed new description" do
+      task = create_task("(B) 2020-08-22 do some things @home")
+
+      task.description = "do other things @work"
+
+      expect(task.raw).to eq("(B) 2020-08-22 do other things @work")
+      expect(task.description).to eq("do other things @work")
+    end
+  end
 end

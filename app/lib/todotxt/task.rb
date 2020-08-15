@@ -7,32 +7,39 @@ class Todotxt
       parser_output = Parser.new.parse(raw_task)
       transform_output = Transform.new.apply(parser_output)
 
-      new(raw: raw_task, **transform_output[:task])
+      new(**transform_output[:task])
     end
 
     private_class_method :new
 
-    attr_reader :raw
-    attr_reader :priority
-    attr_reader :completion_date
-    attr_reader :creation_date
+    attr_accessor :priority
+    attr_accessor :completion_date
+    attr_accessor :creation_date
 
     delegate :<=>, to: :raw
 
     def initialize(
-      raw:,
       description:,
       complete: false,
       priority: nil,
       completion_date: nil,
       creation_date: nil
     )
-      @raw = raw
       @parsed_description = description
-      @complete = complete
+      @complete = !!complete
       @priority = priority&.to_s
       @completion_date = completion_date
       @creation_date = creation_date
+    end
+
+    def raw
+      [
+        complete? && "x",
+        priority && "(#{priority})",
+        completion_date,
+        creation_date,
+        *parsed_description
+      ].select { |x| x }.join(" ")
     end
 
     def complete?
@@ -61,10 +68,35 @@ class Todotxt
       }.to_h
     end
 
+    def complete=(value)
+      return if complete == value
+      @complete = value
+      self.completion_date = if complete?
+        Date.today
+      end
+    end
+
+    def complete!
+      self.complete = true
+    end
+
+    def increase_priority
+      decrement_priority_char(1)
+    end
+
+    def decrease_priority
+      decrement_priority_char(-1)
+    end
+
+    def description=(new_description)
+      self.parsed_description =
+        Task.parse(new_description).send(:parsed_description)
+    end
+
     private
 
     attr_reader :complete
-    attr_reader :parsed_description
+    attr_accessor :parsed_description
 
     def join_parts(parts)
       parts.map(&:to_s).join(" ")
@@ -72,6 +104,13 @@ class Todotxt
 
     def description_parts_of_type(type)
       parsed_description.select { |part| part.is_a?(type) }
+    end
+
+    def decrement_priority_char(delta)
+      return unless priority
+      new_priority = (priority.ord - delta).chr
+      return unless ("A".."Z").cover?(new_priority)
+      self.priority = new_priority
     end
   end
 end

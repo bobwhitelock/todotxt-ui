@@ -29,6 +29,8 @@ Below took some bashing, so may be missing a step/need adjustment.
 ```bash
 # Remote
 dokku apps:create todotxt
+dokku buildpacks:add todotxt https://github.com/heroku/heroku-buildpack-ruby.git
+dokku buildpacks:add todotxt https://github.com/heroku/heroku-buildpack-nodejs.git
 dokku domains:add todotxt "$public_domain"
 dokku domains:remove todotxt todotxt.li1514-40.members.linode.com
 dokku plugins:install letsencrypt

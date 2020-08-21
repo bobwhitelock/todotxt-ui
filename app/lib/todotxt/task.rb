@@ -64,7 +64,7 @@ class Todotxt
 
     def tags
       description_parts_of_type(Tag).map { |tag|
-        [tag.key.to_sym, tag.value]
+        [tag.key, tag.value]
       }.to_h
     end
 

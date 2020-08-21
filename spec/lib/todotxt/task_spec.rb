@@ -240,4 +240,91 @@ RSpec.describe Todotxt::Task do
       expect(task.description).to eq("do other things @work")
     end
   end
+
+  describe "#contexts=" do
+    it "adds any new contexts" do
+      task = create_task("my task @foo")
+
+      task.contexts = ["@foo", "@bar"]
+
+      expect(task.contexts).to eq(["@foo", "@bar"])
+      expect(task.raw).to eq("my task @foo @bar")
+    end
+
+    it "removes any existing contexts not included" do
+      task = create_task("my task @foo")
+
+      task.contexts = ["@bar"]
+
+      expect(task.contexts).to eq(["@bar"])
+      expect(task.raw).to eq("my task @bar")
+    end
+
+    it "preserves order and number of contexts" do
+      task = create_task("@foo text @foo @bar text @baz @bar")
+
+      task.contexts = ["@foo", "@baz", "@baz", "@new"]
+
+      expect(task.contexts).to eq(["@foo", "@baz", "@baz", "@new"])
+      expect(task.raw).to eq("@foo text text @baz @baz @new")
+    end
+  end
+
+  describe "#projects=" do
+    it "adds any new projects" do
+      task = create_task("my task +foo")
+
+      task.projects = ["+foo", "+bar"]
+
+      expect(task.projects).to eq(["+foo", "+bar"])
+      expect(task.raw).to eq("my task +foo +bar")
+    end
+
+    it "removes any existing projects not included" do
+      task = create_task("my task +foo")
+
+      task.projects = ["+bar"]
+
+      expect(task.projects).to eq(["+bar"])
+      expect(task.raw).to eq("my task +bar")
+    end
+
+    it "preserves order and number of projects" do
+      task = create_task("+foo text +foo +bar text +baz +bar")
+
+      task.projects = ["+foo", "+baz", "+baz", "+new"]
+
+      expect(task.projects).to eq(["+foo", "+baz", "+baz", "+new"])
+      expect(task.raw).to eq("+foo text text +baz +baz +new")
+    end
+  end
+
+  describe "#tags=" do
+    it "adds any new tags" do
+      task = create_task("my task foo:1")
+
+      task.tags = {foo: 1, bar: 2}
+
+      expect(task.tags).to eq({foo: "1", bar: "2"})
+      expect(task.raw).to eq("my task foo:1 bar:2")
+    end
+
+    it "removes any existing tags not included" do
+      task = create_task("my task foo:1")
+
+      task.tags = {bar: 2}
+
+      expect(task.tags).to eq({bar: "2"})
+      expect(task.raw).to eq("my task bar:2")
+    end
+
+    it "updates tag values in place" do
+      task = create_task("my task foo:1 text")
+
+      task.tags = {foo: 2}
+
+      expect(task.tags).to eq({foo: "2"})
+      expect(task.raw).to eq("my task foo:2 text")
+    end
+  end
 end

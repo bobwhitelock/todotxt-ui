@@ -93,6 +93,55 @@ class Todotxt
         Task.parse(new_description).send(:parsed_description)
     end
 
+    def contexts=(new_contexts)
+      contexts_to_include = new_contexts.map { |c| Context.new(c) }
+      parsed_description.map! { |part|
+        if !part.is_a?(Context)
+          part
+        elsif contexts_to_include.include?(part)
+          Utils.delete_first(contexts_to_include, part)
+          part
+        end
+      }.compact!
+
+      contexts_to_include.each do |context|
+        parsed_description << context
+      end
+    end
+
+    def projects=(new_projects)
+      projects_to_include = new_projects.map { |c| Project.new(c) }
+      parsed_description.map! { |part|
+        if !part.is_a?(Project)
+          part
+        elsif projects_to_include.include?(part)
+          Utils.delete_first(projects_to_include, part)
+          part
+        end
+      }.compact!
+
+      projects_to_include.each do |project|
+        parsed_description << project
+      end
+    end
+
+    def tags=(new_tags)
+      tags_to_include = new_tags.map { |k, v| Tag.new(key: k, value: v) }
+      parsed_description.map! { |part|
+        if !part.is_a?(Tag)
+          part
+        elsif tags_to_include.map(&:key).include?(part.key)
+          Utils.delete_first(tags_to_include) do |tag|
+            tag.key == part.key
+          end
+        end
+      }.compact!
+
+      tags_to_include.each do |tag|
+        parsed_description << tag
+      end
+    end
+
     private
 
     attr_reader :complete

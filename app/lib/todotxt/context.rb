@@ -1,14 +1,4 @@
 class Todotxt
-  class Context
-    attr_reader :value
-    alias to_s value
-
-    def initialize(value)
-      @value = value.to_s
-    end
-
-    def ==(other_context)
-      other_context.is_a?(Context) && other_context.value == value
-    end
+  class Context < DescriptionPart
   end
 end

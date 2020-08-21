@@ -1,15 +1,14 @@
 class Todotxt
-  class Tag
+  class Tag < DescriptionPart
     attr_reader :key
-    attr_reader :value
 
     def initialize(key:, value:)
+      super(value)
       @key = key.to_sym
-      @value = value.to_s
     end
 
     def ==(other_tag)
-      other_tag.is_a?(Tag) && other_tag.key == key && other_tag.value == value
+      super && other_tag.key == key
     end
 
     def to_s

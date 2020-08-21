@@ -4,8 +4,8 @@ class Todotxt
     attr_reader :value
 
     def initialize(key:, value:)
-      @key = key
-      @value = value
+      @key = key.to_sym
+      @value = value.to_s
     end
 
     def ==(other_tag)

@@ -44,7 +44,7 @@ class Todotxt
       return input_task if input_task.is_a?(Task)
       input_task = input_task.strip
       return nil if input_task.empty?
-      Task.parse(input_task)
+      Task.new(input_task)
     end
   end
 end

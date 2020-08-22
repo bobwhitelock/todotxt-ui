@@ -8,11 +8,11 @@ RSpec.describe Todotxt::Task do
     expect(task).to be_a(Comparable)
   end
 
-  describe ".parse" do
+  describe ".new" do
     it "parses a simple todotxt task into a Task" do
       raw_task = "do things @home"
 
-      task = described_class.parse(raw_task)
+      task = described_class.new(raw_task)
 
       expect(task).not_to be_complete
       expect(task.priority).to be nil
@@ -29,7 +29,7 @@ RSpec.describe Todotxt::Task do
     it "parses a complex todotxt task into a Task" do
       raw_task = "x (B) 2020-08-02 2019-07-01 do things @home and other stuff +important +housework due:2020-08-09"
 
-      task = described_class.parse(raw_task)
+      task = described_class.new(raw_task)
 
       expect(task).to be_complete
       expect(task.priority).to eq("B")
@@ -48,7 +48,7 @@ RSpec.describe Todotxt::Task do
     it "exposes parsed text as strings" do
       raw_task = "(A) stuff @context +project tag_key:tag_value"
 
-      task = described_class.parse(raw_task)
+      task = described_class.new(raw_task)
 
       expect(task.priority).to be_a(String)
       expect(task.description).to be_a(String)
@@ -64,15 +64,9 @@ RSpec.describe Todotxt::Task do
     it "trims any whitespace from passed raw task" do
       raw_task = "   a messy task  \n"
 
-      task = described_class.parse(raw_task)
+      task = described_class.new(raw_task)
 
       expect(task.raw).to eq("a messy task")
-    end
-  end
-
-  describe ".new" do
-    it "is private" do
-      expect(described_class).not_to respond_to(:new)
     end
   end
 

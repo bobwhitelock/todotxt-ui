@@ -2,35 +2,11 @@ class Todotxt
   class Task
     include Comparable
 
-    def self.parse(raw_task)
-      raw_task = raw_task.strip
-      parser_output = Parser.new.parse(raw_task)
-      transform_output = Transform.new.apply(parser_output)
-
-      new(**transform_output[:task])
-    end
-
-    private_class_method :new
-
     attr_accessor :priority
     attr_accessor :completion_date
     attr_accessor :creation_date
 
     delegate :<=>, to: :raw
-
-    def initialize(
-      description:,
-      complete: false,
-      priority: nil,
-      completion_date: nil,
-      creation_date: nil
-    )
-      @parsed_description = description
-      @complete = !!complete
-      @priority = priority&.to_s
-      @completion_date = completion_date
-      @creation_date = creation_date
-    end
 
     def raw
       [
@@ -90,7 +66,7 @@ class Todotxt
 
     def description=(new_description)
       self.parsed_description =
-        Task.parse(new_description).send(:parsed_description)
+        Task.new(new_description).send(:parsed_description)
     end
 
     def contexts=(new_contexts)
@@ -146,6 +122,28 @@ class Todotxt
 
     attr_reader :complete
     attr_accessor :parsed_description
+
+    def parse_and_initialize(raw_task)
+      raw_task = raw_task.strip
+      parser_output = Parser.new.parse(raw_task)
+      transform_output = Transform.new.apply(parser_output)
+      initialize_task_data(original_raw: raw_task, **transform_output[:task])
+    end
+    alias initialize parse_and_initialize
+
+    def initialize_task_data(
+      description:,
+      complete: false,
+      priority: nil,
+      completion_date: nil,
+      creation_date: nil
+    )
+      @parsed_description = description
+      @complete = !!complete
+      @priority = priority&.to_s
+      @completion_date = completion_date
+      @creation_date = creation_date
+    end
 
     def join_parts(parts)
       parts.map(&:to_s).join(" ")

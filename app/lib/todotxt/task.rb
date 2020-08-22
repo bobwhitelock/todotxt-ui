@@ -18,6 +18,14 @@ class Todotxt
       ].select { |x| x }.join(" ")
     end
 
+    def dirty?
+      raw != original_raw
+    end
+
+    def reset
+      parse_and_initialize(original_raw)
+    end
+
     def complete?
       complete
     end
@@ -120,6 +128,7 @@ class Todotxt
 
     private
 
+    attr_reader :original_raw
     attr_reader :complete
     attr_accessor :parsed_description
 
@@ -132,12 +141,14 @@ class Todotxt
     alias initialize parse_and_initialize
 
     def initialize_task_data(
+      original_raw:,
       description:,
       complete: false,
       priority: nil,
       completion_date: nil,
       creation_date: nil
     )
+      @original_raw = original_raw
       @parsed_description = description
       @complete = !!complete
       @priority = priority&.to_s

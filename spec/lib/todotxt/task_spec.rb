@@ -89,6 +89,50 @@ RSpec.describe Todotxt::Task do
     end
   end
 
+  describe "#dirty?" do
+    it "returns true if Task has been modified from original raw value loaded" do
+      task = create_task("my task")
+      task.contexts = ["@foo"]
+
+      expect(task).to be_dirty
+    end
+
+    it "returns false if Task has not been modified" do
+      task = create_task("my task")
+
+      expect(task).not_to be_dirty
+    end
+
+    it "returns false if Task has been modified but retains same raw value" do
+      task = create_task("my task")
+      task.contexts = ["@foo"]
+      task.contexts = []
+
+      expect(task).not_to be_dirty
+    end
+
+    it "returns false for unmodified Task created with leading/trailing whitespace" do
+      task = create_task("  my task   ")
+
+      expect(task).not_to be_dirty
+    end
+
+    # XXX Implement this once saving is possible.
+    it "returns false if Task has been modified and then saved"
+  end
+
+  describe "#reset" do
+    it "resets Task to original raw value loaded" do
+      task = create_task("my task")
+      task.projects = ["+foo", "+bar"]
+      task.priority = "C"
+
+      task.reset
+
+      expect(task.raw).to eq("my task")
+    end
+  end
+
   describe "#tags" do
     it "provides a hash of Task tag keys to values" do
       task = create_task("my task foo:bar baz:5")

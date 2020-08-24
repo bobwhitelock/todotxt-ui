@@ -36,6 +36,16 @@ class Todotxt
       tasks.dup
     end
 
+    def to_s
+      parts = [
+        "#{self.class}:",
+        file ? "file=\"#{file}\"" : nil,
+        "tasks=#{tasks.map(&:raw)}"
+      ].compact
+      "<#{parts.join(" ")}>"
+    end
+    alias inspect to_s
+
     private
 
     attr_reader :tasks

@@ -91,4 +91,25 @@ RSpec.describe Todotxt::List do
       ])
     end
   end
+
+  describe "#to_s and #inspect" do
+    it "returns useful representation of List" do
+      list = described_class.new(["do some things", "other things"])
+
+      expected_result = '<Todotxt::List: tasks=["do some things", "other things"]>'
+      expect(list.to_s).to eq(expected_result)
+      expect(list.inspect).to eq(expected_result)
+    end
+
+    it "includes file if set for List" do
+      list = described_class.new(
+        ["do some things", "other things"],
+        file: "/tmp/foo.todo"
+      )
+
+      expected_result = '<Todotxt::List: file="/tmp/foo.todo" tasks=["do some things", "other things"]>'
+      expect(list.to_s).to eq(expected_result)
+      expect(list.inspect).to eq(expected_result)
+    end
+  end
 end

@@ -8,6 +8,11 @@ class Todotxt
 
     delegate :<=>, to: :raw
 
+    def to_s
+      "<#{self.class}: \"#{raw}\">"
+    end
+    alias inspect to_s
+
     def raw
       [
         complete? && "x",

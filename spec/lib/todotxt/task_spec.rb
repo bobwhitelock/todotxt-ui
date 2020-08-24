@@ -89,6 +89,16 @@ RSpec.describe Todotxt::Task do
     end
   end
 
+  describe "#to_s and #inspect" do
+    it "returns useful representation of Task" do
+      task = create_task("do some things")
+
+      expected_result = '<Todotxt::Task: "do some things">'
+      expect(task.to_s).to eq(expected_result)
+      expect(task.inspect).to eq(expected_result)
+    end
+  end
+
   describe "#dirty?" do
     it "returns true if Task has been modified from original raw value loaded" do
       task = create_task("my task")

@@ -112,4 +112,53 @@ RSpec.describe Todotxt::List do
       expect(list.inspect).to eq(expected_result)
     end
   end
+
+  describe "Array method delegation" do
+    it "only responds to Array methods" do
+      list = described_class.new
+      array_methods = [:size, :map!, :select]
+      non_array_methods = [:size!, :foo]
+
+      array_methods.each do |method|
+        expect(list).to respond_to(method)
+      end
+      non_array_methods.each do |method|
+        expect(list).not_to respond_to(method)
+        expect { list.public_send(method) }.to raise_error(NoMethodError)
+      end
+    end
+
+    it "delegates all Array methods to internal tasks Array" do
+      list = described_class.new(["(A) foo", "(B) bar"])
+
+      size = list.size
+      descriptions = list.map(&:description)
+
+      expect(size).to eq(2)
+      expect(descriptions).to eq(["foo", "bar"])
+    end
+
+    it "converts any strings added to List to Tasks" do
+      list = described_class.new(["foo"])
+
+      result = list << "bar"
+
+      # New Task should appear as a Task (rather than String) both when later
+      # converting the List to an Array and in the return value from calling
+      # the delegated method (if this is returning the Tasks Array); doing the
+      # former but not the latter would be confusing.
+      expected_tasks = [create_task("foo"), create_task("bar")]
+      expect(list.to_a).to eq(expected_tasks)
+      expect(result).to eq(expected_tasks)
+    end
+
+    it "prevents blank Tasks from being included in List" do
+      list = described_class.new(["foo"])
+
+      list << ""
+      list.concat([" ", "\n\n", "\t"])
+
+      expect(list.to_a).to eq([create_task("foo")])
+    end
+  end
 end

@@ -28,7 +28,7 @@ class Todotxt
     attr_reader :file
 
     def initialize(tasks = [], file: nil)
-      @tasks = tasks.map { |task| to_task(task) }.compact
+      @tasks = to_tasks(tasks)
       @file = file
     end
 
@@ -46,15 +46,29 @@ class Todotxt
     end
     alias inspect to_s
 
+    def respond_to_missing?(method, include_all)
+      tasks.respond_to?(method, include_all)
+    end
+
+    def method_missing(method, *args, &block)
+      super unless respond_to?(method)
+      result = tasks.public_send(method, *args, &block)
+      result == tasks ? self.tasks = to_tasks(tasks) : result
+    end
+
     private
 
-    attr_reader :tasks
+    attr_accessor :tasks
 
-    def to_task(input_task)
-      return input_task if input_task.is_a?(Task)
-      input_task = input_task.strip
-      return nil if input_task.empty?
-      Task.new(input_task)
+    def to_tasks(maybe_tasks)
+      maybe_tasks.map { |task| to_task(task) }.compact
+    end
+
+    def to_task(maybe_task)
+      return maybe_task if maybe_task.is_a?(Task)
+      raw_task = maybe_task.strip
+      return nil if raw_task.empty?
+      Task.new(raw_task)
     end
   end
 end

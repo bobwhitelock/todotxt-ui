@@ -56,6 +56,18 @@ class Todotxt
       result == tasks ? self.tasks = to_tasks(tasks) : result
     end
 
+    def save(file_path = nil)
+      save_file = file_path || file
+      raise Todotxt::UsageError, "No file set for #{self}" unless save_file
+      File.open(save_file, "w") do |f|
+        f.write(as_string)
+      end
+    end
+
+    def as_string
+      map(&:raw).join("\n") + "\n"
+    end
+
     private
 
     attr_accessor :tasks

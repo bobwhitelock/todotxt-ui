@@ -68,6 +68,17 @@ RSpec.describe Todotxt::Task do
 
       expect(task.raw).to eq("a messy task")
     end
+
+    it "allows creating empty Tasks" do
+      empty_tasks = [
+        described_class.new(""),
+        described_class.new,
+        described_class.new(nil)
+      ]
+
+      raw_tasks = empty_tasks.map(&:raw)
+      expect(raw_tasks).to eq(["", "", ""])
+    end
   end
 
   describe "#<=>" do

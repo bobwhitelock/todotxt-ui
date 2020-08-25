@@ -161,4 +161,54 @@ RSpec.describe Todotxt::List do
       expect(list.to_a).to eq([create_task("foo")])
     end
   end
+
+  describe "#save" do
+    context "when no arguments passed" do
+      it "saves List Tasks to configured file" do
+        file = Tempfile.new.path
+        list = described_class.new(["foo", "bar"], file: file)
+
+        list.save
+
+        file_content = File.read(file)
+        expect(file_content).to eq("foo\nbar\n")
+      end
+
+      it "raises when no configured file" do
+        list = described_class.new(["foo", "bar"])
+
+        expect {
+          list.save
+        }.to raise_error(Todotxt::UsageError, "No file set for #{list}")
+      end
+    end
+
+    context "when file path passed" do
+      it "saves List Tasks to given file" do
+        file = Tempfile.new.path
+        list = described_class.new(["foo", "bar"])
+
+        list.save(file)
+
+        file_content = File.read(file)
+        expect(file_content).to eq("foo\nbar\n")
+      end
+
+      it "raises default error if bad file path given" do
+        list = described_class.new(["foo", "bar"])
+
+        expect {
+          list.save("/some/non/existent/path")
+        }.to raise_error(Errno::ENOENT)
+      end
+    end
+  end
+
+  describe "#as_string" do
+    it "returns the raw content of List as would be saved" do
+      list = described_class.new(["foo", "bar"])
+
+      expect(list.as_string).to eq("foo\nbar\n")
+    end
+  end
 end

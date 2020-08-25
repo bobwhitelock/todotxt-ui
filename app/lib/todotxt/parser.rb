@@ -48,7 +48,7 @@ class Todotxt
     end
 
     rule(:description) do
-      description_part.repeat(1).as(:description)
+      description_part.repeat.as(:description)
     end
     rule(:description_part) do
       (project | context | key_value_tag | word) >> spaces?

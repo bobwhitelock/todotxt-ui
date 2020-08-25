@@ -137,7 +137,8 @@ class Todotxt
     attr_reader :complete
     attr_accessor :parsed_description
 
-    def parse_and_initialize(raw_task)
+    def parse_and_initialize(raw_task = "")
+      raw_task ||= ""
       raw_task = raw_task.strip
       parser_output = Parser.new.parse(raw_task)
       transform_output = Transform.new.apply(parser_output)

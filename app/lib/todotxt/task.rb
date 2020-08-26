@@ -77,6 +77,10 @@ class Todotxt
       decrement_priority_char(-1)
     end
 
+    def raw=(new_raw_task)
+      parse_and_initialize(new_raw_task)
+    end
+
     def description=(new_description)
       self.parsed_description =
         Task.new(new_description).send(:parsed_description)

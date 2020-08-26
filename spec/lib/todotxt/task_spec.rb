@@ -289,6 +289,19 @@ RSpec.describe Todotxt::Task do
     end
   end
 
+  describe "#raw=" do
+    it "replaces all parts of Task with parts of new parsed Task" do
+      task = create_task("(B) 2020-08-22 do some things @home")
+
+      task.raw = "2020-08-22 do other things @work"
+
+      expect(task.raw).to eq("2020-08-22 do other things @work")
+      expect(task.priority).to be nil
+      expect(task.creation_date).to eq(Date.new(2020, 8, 22))
+      expect(task.description).to eq("do other things @work")
+    end
+  end
+
   describe "#description=" do
     it "replaces current description with parsed new description" do
       task = create_task("(B) 2020-08-22 do some things @home")

@@ -15,7 +15,7 @@ class Todotxt
     rule(context: simple(:value)) { Context.new(value) }
 
     rule(metadatum: {key: simple(:key), value: simple(:value)}) do
-      Metadatum.new(key: key, value: value)
+      Metadatum.new(key, value)
     end
 
     def self.merge_words_in_parts(parts)

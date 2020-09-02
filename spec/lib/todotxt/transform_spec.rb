@@ -58,7 +58,7 @@ RSpec.describe Todotxt::Transform do
     expect(
       subject.apply(metadatum: {key: "mykey", value: "myvalue"})
     ).to eq(
-      Todotxt::Metadatum.new(key: "mykey", value: "myvalue")
+      Todotxt::Metadatum.new("mykey", "myvalue")
     )
   end
 end

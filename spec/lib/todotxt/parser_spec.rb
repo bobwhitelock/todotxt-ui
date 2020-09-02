@@ -161,7 +161,7 @@ RSpec.describe Todotxt::Parser do
         {project: "+proj1"},
         {context: "@work"},
         {project: "+proj2"},
-        {tag: {key: "due", value: "2038-02-01"}},
+        {metadatum: {key: "due", value: "2038-02-01"}},
         {word: "something_else"}
       ])
     }
@@ -183,23 +183,23 @@ RSpec.describe Todotxt::Parser do
     it { expect(subject.identifier).not_to parse("foo bar") }
   end
 
-  describe "key_value_tag" do
+  describe "metadatum" do
     it do
-      expect(subject.key_value_tag).to parse("mykey:myvalue").as(
-        tag: {key: "mykey", value: "myvalue"}
+      expect(subject.metadatum).to parse("mykey:myvalue").as(
+        metadatum: {key: "mykey", value: "myvalue"}
       )
     end
-    it { expect(subject.key_value_tag).not_to parse("mykey:myvalue:something_else") }
-    it { expect(subject.key_value_tag).not_to parse("my key:my value") }
+    it { expect(subject.metadatum).not_to parse("mykey:myvalue:something_else") }
+    it { expect(subject.metadatum).not_to parse("my key:my value") }
   end
 
-  describe "key_value_tag_identifier" do
-    it { expect(subject.key_value_tag_identifier).to parse("something") }
-    it { expect(subject.key_value_tag_identifier).to parse("5") }
-    it { expect(subject.key_value_tag_identifier).to parse("😎") }
+  describe "metadatum_identifier" do
+    it { expect(subject.metadatum_identifier).to parse("something") }
+    it { expect(subject.metadatum_identifier).to parse("5") }
+    it { expect(subject.metadatum_identifier).to parse("😎") }
     # This is the one difference from the regular `identifier`.
-    it { expect(subject.key_value_tag_identifier).not_to parse("with:some:colons") }
-    it { expect(subject.key_value_tag_identifier).not_to parse("foo bar") }
+    it { expect(subject.metadatum_identifier).not_to parse("with:some:colons") }
+    it { expect(subject.metadatum_identifier).not_to parse("foo bar") }
   end
 
   describe "space" do

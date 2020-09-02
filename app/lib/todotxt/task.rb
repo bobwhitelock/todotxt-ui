@@ -51,9 +51,9 @@ class Todotxt
       description_parts_of_type(Project).map(&:to_s)
     end
 
-    def tags
-      description_parts_of_type(Tag).map { |tag|
-        [tag.key, tag.value]
+    def metadata
+      description_parts_of_type(Metadatum).map { |d|
+        [d.key, d.value]
       }.to_h
     end
 
@@ -118,20 +118,20 @@ class Todotxt
       end
     end
 
-    def tags=(new_tags)
-      tags_to_include = new_tags.map { |k, v| Tag.new(key: k, value: v) }
+    def metadata=(new_metadata)
+      metadata_to_include = new_metadata.map { |k, v| Metadatum.new(key: k, value: v) }
       parsed_description.map! { |part|
-        if !part.is_a?(Tag)
+        if !part.is_a?(Metadatum)
           part
-        elsif tags_to_include.map(&:key).include?(part.key)
-          Utils.delete_first(tags_to_include) do |tag|
-            tag.key == part.key
+        elsif metadata_to_include.map(&:key).include?(part.key)
+          Utils.delete_first(metadata_to_include) do |d|
+            d.key == part.key
           end
         end
       }.compact!
 
-      tags_to_include.each do |tag|
-        parsed_description << tag
+      metadata_to_include.each do |d|
+        parsed_description << d
       end
     end
 

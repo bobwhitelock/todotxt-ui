@@ -1,5 +1,5 @@
 class Todotxt
-  class Tag < DescriptionPart
+  class Metadatum < DescriptionPart
     attr_reader :key
 
     def initialize(key:, value:)
@@ -7,8 +7,8 @@ class Todotxt
       @key = key.to_sym
     end
 
-    def ==(other_tag)
-      super && other_tag.key == key
+    def ==(other_metadatum)
+      super && other_metadatum.key == key
     end
 
     def to_s

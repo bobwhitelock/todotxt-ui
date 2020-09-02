@@ -2,7 +2,7 @@ class Todotxt
   class Metadatum < DescriptionPart
     attr_reader :key
 
-    def initialize(key:, value:)
+    def initialize(key, value)
       super(value)
       @key = key.to_sym
     end

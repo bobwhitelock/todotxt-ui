@@ -119,7 +119,7 @@ class Todotxt
     end
 
     def metadata=(new_metadata)
-      metadata_to_include = new_metadata.map { |k, v| Metadatum.new(key: k, value: v) }
+      metadata_to_include = new_metadata.map { |args| Metadatum.new(*args) }
       parsed_description.map! { |part|
         if !part.is_a?(Metadatum)
           part

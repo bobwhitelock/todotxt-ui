@@ -211,4 +211,80 @@ RSpec.describe Todotxt::List do
       expect(list.as_string).to eq("foo\nbar\n")
     end
   end
+
+  describe "#raw_tasks" do
+    it "returns array of raw text for all List Tasks" do
+      list = described_class.new(["foo", "bar"])
+
+      expect(list.raw_tasks).to eq(["foo", "bar"])
+    end
+  end
+
+  describe "#complete_tasks" do
+    it "returns only complete Tasks in the List" do
+      list = described_class.new([
+        "task 1",
+        "x task 2",
+        "task 3",
+        "x task 4"
+      ])
+
+      expect(list.complete_tasks).to eq([
+        create_task("x task 2"),
+        create_task("x task 4")
+      ])
+    end
+  end
+
+  describe "#incomplete_tasks" do
+    it "returns only incomplete Tasks in the List" do
+      list = described_class.new([
+        "task 1",
+        "x task 2",
+        "task 3",
+        "x task 4"
+      ])
+
+      expect(list.incomplete_tasks).to eq([
+        create_task("task 1"),
+        create_task("task 3")
+      ])
+    end
+  end
+
+  describe "#all_contexts" do
+    it "returns sorted, de-duplicated contexts for all List Tasks" do
+      list = described_class.new([
+        "task 1 @foo @bar +proj",
+        "task 2 @foo",
+        "task 3 @baz @bar"
+      ])
+
+      expect(list.all_contexts).to eq(["@bar", "@baz", "@foo"])
+    end
+  end
+
+  describe "#all_projects" do
+    it "returns sorted, de-duplicated projects for all List Tasks" do
+      list = described_class.new([
+        "task 1 +foo +bar @context",
+        "task 2 +foo",
+        "task 3 +baz +bar"
+      ])
+
+      expect(list.all_projects).to eq(["+bar", "+baz", "+foo"])
+    end
+  end
+
+  describe "#all_metadata_keys" do
+    it "returns sorted, de-duplicated metadata keys for all List Tasks" do
+      list = described_class.new([
+        "task 1 foo:1 bar:2 @context",
+        "task 2 foo:3",
+        "task 3 baz:4 bar:5"
+      ])
+
+      expect(list.all_metadata_keys).to eq([:bar, :baz, :foo])
+    end
+  end
 end

@@ -69,7 +69,31 @@ class Todotxt
     end
 
     def as_string
-      map(&:raw).join("\n") + "\n"
+      raw_tasks.join("\n") + "\n"
+    end
+
+    def raw_tasks
+      map(&:raw)
+    end
+
+    def complete_tasks
+      select(&:complete?)
+    end
+
+    def incomplete_tasks
+      select(&:incomplete?)
+    end
+
+    def all_contexts
+      unique_task_attribute(&:contexts)
+    end
+
+    def all_projects
+      unique_task_attribute(&:projects)
+    end
+
+    def all_metadata_keys
+      unique_task_attribute { |task| task.metadata.keys }
     end
 
     private
@@ -85,6 +109,10 @@ class Todotxt
       raw_task = maybe_task.strip
       return nil if raw_task.empty?
       Task.new(raw_task)
+    end
+
+    def unique_task_attribute(&block)
+      flat_map(&block).uniq.sort
     end
   end
 end

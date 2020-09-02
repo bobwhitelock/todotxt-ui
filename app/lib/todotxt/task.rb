@@ -35,6 +35,10 @@ class Todotxt
       complete
     end
 
+    def incomplete?
+      !complete?
+    end
+
     def description
       join_parts(parsed_description)
     end

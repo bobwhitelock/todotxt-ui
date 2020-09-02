@@ -51,7 +51,7 @@ class Todotxt
       description_part.repeat.as(:description)
     end
     rule(:description_part) do
-      (project | context | key_value_tag | word) >> spaces?
+      (project | context | metadatum | word) >> spaces?
     end
     rule(:word) { identifier.as(:word) }
 
@@ -59,14 +59,14 @@ class Todotxt
     rule(:context) { tag(:context, "@") }
     rule(:identifier) { match("[^\s]").repeat(1) }
 
-    rule(:key_value_tag) do
+    rule(:metadatum) do
       (
-        key_value_tag_identifier.as(:key) >>
+        metadatum_identifier.as(:key) >>
         str(":") >>
-        key_value_tag_identifier.as(:value)
-      ).as(:tag)
+        metadatum_identifier.as(:value)
+      ).as(:metadatum)
     end
-    rule(:key_value_tag_identifier) { match("[^\s:]").repeat(1) }
+    rule(:metadatum_identifier) { match("[^\s:]").repeat(1) }
 
     rule(:spaces?) { spaces.maybe }
     rule(:spaces) { space.repeat(1) }

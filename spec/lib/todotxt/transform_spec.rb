@@ -54,11 +54,11 @@ RSpec.describe Todotxt::Transform do
     )
   end
 
-  it "transforms key-value `tag`" do
+  it "transforms key-value metadata" do
     expect(
-      subject.apply(tag: {key: "mykey", value: "myvalue"})
+      subject.apply(metadatum: {key: "mykey", value: "myvalue"})
     ).to eq(
-      Todotxt::Tag.new(key: "mykey", value: "myvalue")
+      Todotxt::Metadatum.new(key: "mykey", value: "myvalue")
     )
   end
 end

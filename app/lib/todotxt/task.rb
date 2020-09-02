@@ -87,52 +87,24 @@ class Todotxt
     end
 
     def contexts=(new_contexts)
-      contexts_to_include = new_contexts.map { |c| Context.new(c) }
-      parsed_description.map! { |part|
-        if !part.is_a?(Context)
-          part
-        elsif contexts_to_include.include?(part)
-          Utils.delete_first(contexts_to_include, part)
-          part
-        end
-      }.compact!
-
-      contexts_to_include.each do |context|
-        parsed_description << context
-      end
+      assign_tags(new_tags: new_contexts, tag_class: Context)
     end
 
     def projects=(new_projects)
-      projects_to_include = new_projects.map { |c| Project.new(c) }
-      parsed_description.map! { |part|
-        if !part.is_a?(Project)
-          part
-        elsif projects_to_include.include?(part)
-          Utils.delete_first(projects_to_include, part)
-          part
-        end
-      }.compact!
-
-      projects_to_include.each do |project|
-        parsed_description << project
-      end
+      assign_tags(new_tags: new_projects, tag_class: Project)
     end
 
     def metadata=(new_metadata)
-      metadata_to_include = new_metadata.map { |args| Metadatum.new(*args) }
-      parsed_description.map! { |part|
-        if !part.is_a?(Metadatum)
-          part
-        elsif metadata_to_include.map(&:key).include?(part.key)
-          Utils.delete_first(metadata_to_include) do |d|
-            d.key == part.key
-          end
+      assign_tags(
+        new_tags: new_metadata,
+        tag_class: Metadatum,
+        tag_is_present: proc do |metadata, metadatum|
+          metadata.map(&:key).include?(metadatum.key)
+        end,
+        delete_tag: proc do |metadata, metadatum|
+          Utils.delete_first(metadata) { |d| d.key == metadatum.key }
         end
-      }.compact!
-
-      metadata_to_include.each do |d|
-        parsed_description << d
-      end
+      )
     end
 
     private
@@ -179,6 +151,32 @@ class Todotxt
       new_priority = (priority.ord - delta).chr
       return unless ("A".."Z").cover?(new_priority)
       self.priority = new_priority
+    end
+
+    def assign_tags(
+      new_tags:,
+      tag_class:,
+      tag_is_present: proc { |tags, tag| tags.include?(tag) },
+      delete_tag: proc { |tags, tag| Utils.delete_first(tags, tag) }
+    )
+      tags_to_include = new_tags.map { |tag_args| tag_class.new(*tag_args) }
+
+      parsed_description.map! { |part|
+        if !part.is_a?(tag_class)
+          # Leave other types of tags unchanged.
+          part
+        elsif tag_is_present.call(tags_to_include, part)
+          # Replace existing tag with new version (always identical to old
+          # version apart from in metadata case).
+          delete_tag.call(tags_to_include, part)
+        end
+        # Implicit else: delete existing tags not present in `new_tags`.
+      }.compact!
+
+      # Add any new tags.
+      tags_to_include.each do |tag|
+        parsed_description << tag
+      end
     end
   end
 end

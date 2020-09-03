@@ -25,6 +25,10 @@ class Todotxt
       end
     end
 
+    # Undefine `Kernel#select` on this class, which isn't useful, and so
+    # `select` will be handled via `method_missing` instead.
+    undef select
+
     attr_reader :file
 
     def initialize(tasks = [], file: nil)

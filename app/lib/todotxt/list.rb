@@ -57,7 +57,9 @@ class Todotxt
     def method_missing(method, *args, &block)
       super unless respond_to?(method)
       result = tasks.public_send(method, *args, &block)
-      result == tasks ? self.tasks = to_tasks(tasks) : result
+      return_tasks = result == tasks
+      self.tasks = to_tasks(tasks)
+      return_tasks ? tasks : result
     end
 
     def save(file_path = nil)

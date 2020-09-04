@@ -162,6 +162,15 @@ RSpec.describe Todotxt::List do
       expect(result).to eq(expected_tasks)
     end
 
+    it "converts any strings replaced in List to Tasks" do
+      list = described_class.new(["foo"])
+
+      list[0] = "bar"
+
+      expected_tasks = [create_task("bar")]
+      expect(list.to_a).to eq(expected_tasks)
+    end
+
     it "prevents blank Tasks from being included in List" do
       list = described_class.new(["foo"])
 

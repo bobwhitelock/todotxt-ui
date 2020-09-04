@@ -92,6 +92,16 @@ RSpec.describe Todotxt::List do
     end
   end
 
+  describe "#file=" do
+    it "assigns `file` for List" do
+      list = described_class.new
+
+      list.file = "/some/path"
+
+      expect(list.file).to eq("/some/path")
+    end
+  end
+
   describe "#to_s and #inspect" do
     it "returns useful representation of List" do
       list = described_class.new(["do some things", "other things"])
@@ -217,6 +227,113 @@ RSpec.describe Todotxt::List do
       list = described_class.new(["foo", "bar"])
 
       expect(list.raw_tasks).to eq(["foo", "bar"])
+    end
+  end
+
+  describe "#reload" do
+    let :file do
+      Tempfile.new.tap do |f|
+        f << "task 1\n"
+        f << "task 2\n"
+        f.write
+        f.flush
+        f.rewind
+      end
+    end
+
+    it "reloads List Tasks from configured `file`" do
+      list = described_class.new(file: file.path)
+
+      result = list.reload
+
+      expect(list.to_a).to eq([
+        create_task("task 1"),
+        create_task("task 2")
+      ])
+      expect(result).to eq(list)
+    end
+
+    it "raises when no configured file" do
+      list = described_class.new
+
+      expect {
+        list.reload
+      }.to raise_error(Todotxt::UsageError, "No file set for #{list}")
+    end
+  end
+
+  describe "#archive_to" do
+    subject do
+      described_class.new([
+        "task 1",
+        "x task 2",
+        "task 3",
+        "x task 4"
+      ])
+    end
+
+    let :archive_file do
+      Tempfile.new.tap do |f|
+        f << "x existing task\n"
+        f.write
+        f.flush
+        f.rewind
+      end
+    end
+
+    let :archive_list do
+      described_class.load(archive_file.path)
+    end
+
+    let :expected_list_tasks do
+      [
+        create_task("task 1"),
+        create_task("task 3")
+      ]
+    end
+
+    let :expected_archive_tasks do
+      [
+        create_task("x existing task"),
+        create_task("x task 2"),
+        create_task("x task 4")
+      ]
+    end
+
+    it "saves List Tasks when List has `file` configured" do
+      subject.file = Tempfile.new.path
+
+      subject.archive_to(archive_file)
+
+      expect(subject.reload.to_a).to eq(expected_list_tasks)
+    end
+
+    context "given file path" do
+      it "archives completed List Tasks to given file" do
+        subject.archive_to(archive_file.path)
+
+        expect(subject.to_a).to eq(expected_list_tasks)
+        expect(archive_list.to_a).to eq(expected_archive_tasks)
+      end
+    end
+
+    context "given file object" do
+      it "archives completed List Tasks to given file" do
+        subject.archive_to(archive_file)
+
+        expect(subject.to_a).to eq(expected_list_tasks)
+        expect(archive_list.to_a).to eq(expected_archive_tasks)
+      end
+    end
+
+    context "given List object" do
+      it "archives completed List Tasks to given other List" do
+        subject.archive_to(archive_list)
+
+        expect(subject.to_a).to eq(expected_list_tasks)
+        expect(archive_list.to_a).to eq(expected_archive_tasks)
+        expect(archive_list.reload.to_a).to eq(expected_archive_tasks)
+      end
     end
   end
 

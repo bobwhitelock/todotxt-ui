@@ -21,7 +21,7 @@ class Todotxt
       end
 
       def load_from_path(path)
-        new(File.readlines(path), file: path)
+        new(file: path).reload
       end
     end
 
@@ -29,7 +29,7 @@ class Todotxt
     # `select` will be handled via `method_missing` instead.
     undef select
 
-    attr_reader :file
+    attr_accessor :file
 
     def initialize(tasks = [], file: nil)
       @tasks = to_tasks(tasks)
@@ -62,7 +62,7 @@ class Todotxt
 
     def save(file_path = nil)
       save_file = file_path || file
-      raise Todotxt::UsageError, "No file set for #{self}" unless save_file
+      verify_file!(save_file)
       File.open(save_file, "w") do |f|
         f.write(as_string)
       end
@@ -74,6 +74,21 @@ class Todotxt
 
     def raw_tasks
       map(&:raw)
+    end
+
+    def reload
+      verify_file!(file)
+      self.tasks = to_tasks(File.readlines(file))
+      self
+    end
+
+    def archive_to(archive_file_or_list)
+      archive_list = to_list(archive_file_or_list)
+      archive_list.concat(complete_tasks)
+      archive_list.save
+
+      self.tasks = incomplete_tasks
+      save if file
     end
 
     def complete_tasks
@@ -109,6 +124,15 @@ class Todotxt
       raw_task = maybe_task.strip
       return nil if raw_task.empty?
       Task.new(raw_task)
+    end
+
+    def verify_file!(file)
+      raise Todotxt::UsageError, "No file set for #{self}" unless file
+    end
+
+    def to_list(maybe_list)
+      return maybe_list if maybe_list.is_a?(List)
+      self.class.load(maybe_list)
     end
 
     def unique_task_attribute(&block)

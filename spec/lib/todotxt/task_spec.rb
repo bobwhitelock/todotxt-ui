@@ -276,6 +276,17 @@ RSpec.describe Todotxt::Task do
       expect(task.completion_date).to eq(Date.new(2020, 8, 10))
       expect(task.raw).to eq("x 2020-08-10 my task")
     end
+
+    it "raises if Task is not complete" do
+      task = create_task("my task")
+
+      expect {
+        task.completion_date = Date.new(2020, 8, 10)
+      }.to raise_error(
+        Todotxt::UsageError,
+        "Cannot set `completion_date` for incomplete task #{task}"
+      )
+    end
   end
 
   describe "#creation_date=" do

@@ -271,6 +271,48 @@ RSpec.describe Todotxt::List do
     end
   end
 
+  describe "#dirty?" do
+    subject do
+      described_class.new(["foo", "bar"])
+    end
+
+    it "returns true if any List Task has been modified from original value on creation" do
+      subject[0].contexts += ["@work"]
+
+      expect(subject).to be_dirty
+    end
+
+    it "returns false if no List Tasks have been modified" do
+      expect(subject).not_to be_dirty
+    end
+
+    it "returns true if a List Task has been added" do
+      subject << "a task"
+
+      expect(subject).to be_dirty
+    end
+
+    it "returns true if a List Task has been deleted" do
+      subject.reject! { |task| task.raw == "bar" }
+
+      expect(subject).to be_dirty
+    end
+
+    it "returns false if List Tasks have been modified but the List is the same as created" do
+      subject.reject! { |task| task.raw == "bar" }
+      subject << "bar"
+
+      expect(subject).not_to be_dirty
+    end
+
+    it "returns false if List Tasks have been modified and then saved" do
+      subject << "a task"
+      subject.save(Tempfile.new)
+
+      expect(subject).not_to be_dirty
+    end
+  end
+
   describe "#archive_to" do
     subject do
       described_class.new([

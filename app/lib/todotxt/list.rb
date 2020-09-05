@@ -33,6 +33,7 @@ class Todotxt
 
     def initialize(tasks = [], file: nil)
       @tasks = to_tasks(tasks)
+      @original_tasks = @tasks.dup
       @file = file
     end
 
@@ -68,6 +69,7 @@ class Todotxt
       File.open(save_file, "w") do |f|
         f.write(as_string)
       end
+      self.original_tasks = tasks
     end
 
     def as_string
@@ -82,6 +84,10 @@ class Todotxt
       verify_file!(file)
       self.tasks = to_tasks(File.readlines(file))
       self
+    end
+
+    def dirty?
+      any?(&:dirty?) || original_tasks != tasks
     end
 
     def archive_to(archive_file_or_list)
@@ -116,6 +122,7 @@ class Todotxt
     private
 
     attr_accessor :tasks
+    attr_accessor :original_tasks
 
     def to_tasks(maybe_tasks)
       maybe_tasks.map { |task| to_task(task) }.compact

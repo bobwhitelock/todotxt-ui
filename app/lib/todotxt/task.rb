@@ -3,7 +3,7 @@ class Todotxt
     include Comparable
 
     attr_accessor :priority
-    attr_accessor :completion_date
+    attr_reader :completion_date
     attr_accessor :creation_date
 
     delegate :<=>, to: :raw
@@ -71,6 +71,14 @@ class Todotxt
 
     def complete!
       self.complete = true
+    end
+
+    def completion_date=(new_completion_date)
+      if new_completion_date && incomplete?
+        raise Todotxt::UsageError,
+          "Cannot set `completion_date` for incomplete task #{self}"
+      end
+      @completion_date = new_completion_date
     end
 
     def increase_priority

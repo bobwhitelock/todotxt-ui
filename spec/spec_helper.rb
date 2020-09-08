@@ -84,4 +84,15 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
+
+  # Override Parslet `parse` matcher to always set `trace` option, so useful
+  # output always given when a parsing test fails. Inspired by
+  # https://github.com/rspec/rspec-mocks/issues/1230#issuecomment-399806414.
+  module ParseExpectation
+    def parse(input, opts = {}, &block)
+      opts = {**opts, trace: true}
+      super(input, opts, &block)
+    end
+  end
+  config.include ParseExpectation
 end

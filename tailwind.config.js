@@ -14,4 +14,8 @@ module.exports = {
     opacity: ["responsive", "hover", "focus", "disabled"],
   },
   plugins: [],
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
 };

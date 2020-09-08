@@ -14,6 +14,7 @@ module.exports = {
     opacity: ["responsive", "hover", "focus", "disabled"],
   },
   plugins: [],
+  purge: ["app/**/*.js", "app/**/*.html", "app/**/*.html.erb", "app/**/*.rb"],
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,

@@ -29,13 +29,13 @@ export function addClassEventHandler(
 ) {
   const { passThrough, runOnAttach } = options;
 
-  forEachWithClass(className, element => {
+  forEachWithClass(className, (element) => {
     const runHandler = () => handlerFunction(element, passThrough);
     if (runOnAttach) {
       runHandler();
     }
 
-    element.addEventListener(eventName, event => {
+    element.addEventListener(eventName, (event) => {
       event.preventDefault();
       runHandler();
     });

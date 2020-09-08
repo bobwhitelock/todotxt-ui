@@ -5,12 +5,12 @@ import {
   addClassEventHandler,
   forEachWithClass,
   scrollToBottom,
-  scrollToTop
+  scrollToTop,
 } from "framework";
 
 turbolinksPersistScroll("js-turbolinks-persist-scroll");
 
-window.addEventListener("turbolinks:load", function() {
+window.addEventListener("turbolinks:load", function () {
   const initialData = document.getElementById("js-initial-data");
   const projects = JSON.parse(initialData.getAttribute("data-projects"));
   const contexts = JSON.parse(initialData.getAttribute("data-contexts"));
@@ -23,9 +23,9 @@ window.addEventListener("turbolinks:load", function() {
   addClassEventHandler(tasksFormTextarea, "input", disableSubmitWhenUnchanged, {
     passThrough: {
       submitButtonClass: tasksFormSubmit,
-      originalContentAttr: "data-original-content"
+      originalContentAttr: "data-original-content",
     },
-    runOnAttach: true
+    runOnAttach: true,
   });
 
   addTagsAutocompletion(tasksFormTextarea, projects, contexts);
@@ -37,7 +37,7 @@ function disableSubmitWhenUnchanged(
 ) {
   const originalContent = element.getAttribute(originalContentAttr);
 
-  forEachWithClass(submitButtonClass, button => {
+  forEachWithClass(submitButtonClass, (button) => {
     if (element.value.trim() === originalContent.trim()) {
       button.setAttribute("disabled", "");
     } else {
@@ -50,15 +50,15 @@ function addTagsAutocompletion(className, projects, contexts) {
   const tribute = new Tribute({
     collection: [
       { values: toTributeValues(projects), trigger: "+" },
-      { values: toTributeValues(contexts), trigger: "@" }
+      { values: toTributeValues(contexts), trigger: "@" },
     ],
     noMatchTemplate: () => '<span class:"hidden"></span>',
-    spaceSelectsMatch: true
+    spaceSelectsMatch: true,
   });
 
   tribute.attach(document.getElementsByClassName(className));
 }
 
 function toTributeValues(array) {
-  return array.map(i => ({ key: i, value: i }));
+  return array.map((i) => ({ key: i, value: i }));
 }

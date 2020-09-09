@@ -30,12 +30,34 @@ RSpec.describe Todotxt::Transform do
       {context: "@home"},
       {word: "and"},
       {word: "other"},
-      {word: "stuff"}
+      {word: "stuff"},
+      {code_block: [
+        {word: "with"},
+        {word: "code"}
+      ]}
     ])).to eq(description: [
       Todotxt::Text.new("do things"),
       Todotxt::Context.new("@home"),
-      Todotxt::Text.new("and other stuff")
+      Todotxt::Text.new("and other stuff `with code`")
     ])
+  end
+
+  it "transforms `code_block`" do
+    expect(subject.apply(code_block: [
+      {word: "something"},
+      {word: "@context"},
+      {word: "+project"}
+    ])).to eq(
+      Todotxt::Text.new("`something @context +project`")
+    )
+  end
+
+  it "transforms empty `code_block`" do
+    expect(
+      subject.apply(code_block: "``")
+    ).to eq(
+      Todotxt::Text.new("``")
+    )
   end
 
   it "transforms `project`" do

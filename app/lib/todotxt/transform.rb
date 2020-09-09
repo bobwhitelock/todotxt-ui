@@ -9,6 +9,13 @@ class Todotxt
     rule(description: sequence(:parts)) do
       {description: Transform.merge_words_in_parts(parts)}
     end
+
+    rule(code_block: sequence(:words)) do
+      merged_words = Transform.merge_words_in_parts(words)[0].value
+      Text.new("`#{merged_words}`")
+    end
+    rule(code_block: simple(:word)) { Text.new(word) }
+
     rule(word: simple(:word)) { Text.new(word) }
 
     rule(project: simple(:value)) { Project.new(value) }

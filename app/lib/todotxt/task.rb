@@ -126,11 +126,7 @@ class Todotxt
     attr_accessor :parsed_description
 
     def parse_and_initialize(raw_task = "")
-      raw_task ||= ""
-      raw_task = raw_task.strip
-      parser_output = Parser.new.parse(raw_task)
-      transform_output = Transform.new.apply(parser_output)
-      initialize_task_data(original_raw: raw_task, **transform_output[:task])
+      initialize_task_data(**Todotxt.config.parse_task(raw_task))
     end
     alias initialize parse_and_initialize
 

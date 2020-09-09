@@ -1,5 +1,9 @@
 class Todotxt
   class Parser < Parslet::Parser
+    def initialize(parse_code_blocks: false)
+      @parse_code_blocks = parse_code_blocks
+    end
+
     root :task
 
     rule(:task) do
@@ -48,16 +52,40 @@ class Todotxt
     end
 
     rule(:description) do
-      description_part.repeat.as(:description)
+      part = description_part
+      part = code_block | unmatched_backtick | part if parse_code_blocks
+      part.repeat.as(:description)
     end
     rule(:description_part) do
       (project | context | metadatum | word) >> spaces?
     end
-    rule(:word) { identifier.as(:word) }
+
+    rule(:code_block) do
+      unless parse_code_blocks
+        raise Todotxt::InternalError,
+          "Invalid to call `code_block` when `parse_code_blocks` option not set"
+      end
+
+      (
+        spaces? >>
+        backtick >>
+        spaces? >>
+        (word >> spaces?).repeat >>
+        spaces? >>
+        backtick >>
+        spaces?
+      ).as(:code_block)
+    end
+    rule(:unmatched_backtick) do
+      spaces? >> backtick.as(:word) >> spaces?
+    end
+    rule(:backtick) { str("`") }
 
     rule(:project) { tag(:project, "+") }
     rule(:context) { tag(:context, "@") }
-    rule(:identifier) { match("[^\s]").repeat(1) }
+    rule(:word) { identifier.as(:word) }
+
+    rule(:identifier) { match_identifier }
 
     rule(:metadatum) do
       (
@@ -66,7 +94,9 @@ class Todotxt
         metadatum_identifier.as(:value)
       ).as(:metadatum)
     end
-    rule(:metadatum_identifier) { match("[^\s:]").repeat(1) }
+    rule(:metadatum_identifier) do
+      match_identifier(except_chars: ":")
+    end
 
     rule(:spaces?) { spaces.maybe }
     rule(:spaces) { space.repeat(1) }
@@ -74,8 +104,15 @@ class Todotxt
 
     private
 
+    attr_reader :parse_code_blocks
+
     def tag(type, symbol)
       (str(symbol) >> identifier).as(type)
+    end
+
+    def match_identifier(except_chars: "")
+      except_chars += "`" if parse_code_blocks
+      match("[^\s#{except_chars}]").repeat(1)
     end
   end
 end

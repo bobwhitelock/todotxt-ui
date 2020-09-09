@@ -165,6 +165,80 @@ RSpec.describe Todotxt::Parser do
         {word: "something_else"}
       ])
     }
+
+    context "when `parse_code_blocks` option passed" do
+      subject do
+        described_class.new(parse_code_blocks: true)
+      end
+
+      it "parses anything within backticks as a code block" do
+        expect(subject.description).to parse(
+          "` @context and +project ` something `key:value`@realcontext`foo`"
+        ).as(description: [
+          {code_block: [
+            {word: "@context"},
+            {word: "and"},
+            {word: "+project"}
+          ]},
+          {word: "something"},
+          {code_block: [
+            {word: "key:value"}
+          ]},
+          {context: "@realcontext"},
+          {code_block: [
+            {word: "foo"}
+          ]}
+        ])
+      end
+
+      it "correctly parses when inconsistent number of backticks present" do
+        expect(subject.description).to parse(
+          "`foo` `bar baz"
+        ).as(description: [
+          {code_block: [{word: "foo"}]},
+          {word: "`"},
+          {word: "bar"},
+          {word: "baz"}
+        ])
+      end
+
+      it "correctly parses backticks in middle of word" do
+        expect(subject.description).to parse("foo`bar`baz").as(description: [
+          {word: "foo"},
+          {code_block: [{word: "bar"}]},
+          {word: "baz"}
+        ])
+      end
+    end
+  end
+
+  describe "code_block" do
+    context "when `parse_code_blocks` option passed" do
+      subject do
+        described_class.new(parse_code_blocks: true)
+      end
+
+      it do
+        expect(subject.code_block).to parse(
+          "`@context and +project`"
+        ).as(code_block: [
+          {word: "@context"},
+          {word: "and"},
+          {word: "+project"}
+        ])
+      end
+    end
+
+    context "when `parse_code_blocks` option not passed" do
+      it do
+        expect {
+          subject.code_block.parse("anything")
+        }.to raise_error(
+          Todotxt::InternalError,
+          "Invalid to call `code_block` when `parse_code_blocks` option not set"
+        )
+      end
+    end
   end
 
   describe "project" do
@@ -179,8 +253,17 @@ RSpec.describe Todotxt::Parser do
     it { expect(subject.identifier).to parse("something") }
     it { expect(subject.identifier).to parse("5") }
     it { expect(subject.identifier).to parse("😎") }
+    it { expect(subject.identifier).to parse("`with_backticks`") }
     it { expect(subject.identifier).to parse("with:some:colons") }
     it { expect(subject.identifier).not_to parse("foo bar") }
+
+    context "when `parse_code_blocks` option passed" do
+      subject do
+        described_class.new(parse_code_blocks: true)
+      end
+
+      it { expect(subject.identifier).not_to parse("`with_backticks`") }
+    end
   end
 
   describe "metadatum" do
@@ -197,9 +280,20 @@ RSpec.describe Todotxt::Parser do
     it { expect(subject.metadatum_identifier).to parse("something") }
     it { expect(subject.metadatum_identifier).to parse("5") }
     it { expect(subject.metadatum_identifier).to parse("😎") }
+    it { expect(subject.metadatum_identifier).to parse("`with_backticks`") }
     # This is the one difference from the regular `identifier`.
     it { expect(subject.metadatum_identifier).not_to parse("with:some:colons") }
     it { expect(subject.metadatum_identifier).not_to parse("foo bar") }
+
+    context "when `parse_code_blocks` option passed" do
+      subject do
+        described_class.new(parse_code_blocks: true)
+      end
+
+      it do
+        expect(subject.metadatum_identifier).not_to parse("`with_backticks`")
+      end
+    end
   end
 
   describe "space" do

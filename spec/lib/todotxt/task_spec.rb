@@ -79,6 +79,49 @@ RSpec.describe Todotxt::Task do
       raw_tasks = empty_tasks.map(&:raw)
       expect(raw_tasks).to eq(["", "", ""])
     end
+
+    context "when `parse_code_blocks` Config option not set" do
+      it "does nothing special with backticks" do
+        raw_task = "some text `with a @context and +project`"
+
+        task = described_class.new(raw_task)
+
+        expect(task.description).to eq(
+          "some text `with a @context and +project`"
+        )
+        expect(task.description_text).to eq("some text `with a and")
+        expect(task.contexts).to eq(["@context"])
+        expect(task.projects).to eq(["+project`"])
+        expect(task.raw).to eq("some text `with a @context and +project`")
+      end
+    end
+
+    context "when `parse_code_blocks` Config option set" do
+      before :each do
+        Todotxt.config = Todotxt::Config.new(parse_code_blocks: true)
+      end
+
+      after :each do
+        Todotxt.config = Todotxt::Config.new
+      end
+
+      it "parses anything within backticks as just text" do
+        raw_task = "` @context and +project ` some more text `key:value`@realcontext ``"
+
+        task = described_class.new(raw_task)
+
+        expect(task.description).to eq(
+          "`@context and +project` some more text `key:value` @realcontext ``"
+        )
+        expect(task.description_text).to eq(
+          "`@context and +project` some more text `key:value` ``"
+        )
+        expect(task.contexts).to eq(["@realcontext"])
+        expect(task.raw).to eq(
+          "`@context and +project` some more text `key:value` @realcontext ``"
+        )
+      end
+    end
   end
 
   describe "#<=>" do

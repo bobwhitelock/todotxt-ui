@@ -153,7 +153,7 @@ RSpec.describe Todotxt::Parser do
   describe "description" do
     it {
       expect(subject.description).to parse(
-        "foo bar @somewhere +proj1 @work +proj2 due:2038-02-01 something_else"
+        "foo bar @somewhere +proj1 @work +proj2 mykey:myvalue something_else"
       ).as(description: [
         {word: "foo"},
         {word: "bar"},
@@ -161,7 +161,7 @@ RSpec.describe Todotxt::Parser do
         {project: "+proj1"},
         {context: "@work"},
         {project: "+proj2"},
-        {metadatum: {key: "due", value: "2038-02-01"}},
+        {metadatum: {key: "mykey", value: "myvalue"}},
         {word: "something_else"}
       ])
     }
@@ -267,11 +267,21 @@ RSpec.describe Todotxt::Parser do
   end
 
   describe "metadatum" do
-    it do
+    it "parses metadata with simple values" do
       expect(subject.metadatum).to parse("mykey:myvalue").as(
         metadatum: {key: "mykey", value: "myvalue"}
       )
     end
+
+    it "parses metadata with date values" do
+      expect(subject.metadatum).to parse("due:2038-02-01").as(
+        metadatum: {
+          key: "due",
+          value: {year: "2038", month: "02", day: "01"}
+        }
+      )
+    end
+
     it { expect(subject.metadatum).not_to parse("mykey:myvalue:something_else") }
     it { expect(subject.metadatum).not_to parse("my key:my value") }
   end

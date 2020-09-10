@@ -91,7 +91,7 @@ class Todotxt
       (
         metadatum_identifier.as(:key) >>
         str(":") >>
-        metadatum_identifier.as(:value)
+        (date | metadatum_identifier).as(:value)
       ).as(:metadatum)
     end
     rule(:metadatum_identifier) do

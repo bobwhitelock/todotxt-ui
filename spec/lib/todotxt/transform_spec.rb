@@ -76,11 +76,22 @@ RSpec.describe Todotxt::Transform do
     )
   end
 
-  it "transforms key-value metadata" do
+  it "transforms `metadatum` with string value" do
     expect(
       subject.apply(metadatum: {key: "mykey", value: "myvalue"})
     ).to eq(
       Todotxt::Metadatum.new("mykey", "myvalue")
+    )
+  end
+
+  it "transforms `metadatum` with date value" do
+    expect(
+      subject.apply(metadatum: {
+        key: "due",
+        value: {year: "2038", month: "02", day: "01"}
+      })
+    ).to eq(
+      Todotxt::Metadatum.new("due", Date.new(2038, 2, 1))
     )
   end
 end

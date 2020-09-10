@@ -29,6 +29,32 @@ RSpec.describe Todotxt::List do
 
       expect(list.to_a).to be_empty
     end
+
+    context "when `task_class` Config option set" do
+      class CustomTask < Todotxt::Task; end
+
+      before :each do
+        Todotxt.config = Todotxt::Config.new(task_class: CustomTask)
+      end
+
+      after :each do
+        Todotxt.config = Todotxt::Config.new
+      end
+
+      it "uses given class when creating Tasks internally" do
+        list = described_class.new(["foo"])
+
+        expect(list[0]).to be_a(CustomTask)
+        expect(list[0].raw).to eq("foo")
+      end
+
+      it "converts any Tasks passed to given class" do
+        list = described_class.new([create_task("foo")])
+
+        expect(list[0]).to be_a(CustomTask)
+        expect(list[0].raw).to eq("foo")
+      end
+    end
   end
 
   describe ".load" do

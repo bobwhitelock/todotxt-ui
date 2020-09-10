@@ -95,7 +95,7 @@ class Todotxt
 
     def description=(new_description)
       self.parsed_description =
-        Task.new(new_description).send(:parsed_description)
+        self.class.new(new_description).send(:parsed_description)
     end
 
     def contexts=(new_contexts)

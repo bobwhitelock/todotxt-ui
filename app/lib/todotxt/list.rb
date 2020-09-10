@@ -129,10 +129,24 @@ class Todotxt
     end
 
     def to_task(maybe_task)
-      return maybe_task if maybe_task.is_a?(Task)
-      raw_task = maybe_task.strip
+      case maybe_task
+      when task_class
+        maybe_task
+      when Task
+        task_class.new(maybe_task.raw)
+      else
+        string_to_task(maybe_task)
+      end
+    end
+
+    def task_class
+      Todotxt.config.task_class
+    end
+
+    def string_to_task(raw_task)
+      raw_task = raw_task.strip
       return nil if raw_task.empty?
-      Task.new(raw_task)
+      task_class.new(raw_task)
     end
 
     def verify_file!(file)

@@ -1,7 +1,7 @@
 
 # Todotxt UI
 
-![Tests](https://github.com/bobwhitelock/todotxt-ui/workflows/Tests/badge.svg)
+![CI](https://github.com/bobwhitelock/todotxt-ui/workflows/CI/badge.svg)
 
 ## Development Notes
 

@@ -8,6 +8,11 @@ class Todotxt
       @task_class = task_class
     end
 
+    def to_s
+      "<#{self.class}: parse_code_blocks=#{parse_code_blocks} task_class=#{task_class}>"
+    end
+    alias inspect to_s
+
     def parse_task(raw_task = "")
       raw_task ||= ""
       raw_task = raw_task.strip

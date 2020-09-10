@@ -27,7 +27,7 @@ RSpec.describe Todotxt::Task do
     end
 
     it "parses a complex todotxt task into a Task" do
-      raw_task = "x (B) 2020-08-02 2019-07-01 do things @home and other stuff +important +housework due:2020-08-09"
+      raw_task = "x (B) 2020-08-02 2019-07-01 do things @home and other stuff +important +housework foo:bar"
 
       task = described_class.new(raw_task)
 
@@ -36,13 +36,25 @@ RSpec.describe Todotxt::Task do
       expect(task.completion_date).to eq(Date.new(2020, 8, 2))
       expect(task.creation_date).to eq(Date.new(2019, 7, 1))
       expect(task.description).to eq(
-        "do things @home and other stuff +important +housework due:2020-08-09"
+        "do things @home and other stuff +important +housework foo:bar"
       )
       expect(task.description_text).to eq("do things and other stuff")
       expect(task.contexts).to eq(["@home"])
       expect(task.projects).to eq(["+important", "+housework"])
-      expect(task.metadata).to eq(due: "2020-08-09")
+      expect(task.metadata).to eq(foo: "bar")
       expect(task.raw).to eq(raw_task)
+    end
+
+    it "parses task metadata as appropriate values" do
+      raw_task = "a task foo:bar due:2020-08-09 awesomeness:5"
+
+      task = described_class.new(raw_task)
+
+      expect(task.metadata).to eq({
+        foo: "bar",
+        due: Date.new(2020, 8, 9),
+        awesomeness: 5
+      })
     end
 
     it "exposes parsed text as strings" do
@@ -194,14 +206,6 @@ RSpec.describe Todotxt::Task do
       task.reset
 
       expect(task.raw).to eq("my task")
-    end
-  end
-
-  describe "#metadata" do
-    it "provides a hash of Task metadata keys to values" do
-      task = create_task("my task foo:bar baz:5")
-
-      expect(task.metadata).to eq(foo: "bar", baz: "5")
     end
   end
 
@@ -429,10 +433,10 @@ RSpec.describe Todotxt::Task do
     it "adds any new metadata" do
       task = create_task("my task foo:1")
 
-      task.metadata = {foo: 1, bar: 2}
+      task.metadata = {foo: 1, bar: "baz"}
 
-      expect(task.metadata).to eq({foo: "1", bar: "2"})
-      expect(task.raw).to eq("my task foo:1 bar:2")
+      expect(task.metadata).to eq({foo: 1, bar: "baz"})
+      expect(task.raw).to eq("my task foo:1 bar:baz")
     end
 
     it "removes any existing metadata not included" do
@@ -440,17 +444,18 @@ RSpec.describe Todotxt::Task do
 
       task.metadata = {bar: 2}
 
-      expect(task.metadata).to eq({bar: "2"})
+      expect(task.metadata).to eq({bar: 2})
       expect(task.raw).to eq("my task bar:2")
     end
 
     it "updates metadata values in place" do
       task = create_task("my task foo:1 text")
+      date = Date.new(2038, 2, 1)
 
-      task.metadata = {foo: 2}
+      task.metadata = {foo: date}
 
-      expect(task.metadata).to eq({foo: "2"})
-      expect(task.raw).to eq("my task foo:2 text")
+      expect(task.metadata).to eq({foo: date})
+      expect(task.raw).to eq("my task foo:2038-02-01 text")
     end
   end
 end

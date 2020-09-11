@@ -2,7 +2,7 @@ class Todotxt
   class Task
     include Comparable
 
-    attr_accessor :priority
+    attr_reader :priority
     attr_reader :completion_date
     attr_accessor :creation_date
 
@@ -81,6 +81,14 @@ class Todotxt
       @completion_date = new_completion_date
     end
 
+    def priority=(new_priority)
+      new_priority = new_priority.upcase
+      unless valid_priority?(new_priority)
+        raise UsageError, "`priority` must be a single uppercase letter"
+      end
+      @priority = new_priority
+    end
+
     def increase_priority
       decrement_priority_char(1)
     end
@@ -157,8 +165,12 @@ class Todotxt
     def decrement_priority_char(delta)
       return unless priority
       new_priority = (priority.ord - delta).chr
-      return unless ("A".."Z").cover?(new_priority)
+      return unless valid_priority?(new_priority)
       self.priority = new_priority
+    end
+
+    def valid_priority?(maybe_priority)
+      /^[A-Z]$/.match?(maybe_priority)
     end
 
     def assign_tags(

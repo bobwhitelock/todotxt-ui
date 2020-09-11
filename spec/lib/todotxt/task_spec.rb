@@ -258,6 +258,27 @@ RSpec.describe Todotxt::Task do
       expect(task.priority).to eq("B")
       expect(task.raw).to eq("(B) my task")
     end
+
+    it "upcases priority if lowercase" do
+      task = create_task("my task")
+
+      task.priority = "b"
+
+      expect(task.priority).to eq("B")
+      expect(task.raw).to eq("(B) my task")
+    end
+
+    it "raises for invalid priority" do
+      task = create_task("my task")
+
+      expected_error = "`priority` must be a single uppercase letter"
+      expect {
+        task.priority = "aa"
+      }.to raise_error Todotxt::UsageError, expected_error
+      expect {
+        task.priority = "5"
+      }.to raise_error Todotxt::UsageError, expected_error
+    end
   end
 
   describe "#increase_priority" do

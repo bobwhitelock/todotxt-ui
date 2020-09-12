@@ -23,11 +23,11 @@ class Todotxt
       {original_raw: raw_task, **transform_output[:task]}
     end
 
-    private
-
     def parser
       @parser ||= Parser.new(parse_code_blocks: parse_code_blocks)
     end
+
+    private
 
     def transform
       @transform ||= Transform.new

@@ -14,17 +14,11 @@ class Todotxt
     alias inspect to_s
 
     def raw
-      [
-        complete? && "x",
-        priority && "(#{priority})",
-        completion_date,
-        creation_date,
-        *parsed_description
-      ].select { |x| x }.join(" ")
+      dirty? ? current_raw : original_raw
     end
 
     def dirty?
-      raw != original_raw
+      current_raw != original_raw
     end
 
     def reset
@@ -152,6 +146,16 @@ class Todotxt
       @priority = priority&.to_s
       @completion_date = completion_date
       @creation_date = creation_date
+    end
+
+    def current_raw
+      [
+        complete? && "x",
+        priority && "(#{priority})",
+        completion_date,
+        creation_date,
+        *parsed_description
+      ].select { |x| x }.join(" ")
     end
 
     def join_parts(parts)

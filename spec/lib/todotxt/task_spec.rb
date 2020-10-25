@@ -187,8 +187,8 @@ RSpec.describe Todotxt::Task do
       expect(task).not_to be_dirty
     end
 
-    it "returns false for unmodified Task created with leading/trailing whitespace" do
-      task = create_task("  my task   ")
+    it "returns false for unmodified Task where original had excess whitespace" do
+      task = create_task("  my    task   ")
 
       expect(task).not_to be_dirty
     end

@@ -226,6 +226,28 @@ RSpec.describe Todotxt::List do
           list.save
         }.to raise_error(Todotxt::UsageError, "No file set for #{list}")
       end
+
+      it "saves Tasks exactly as originally loaded unless modified" do
+        file = Tempfile.new.tap do |f|
+          f << "a  Task   with  extra  whitespace\n"
+          f << "a  modified  Task   with    extra  whitespace\n"
+          f.write
+          f.flush
+          f.rewind
+        end
+        list = described_class.load(file)
+        list.last.contexts += ["@context"]
+        list.last
+        p "list.last [owtnibvp]:", list.first.dirty?
+
+        list.save(file)
+
+        file_content = File.read(file)
+        expect(file_content).to eq(
+          "a  Task   with  extra  whitespace\n" \
+          "a modified Task with extra whitespace @context\n"
+        )
+      end
     end
 
     context "when file path passed" do

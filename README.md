@@ -30,7 +30,11 @@ Below took some bashing, so may be missing a step/need adjustment.
 # Remote
 dokku apps:create todotxt
 dokku buildpacks:add todotxt https://github.com/heroku/heroku-buildpack-ruby.git
-dokku buildpacks:add todotxt https://github.com/heroku/heroku-buildpack-nodejs.git
+# Using specific version of buildpack as suggested to fix issue at
+# https://github.com/heroku/heroku-buildpack-nodejs/issues/856. At some point
+# upgrade Dokku instead - see
+# https://github.com/heroku/heroku-buildpack-nodejs/issues/856#issuecomment-731933169
+dokku buildpacks:add todotxt 'https://github.com/heroku/heroku-buildpack-nodejs.git#v174'
 dokku domains:add todotxt "$public_domain"
 dokku domains:remove todotxt todotxt.li1514-40.members.linode.com
 dokku plugins:install letsencrypt

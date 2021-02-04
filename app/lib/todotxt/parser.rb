@@ -95,7 +95,7 @@ class Todotxt
       ).as(:metadatum)
     end
     rule(:metadatum_identifier) do
-      match_identifier(except_chars: ":")
+      match_identifier(except_chars: ":/")
     end
 
     rule(:spaces?) { spaces.maybe }

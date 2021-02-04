@@ -8,13 +8,18 @@ class TasksController < ApplicationController
       commit: false
     )
 
-    @total_tasks = tasks.by_not_done.length
+    @total_tasks = todo_repo.incomplete_tasks.length
+
     @tasks = tasks_to_show.sort_by { |task|
+      # Each entry in comparison array should always be of the same type (or
+      # nil) for every task, otherwise this can blow up.
       [
         task.today? ? "a" : "b",
-        task.tags.fetch(:due, "z"),
+        # Compare `due` metadata values as strings, since there is no guarantee
+        # that only Dates will be used for these.
+        task.metadata.fetch(:due, "zzz").to_s,
         task.priority || "Z",
-        task.created_on || 100.years.from_now,
+        task.creation_date || 100.years.from_now,
         task.raw
       ]
     }
@@ -65,20 +70,18 @@ class TasksController < ApplicationController
 
   private
 
-  delegate :tasks, to: :todo_repo
-
   def todo_repo
     @_todo_repo ||= TodoRepo.new(Figaro.env.TODO_FILE!)
   end
 
   def tasks_to_show
-    to_show = tasks.by_not_done
+    to_show = todo_repo.incomplete_tasks
 
     filters.each do |filter|
       if filter.start_with?("+")
-        to_show = to_show.by_project(filter)
+        to_show = to_show.select { |t| t.projects.include?(filter) }
       elsif filter.start_with?("@")
-        to_show = to_show.by_context(filter)
+        to_show = to_show.select { |t| t.contexts.include?(filter) }
       end
     end
 

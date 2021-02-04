@@ -67,7 +67,7 @@
     <div class="card justify-between <%= task.border_color_class %> <%= task.background_class %>">
       <div class="flex-grow">
         <div class="float-right px-1 py-2 text-gray-600">
-          <% task.tags.each do |tag, value| %>
+          <% task.metadata.each do |tag, value| %>
             <span class="px-1">
               <%= tag %>:<%= value %>
             </span>
@@ -79,7 +79,7 @@
 
         <div class="px-2 py-2">
           <p class="text-gray-900">
-            <%= auto_link(task.text) %>
+            <%= auto_link(task.description_text) %>
           </p>
         </div>
 
@@ -101,7 +101,7 @@
       </div>
 
       <div class="px-2 py-1 text-gray-600">
-        <%= task.created_on %>
+        <%= task.creation_date %>
       </div>
 
       <div class="flex justify-between">

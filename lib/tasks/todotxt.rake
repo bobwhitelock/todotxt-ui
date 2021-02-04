@@ -1,46 +1,26 @@
 namespace :todotxt do
   namespace :cron do
-    # TODO Make this nicer and DRY up with other parts of app.
     desc "Automatically clear today list and bump `scheduled` tracking"
     task clear_today_list: :environment do
       RakeLogger.info "starting"
 
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
       repo.reset_to_origin
-      tasks = repo.tasks
 
-      updates = {}
-      tasks.by_not_done.each do |task|
-        task = TaskDecorator.new(task)
-
-        if task.today?
-          scheduled = task.tags.fetch(:scheduled, 0).to_i
-
-          new_task = task
-            .raw
-            .gsub(/\s*@today\s*/, " ")
-            .gsub(/\s*scheduled:#{scheduled}\s*/, " ")
-            .strip
-          new_task += " scheduled:#{scheduled + 1}"
-
-          updates[task.raw] = new_task
-        end
+      cleared_tasks = 0
+      repo.incomplete_tasks
+        .map { |task| TaskDecorator.new(task) }
+        .select(&:today?)
+        .map do |task|
+        task.contexts -= ["@today"]
+        scheduled = task.metadata.fetch(:scheduled, 0).to_i
+        task.metadata = {**task.metadata, scheduled: scheduled + 1}
+        cleared_tasks += 1
       end
 
-      updates.each do |raw_task, new_task|
-        tasks.delete_if do |t|
-          t.respond_to?(:raw) && t.raw == raw_task
-        end
-        tasks << new_task
-      end
+      repo.commit_todo_file("Automatically clear today list") && repo.push
 
-      unless updates.empty?
-        repo.tasks.save!
-        repo.commit_todo_file("Automatically clear today list")
-        repo.push
-      end
-
-      RakeLogger.info "#{updates.length} tasks cleared"
+      RakeLogger.info "#{cleared_tasks} tasks cleared"
     end
 
     desc "Attempt to sync unapplied local Deltas to remote repo"

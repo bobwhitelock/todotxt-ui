@@ -20,9 +20,8 @@ class DeltaApplier
   end
 
   def apply
-    original_raw_tasks = todo_repo.raw_tasks
     handle_delta
-    save_delta_change(original_raw_tasks) if commit
+    save_delta_change if commit
   end
 
   private
@@ -76,28 +75,21 @@ class DeltaApplier
 
   def handle_schedule
     task = delta.arguments.first
-    todo_repo.replace_task(task, task.strip + " @today")
+    todo_repo.map_task(task) { |t| t.contexts += ["@today"] }
   end
 
   def handle_unschedule
     task = delta.arguments.first
-    todo_repo.replace_task(task, task.gsub(/\s+@today\s*/, " "))
+    todo_repo.map_task(task) { |t| t.contexts -= ["@today"] }
   end
 
   def handle_invalid_delta
     delta.update!(status: Delta::INVALID)
   end
 
-  def save_delta_change(original_raw_tasks)
+  def save_delta_change
     return unless commit_message
-
-    # Need to save and then reload TodoRepo when checking if tasks have
-    # changed, as `todo-txt` Gem does not change raw tasks for all changes,
-    # e.g. a completed Task keeps the same raw version until it has been
-    # saved and reloaded from disk.
-    todo_repo.tasks.save!
-    tasks_changed = TodoRepo.reload(todo_repo).raw_tasks != original_raw_tasks
-    todo_repo.commit_todo_file(commit_message) if tasks_changed
+    todo_repo.commit_todo_file(commit_message)
     delta.update!(status: Delta::APPLIED)
   end
 end

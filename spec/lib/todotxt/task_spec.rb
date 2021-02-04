@@ -378,6 +378,7 @@ RSpec.describe Todotxt::Task do
       expect(task.priority).to be nil
       expect(task.creation_date).to eq(Date.new(2020, 8, 22))
       expect(task.description).to eq("do other things @work")
+      expect(task).to be_dirty
     end
   end
 

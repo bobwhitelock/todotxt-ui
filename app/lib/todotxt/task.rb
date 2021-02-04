@@ -98,7 +98,9 @@ class Todotxt
     end
 
     def raw=(new_raw_task)
+      original_raw = self.original_raw
       parse_and_initialize(new_raw_task)
+      self.original_raw = original_raw
     end
 
     def description=(new_description)
@@ -129,7 +131,7 @@ class Todotxt
 
     private
 
-    attr_reader :original_raw
+    attr_accessor :original_raw
     attr_reader :complete
     attr_accessor :parsed_description
 

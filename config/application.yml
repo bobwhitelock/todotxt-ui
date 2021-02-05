@@ -12,3 +12,7 @@ development:
 test:
   todo_file: /path/to/todo.txt
   git_email: bob.whitelock1+todotxt-test@gmail.com
+
+production:
+  todo_file: /repo/todo/next_actions.todo
+  git_email: bob.whitelock1+todotxt@gmail.com

@@ -1,0 +1,14 @@
+
+# This file is picked up by Figaro and is stored in Git; only development,
+# test, or non-sensitive production configuration should be set here.
+
+auth_user: bob
+auth_password: password
+
+development:
+  todo_file: /home/bob/src/tmp/test/foo.todo
+  git_email: bob.whitelock1+todotxt-dev@gmail.com
+
+test:
+  todo_file: /path/to/todo.txt
+  git_email: bob.whitelock1+todotxt-test@gmail.com

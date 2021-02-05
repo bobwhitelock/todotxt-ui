@@ -1,4 +1,4 @@
-require "rails_helper"
+require "spec_helper"
 require "support/todotxt_helpers"
 
 RSpec.describe Todotxt::List do
@@ -294,6 +294,16 @@ RSpec.describe Todotxt::List do
       expect {
         list.reload
       }.to raise_error(Todotxt::UsageError, "No file set for #{list}")
+    end
+
+    it "resets whether List is dirty" do
+      list = described_class.new(file: file.path)
+      list << "new task"
+      expect(list).to be_dirty
+
+      list.reload
+
+      expect(list).not_to be_dirty
     end
   end
 

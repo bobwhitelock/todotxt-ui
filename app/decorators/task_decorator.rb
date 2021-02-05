@@ -1,10 +1,6 @@
 class TaskDecorator < Draper::Decorator
   delegate_all
 
-  def today?
-    contexts.include?("@today")
-  end
-
   def border_color_class
     "border-blue-300" if today?
   end

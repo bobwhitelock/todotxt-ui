@@ -8,16 +8,8 @@ class TasksController < ApplicationController
       commit: false
     )
 
-    @total_tasks = tasks.by_not_done.length
-    @tasks = tasks_to_show.sort_by { |task|
-      [
-        task.today? ? "a" : "b",
-        task.tags.fetch(:due, "z"),
-        task.priority || "Z",
-        task.created_on || 100.years.from_now,
-        task.raw
-      ]
-    }
+    @total_tasks = todo_repo.incomplete_tasks.length
+    @tasks = tasks_to_show.sort_by(&:ui_sort_key)
     @subtitle = "#{@tasks.size} tasks"
   end
 
@@ -65,20 +57,18 @@ class TasksController < ApplicationController
 
   private
 
-  delegate :tasks, to: :todo_repo
-
   def todo_repo
     @_todo_repo ||= TodoRepo.new(Figaro.env.TODO_FILE!)
   end
 
   def tasks_to_show
-    to_show = tasks.by_not_done
+    to_show = todo_repo.incomplete_tasks
 
     filters.each do |filter|
       if filter.start_with?("+")
-        to_show = to_show.by_project(filter)
+        to_show = to_show.select { |t| t.projects.include?(filter) }
       elsif filter.start_with?("@")
-        to_show = to_show.by_context(filter)
+        to_show = to_show.select { |t| t.contexts.include?(filter) }
       end
     end
 

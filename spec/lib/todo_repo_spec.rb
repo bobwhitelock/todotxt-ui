@@ -11,7 +11,7 @@ RSpec.describe TodoRepo do
 
       todo_repo.replace_task("old task", "new task")
 
-      expect_tasks_saved(todo_repo, ["other task", "new task"])
+      expect(todo_repo.list.raw_tasks).to eq(["other task", "new task"])
     end
 
     it "does nothing when old task not present in repo" do
@@ -19,7 +19,7 @@ RSpec.describe TodoRepo do
 
       todo_repo.replace_task("old task", "new task")
 
-      expect_tasks_saved(todo_repo, ["other task"])
+      expect(todo_repo.list.raw_tasks).to eq(["other task"])
     end
 
     it "works when tasks include arbitrary whitespace" do
@@ -27,7 +27,7 @@ RSpec.describe TodoRepo do
 
       todo_repo.replace_task(" old task   ", "  new task  ")
 
-      expect_tasks_saved(todo_repo, ["other task", "new task"])
+      expect(todo_repo.list.raw_tasks).to eq(["other task", "new task"])
     end
   end
 end

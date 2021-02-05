@@ -1,4 +1,4 @@
-require "rails_helper"
+require "spec_helper"
 require "parslet/rig/rspec"
 
 RSpec.describe Todotxt::Parser do
@@ -284,6 +284,16 @@ RSpec.describe Todotxt::Parser do
 
     it { expect(subject.metadatum).not_to parse("mykey:myvalue:something_else") }
     it { expect(subject.metadatum).not_to parse("my key:my value") }
+
+    it "does not parse URLs as metadata" do
+      expect(subject.metadatum).not_to parse("http://www.example.com")
+      expect(subject.metadatum).not_to parse("any_protocol://www.example.com")
+      # TODO Handle not parsing URLs in cleverer way, so this passes.
+      # Should still parse this, which contains `/`s.
+      # expect(subject.metadatum).to parse("my_regex:/foo/").as(
+      #   metadatum: {key: "my_regex", value: "/foo/"}
+      # )
+    end
   end
 
   describe "metadatum_identifier" do

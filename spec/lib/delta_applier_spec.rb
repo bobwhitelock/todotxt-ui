@@ -4,6 +4,22 @@ require "support/repo_utils"
 RSpec.describe DeltaApplier do
   include RepoUtils
 
+  # TODO Better approach to testing this that doesn't require this stub?
+  class StubGit
+    def config(*args)
+    end
+
+    def add(*args)
+    end
+
+    def commit(*args)
+    end
+  end
+
+  before do
+    allow(Git).to receive(:open).and_return(StubGit.new)
+  end
+
   describe ".apply" do
     it "handles `add` delta" do
       now = Time.local(2020, 6, 6)
@@ -16,7 +32,7 @@ RSpec.describe DeltaApplier do
       )
       todo_repo = mock_todo_repo("other task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Create task(s)")
+      expect(todo_repo).to receive(:commit_todo_file).with("Create task(s)").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, [
@@ -37,7 +53,7 @@ RSpec.describe DeltaApplier do
       )
       todo_repo = mock_todo_repo("other task", "old task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Update task")
+      expect(todo_repo).to receive(:commit_todo_file).with("Update task").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ["other task", "new task"])
@@ -53,7 +69,7 @@ RSpec.describe DeltaApplier do
       )
       todo_repo = mock_todo_repo("other task", "some task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Delete task")
+      expect(todo_repo).to receive(:commit_todo_file).with("Delete task").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ["other task"])
@@ -71,7 +87,7 @@ RSpec.describe DeltaApplier do
       )
       todo_repo = mock_todo_repo("other task", "2020-05-05 some task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Complete task")
+      expect(todo_repo).to receive(:commit_todo_file).with("Complete task").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, [
@@ -90,7 +106,7 @@ RSpec.describe DeltaApplier do
       )
       todo_repo = mock_todo_repo("other task", "some task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Add task to today list")
+      expect(todo_repo).to receive(:commit_todo_file).with("Add task to today list").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ["other task", "some task @today"])
@@ -106,7 +122,7 @@ RSpec.describe DeltaApplier do
       )
       todo_repo = mock_todo_repo("other task", "some task @today @another-tag")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Remove task from today list")
+      expect(todo_repo).to receive(:commit_todo_file).with("Remove task from today list").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ["other task", "some task @another-tag"])
@@ -126,7 +142,7 @@ RSpec.describe DeltaApplier do
       }
       todo_repo = mock_todo_repo("other task")
 
-      expect(todo_repo).to receive(:commit_todo_file).thrice.with("Create task(s)")
+      expect(todo_repo).to receive(:commit_todo_file).thrice.with("Create task(s)").and_call_original
       DeltaApplier.apply(deltas: deltas, todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, [
@@ -144,7 +160,7 @@ RSpec.describe DeltaApplier do
       delta = create(:delta, type: Delta::UPDATE, arguments: ["foo", "bar"])
       todo_repo = mock_todo_repo("other task")
 
-      expect(todo_repo).not_to receive(:commit_todo_file)
+      expect(todo_repo.list).not_to receive(:save)
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, ["other task"])
@@ -174,7 +190,7 @@ RSpec.describe DeltaApplier do
       Delta::TYPES.each do |type|
         delta = create(:delta, type: type, arguments: ["arg"] * 10)
         todo_repo = mock_todo_repo
-        allow(todo_repo).to receive(:commit_todo_file)
+        allow(todo_repo).to receive(:commit_todo_file).and_call_original
 
         expect {
           DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
@@ -195,7 +211,6 @@ RSpec.describe DeltaApplier do
             arguments: ["some task", "another arg"]
           )
 
-          expect(todo_repo.tasks).not_to receive(:save!)
           expect(todo_repo).not_to receive(:commit_todo_file)
           DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo, commit: false)
           expect(delta.reload).to be_unapplied

@@ -1,4 +1,4 @@
-require "rails_helper"
+require "spec_helper"
 require "support/todotxt_helpers"
 
 RSpec.describe Todotxt::Task do
@@ -93,6 +93,10 @@ RSpec.describe Todotxt::Task do
     end
 
     context "when `parse_code_blocks` Config option not set" do
+      before :each do
+        Todotxt.config = Todotxt::Config.new(parse_code_blocks: false)
+      end
+
       it "does nothing special with backticks" do
         raw_task = "some text `with a @context and +project`"
 
@@ -378,6 +382,7 @@ RSpec.describe Todotxt::Task do
       expect(task.priority).to be nil
       expect(task.creation_date).to eq(Date.new(2020, 8, 22))
       expect(task.description).to eq("do other things @work")
+      expect(task).to be_dirty
     end
   end
 

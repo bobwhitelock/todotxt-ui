@@ -1,58 +1,45 @@
 class TodoRepo
-  attr_reader :todo_file
+  attr_reader :list
+  delegate :all_contexts, :all_projects, to: :list
   delegate :push, to: :repo
 
   def initialize(todo_file)
-    @todo_file = todo_file
+    # TODO Defining this global config here seems the best place to both have
+    # tests pass without jumping through hoops, and avoid this warning which
+    # occurs if put this in an initializer: `DEPRECATION WARNING:
+    # Initialization autoloaded the constants Todotxt::Config, Todotxt::Task,
+    # and TaskWrapper.`. But might be a better place and/or could make this
+    # config not global.
+    Todotxt.config = Todotxt::Config.new(
+      parse_code_blocks: true,
+      task_class: TaskWrapper
+    )
+
+    @list = Todotxt::List.load(todo_file)
   end
 
-  # Create a new TodoRepo from given TodoRepo, but with tasks reloaded fresh
-  # from disk.
-  def self.reload(other_todo_repo)
-    TodoRepo.new(other_todo_repo.todo_file)
-  end
-
-  def tasks
-    @_tasks ||= Todo::List.new(todo_file)
-  end
-
-  def raw_tasks
-    tasks.map { |task| task.raw.strip }
+  def incomplete_tasks
+    list.select(&:incomplete?)
   end
 
   def add_task(raw_task)
-    tasks << Todo::Task.new(raw_task.strip)
+    list << raw_task
   end
 
   def delete_task(raw_task)
-    tasks.delete_if do |t|
-      t.raw.strip == raw_task.strip
-    end
+    list.delete_if { |t| t.equals_raw_task(raw_task) }
   end
 
   def replace_task(old_raw_task, new_raw_task)
-    # TODO Actually replace inline rather than deleting old and then adding
-    # (i.e. appending at bottom of file) new task -
-    # https://github.com/bobwhitelock/todotxt-ui/issues/17.
-    if tasks.map { |t| t.raw.strip }.include?(old_raw_task.strip)
-      delete_task(old_raw_task)
-      add_task(new_raw_task)
-    end
+    map_task(old_raw_task) { |task| task.raw = new_raw_task }
   end
 
   def complete_task(raw_task)
-    matching_task = tasks.find { |t|
-      t.raw.strip == raw_task.strip
-    }
-    matching_task&.do!
+    map_task(raw_task, &:complete!)
   end
 
-  def all_projects
-    extract_tag(:projects)
-  end
-
-  def all_contexts
-    extract_tag(:contexts)
+  def map_task(raw_task, &block)
+    list.select { |t| t.equals_raw_task(raw_task) }.map(&block)
   end
 
   def reset_to_origin
@@ -61,11 +48,18 @@ class TodoRepo
   end
 
   def commit_todo_file(message)
+    return false unless list.dirty?
+    list.save
     repo.add(todo_file)
     repo.commit(message)
+    true
   end
 
   private
+
+  def todo_file
+    list.file
+  end
 
   def repo
     @_repo ||=
@@ -87,9 +81,5 @@ class TodoRepo
       return path if git_path.exist?
       path = path.parent
     end
-  end
-
-  def extract_tag(tag_type)
-    tasks.flat_map(&tag_type).uniq.map { |p| p[1..-1] }
   end
 end

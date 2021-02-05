@@ -82,7 +82,7 @@ class Todotxt
 
     def reload
       verify_file!(file)
-      self.tasks = to_tasks(File.readlines(file))
+      initialize(File.readlines(file), file: file)
       self
     end
 

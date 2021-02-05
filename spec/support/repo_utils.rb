@@ -10,19 +10,9 @@ module RepoUtils
   end
 
   def expect_tasks_saved(todo_repo, expected_raw_tasks)
-    # Assert given tasks are present in both the given TodoRepo, and a fresh
-    # TodoRepo created for the same todo_file (i.e. these tasks have also been
-    # saved to disk).
-    expect_tasks_equal(todo_repo, expected_raw_tasks)
-    expect_tasks_equal(TodoRepo.reload(todo_repo), expected_raw_tasks)
-  end
-
-  private
-
-  def expect_tasks_equal(todo_repo, expected_raw_tasks)
-    expected_tasks = expected_raw_tasks.map { |raw_task|
-      Todo::Task.new(raw_task)
-    }
-    expect(todo_repo.tasks).to eq(expected_tasks)
+    # Assert given tasks are present in both the current list and are also
+    # present after a reload (i.e. they have also been saved to disk).
+    expect(todo_repo.list.raw_tasks).to eq(expected_raw_tasks)
+    expect(todo_repo.list.reload.raw_tasks).to eq(expected_raw_tasks)
   end
 end

@@ -9,12 +9,9 @@ namespace :todotxt do
 
       cleared_tasks = 0
       repo.incomplete_tasks
-        .map { |task| TaskDecorator.new(task) }
         .select(&:today?)
         .map do |task|
-        task.contexts -= ["@today"]
-        scheduled = task.metadata.fetch(:scheduled, 0).to_i
-        task.metadata = {**task.metadata, scheduled: scheduled + 1}
+        task.unschedule(update_scheduled_tag: true)
         cleared_tasks += 1
       end
 

@@ -9,20 +9,7 @@ class TasksController < ApplicationController
     )
 
     @total_tasks = todo_repo.incomplete_tasks.length
-
-    @tasks = tasks_to_show.sort_by { |task|
-      # Each entry in comparison array should always be of the same type (or
-      # nil) for every task, otherwise this can blow up.
-      [
-        task.today? ? "a" : "b",
-        # Compare `due` metadata values as strings, since there is no guarantee
-        # that only Dates will be used for these.
-        task.metadata.fetch(:due, "zzz").to_s,
-        task.priority || "Z",
-        task.creation_date || 100.years.from_now,
-        task.raw
-      ]
-    }
+    @tasks = tasks_to_show.sort_by(&:ui_sort_key)
     @subtitle = "#{@tasks.size} tasks"
   end
 

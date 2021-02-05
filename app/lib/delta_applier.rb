@@ -75,12 +75,12 @@ class DeltaApplier
 
   def handle_schedule
     task = delta.arguments.first
-    todo_repo.map_task(task) { |t| t.contexts += ["@today"] }
+    todo_repo.map_task(task, &:schedule)
   end
 
   def handle_unschedule
     task = delta.arguments.first
-    todo_repo.map_task(task) { |t| t.contexts -= ["@today"] }
+    todo_repo.map_task(task, &:unschedule)
   end
 
   def handle_invalid_delta

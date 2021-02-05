@@ -4,6 +4,17 @@ class TodoRepo
   delegate :push, to: :repo
 
   def initialize(todo_file)
+    # TODO Defining this global config here seems the best place to both have
+    # tests pass without jumping through hoops, and avoid this warning which
+    # occurs if put this in an initializer: `DEPRECATION WARNING:
+    # Initialization autoloaded the constants Todotxt::Config, Todotxt::Task,
+    # and TaskWrapper.`. But might be a better place and/or could make this
+    # config not global.
+    Todotxt.config = Todotxt::Config.new(
+      parse_code_blocks: true,
+      task_class: TaskWrapper
+    )
+
     @list = Todotxt::List.load(todo_file)
   end
 
@@ -16,7 +27,7 @@ class TodoRepo
   end
 
   def delete_task(raw_task)
-    list.delete_if { |t| t.raw == raw_task.strip }
+    list.delete_if { |t| t.equals_raw_task(raw_task) }
   end
 
   def replace_task(old_raw_task, new_raw_task)
@@ -28,7 +39,7 @@ class TodoRepo
   end
 
   def map_task(raw_task, &block)
-    list.select { |t| t.raw == raw_task.strip }.map(&block)
+    list.select { |t| t.equals_raw_task(raw_task) }.map(&block)
   end
 
   def reset_to_origin

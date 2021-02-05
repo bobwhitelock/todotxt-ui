@@ -1,4 +1,4 @@
-require "rails_helper"
+require "spec_helper"
 require "parslet/rig/rspec"
 
 RSpec.describe Todotxt::Parser do

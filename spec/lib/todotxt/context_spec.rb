@@ -1,4 +1,4 @@
-require "rails_helper"
+require "spec_helper"
 
 RSpec.describe Todotxt::Context do
   describe ".new" do

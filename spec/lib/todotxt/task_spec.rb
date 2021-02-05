@@ -93,6 +93,10 @@ RSpec.describe Todotxt::Task do
     end
 
     context "when `parse_code_blocks` Config option not set" do
+      before :each do
+        Todotxt.config = Todotxt::Config.new(parse_code_blocks: false)
+      end
+
       it "does nothing special with backticks" do
         raw_task = "some text `with a @context and +project`"
 

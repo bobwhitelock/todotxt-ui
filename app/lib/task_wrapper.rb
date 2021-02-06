@@ -7,10 +7,6 @@ class TaskWrapper < Todotxt::Task
     contexts.include?("@today")
   end
 
-  def tomorrow?
-    contexts.include?("@tomorrow")
-  end
-
   def schedule
     self.contexts += ["@today"]
   end

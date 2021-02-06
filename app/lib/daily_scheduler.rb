@@ -7,15 +7,23 @@ class DailyScheduler
       task.unschedule(update_scheduled_tag: true)
     end
 
-    tomorrow_tasks = incomplete_tasks.select(&:tomorrow?)
-    tomorrow_tasks.map do |task|
-      task.contexts -= ["@tomorrow"]
+    current_day = Date.today.strftime("%A").downcase
+    current_day_context = "@#{current_day}" # E.g. "@tuesday"
+    new_today_tasks = incomplete_tasks.select { |task|
+      contexts = task.contexts
+      contexts.include?(current_day_context) || contexts.include?("@tomorrow")
+    }
+    new_today_tasks.map do |task|
+      task.contexts -= [current_day_context, "@tomorrow"]
       task.schedule
     end
 
     todo_repo.commit_todo_file("Progress scheduled tasks") && todo_repo.push
 
-    RakeLogger.info "#{today_tasks.length} tasks unscheduled"
-    RakeLogger.info "#{tomorrow_tasks.length} tasks scheduled for today"
+    unscheduled = today_tasks.length
+    RakeLogger.info "#{unscheduled} #{"task".pluralize(unscheduled)} unscheduled"
+
+    scheduled = new_today_tasks.length
+    RakeLogger.info "#{scheduled} #{"task".pluralize(scheduled)} scheduled for today"
   end
 end

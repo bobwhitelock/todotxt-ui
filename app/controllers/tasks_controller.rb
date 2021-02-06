@@ -81,7 +81,10 @@ class TasksController < ApplicationController
   alias assign_filters filters
 
   def assign_tags
-    @projects = todo_repo.all_projects
-    @contexts = (todo_repo.all_contexts + Context::SPECIAL_CONTEXTS).uniq
+    projects = todo_repo.all_projects
+    @projects = projects.map { |p| p[1...] }
+
+    contexts = todo_repo.all_contexts + Context::SPECIAL_CONTEXTS
+    @contexts = contexts.uniq.map { |p| p[1...] }
   end
 end

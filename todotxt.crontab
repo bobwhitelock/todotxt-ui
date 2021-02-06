@@ -15,7 +15,7 @@ SHELL=/bin/bash
 ### KEEP SORTED IN TIME ORDER
 ### PLACE ALL CRON TASKS BELOW
 
-0 5 * * * dokku dokku --rm run todotxt rake todotxt:cron:clear_today_list
+0 5 * * * dokku dokku --rm run todotxt rake todotxt:cron:progress_scheduled_tasks
 * * * * * dokku dokku --rm run todotxt rake todotxt:cron:sync_deltas
 
 ### PLACE ALL CRON TASKS ABOVE, DO NOT REMOVE THE WHITESPACE AFTER THIS LINE

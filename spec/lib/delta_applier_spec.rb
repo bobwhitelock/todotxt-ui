@@ -1,20 +1,9 @@
 require "rails_helper"
 require "support/repo_utils"
+require "support/stub_git"
 
 RSpec.describe DeltaApplier do
   include RepoUtils
-
-  # TODO Better approach to testing this that doesn't require this stub?
-  class StubGit
-    def config(*args)
-    end
-
-    def add(*args)
-    end
-
-    def commit(*args)
-    end
-  end
 
   before do
     allow(Git).to receive(:open).and_return(StubGit.new)

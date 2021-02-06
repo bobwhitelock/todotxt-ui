@@ -82,6 +82,6 @@ class TasksController < ApplicationController
 
   def assign_tags
     @projects = todo_repo.all_projects
-    @contexts = todo_repo.all_contexts
+    @contexts = (todo_repo.all_contexts + Context::SPECIAL_CONTEXTS).uniq
   end
 end

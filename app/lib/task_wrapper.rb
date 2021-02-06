@@ -4,15 +4,15 @@ class TaskWrapper < Todotxt::Task
   end
 
   def today?
-    contexts.include?("@today")
+    contexts.include?(Context::TODAY)
   end
 
   def schedule
-    self.contexts += ["@today"]
+    self.contexts += [Context::TODAY]
   end
 
   def unschedule(update_scheduled_tag: false)
-    self.contexts -= ["@today"]
+    self.contexts -= [Context::TODAY]
 
     if update_scheduled_tag
       scheduled = metadata.fetch(:scheduled, 0).to_i

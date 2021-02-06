@@ -1,23 +1,11 @@
 namespace :todotxt do
   namespace :cron do
-    desc "Automatically clear today list and bump `scheduled` tracking"
-    task clear_today_list: :environment do
+    desc "Progress scheduled tasks through available states; intended to be run daily, early in the day"
+    task progress_scheduled_tasks: :environment do
       RakeLogger.info "starting"
-
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
       repo.reset_to_origin
-
-      cleared_tasks = 0
-      repo.incomplete_tasks
-        .select(&:today?)
-        .map do |task|
-        task.unschedule(update_scheduled_tag: true)
-        cleared_tasks += 1
-      end
-
-      repo.commit_todo_file("Automatically clear today list") && repo.push
-
-      RakeLogger.info "#{cleared_tasks} tasks cleared"
+      DailyScheduler.progress(todo_repo: repo)
     end
 
     desc "Attempt to sync unapplied local Deltas to remote repo"

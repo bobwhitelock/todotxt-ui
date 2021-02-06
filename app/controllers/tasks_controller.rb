@@ -82,6 +82,14 @@ class TasksController < ApplicationController
 
   def assign_tags
     @projects = todo_repo.all_projects
-    @contexts = todo_repo.all_contexts
+    @contexts = (todo_repo.all_contexts + additional_contexts).uniq
+  end
+
+  def additional_contexts
+    ["@today", "@tomorrow", *day_contexts]
+  end
+
+  def day_contexts
+    Date::DAYNAMES.map { |day| "@#{day.downcase}" }
   end
 end

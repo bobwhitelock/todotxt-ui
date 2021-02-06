@@ -1,7 +1,7 @@
 namespace :todotxt do
   namespace :cron do
-    desc "Automatically clear today list and bump `scheduled` tracking"
-    task clear_today_list: :environment do
+    desc "Progress scheduled tasks through available states; intended to be run daily, early in the day"
+    task progress_scheduled_tasks: :environment do
       RakeLogger.info "starting"
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
       repo.reset_to_origin

@@ -6,5 +6,5 @@ module Context
   TODAY = "@today"
   TOMORROW = "@tomorrow"
   DAILY_CONTEXTS = Date::DAYNAMES.map { |day| from(day) }
-  SPECIAL_CONTEXTS = [TODAY, TOMORROW, *DAILY_CONTEXTS]
+  AUTOCOMPLETE_CONTEXTS = [TODAY, TOMORROW, *DAILY_CONTEXTS]
 end

@@ -84,7 +84,7 @@ class TasksController < ApplicationController
     projects = todo_repo.all_projects
     @projects = projects.map { |p| p[1...] }
 
-    contexts = todo_repo.all_contexts + Context::SPECIAL_CONTEXTS
+    contexts = todo_repo.all_contexts + Context::AUTOCOMPLETE_CONTEXTS
     @contexts = contexts.uniq.map { |p| p[1...] }
   end
 end

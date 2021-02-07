@@ -1,6 +1,13 @@
 module Context
-  def self.from(string)
-    "@#{string.downcase}"
+  class << self
+    def from(string)
+      "@#{string.downcase}"
+    end
+
+    def for_current_day
+      current_day = Date.today.strftime("%A")
+      from(current_day)
+    end
   end
 
   TODAY = "@today"

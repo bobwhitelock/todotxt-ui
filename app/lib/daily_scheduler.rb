@@ -13,8 +13,7 @@ class DailyScheduler
       task.contexts += [Context::YESTERDAY]
     }
 
-    current_day = Date.today.strftime("%A")
-    current_day_context = Context.from(current_day) # E.g. "@tuesday"
+    current_day_context = Context.for_current_day # E.g. "@tuesday"
     current_day_tasks = incomplete_tasks.select { |task| task.contexts.include?(current_day_context) }
     tomorrow_tasks = incomplete_tasks.select { |task| task.contexts.include?(Context::TOMORROW) }
     (current_day_tasks + tomorrow_tasks).uniq.map do |task|

@@ -10,6 +10,11 @@ RSpec.describe DailyScheduler do
   end
 
   describe ".progress" do
+    before :each do
+      now = Time.local(2021, 2, 9) # This is a Tuesday.
+      Timecop.freeze(now)
+    end
+
     it "removes tag from tasks tagged with @yesterday" do
       todo_repo = mock_todo_repo(
         "some important task @yesterday",
@@ -20,8 +25,7 @@ RSpec.describe DailyScheduler do
       expect(todo_repo).to receive(:commit_todo_file).with("Progress scheduled tasks").and_call_original
       expect(todo_repo).to receive(:push)
       expect(RakeLogger).to receive(:info).with("2 tasks untagged with @yesterday").ordered
-      expect(RakeLogger).to receive(:info).with("0 tasks unscheduled").ordered
-      expect(RakeLogger).to receive(:info).with("0 tasks scheduled for today").ordered
+      expect(RakeLogger).to receive(:info).with("Total tasks progressed: 2").ordered
       DailyScheduler.progress(todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, [
@@ -40,9 +44,8 @@ RSpec.describe DailyScheduler do
 
       expect(todo_repo).to receive(:commit_todo_file).with("Progress scheduled tasks").and_call_original
       expect(todo_repo).to receive(:push)
-      expect(RakeLogger).to receive(:info).with("0 tasks untagged with @yesterday").ordered
-      expect(RakeLogger).to receive(:info).with("2 tasks unscheduled").ordered
-      expect(RakeLogger).to receive(:info).with("0 tasks scheduled for today").ordered
+      expect(RakeLogger).to receive(:info).with("2 tasks moved from @today -> @yesterday").ordered
+      expect(RakeLogger).to receive(:info).with("Total tasks progressed: 2").ordered
       DailyScheduler.progress(todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, [
@@ -61,9 +64,8 @@ RSpec.describe DailyScheduler do
 
       expect(todo_repo).to receive(:commit_todo_file).with("Progress scheduled tasks").and_call_original
       expect(todo_repo).to receive(:push)
-      expect(RakeLogger).to receive(:info).with("0 tasks untagged with @yesterday").ordered
-      expect(RakeLogger).to receive(:info).with("0 tasks unscheduled").ordered
-      expect(RakeLogger).to receive(:info).with("2 tasks scheduled for today").ordered
+      expect(RakeLogger).to receive(:info).with("2 tasks moved from @tomorrow -> @today").ordered
+      expect(RakeLogger).to receive(:info).with("Total tasks progressed: 2").ordered
       DailyScheduler.progress(todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, [
@@ -74,8 +76,6 @@ RSpec.describe DailyScheduler do
     end
 
     it "schedules tasks tagged with current day of the week for today" do
-      now = Time.local(2021, 2, 9) # This is a Tuesday.
-      Timecop.freeze(now)
       todo_repo = mock_todo_repo(
         "some important task @tuesday",
         "other task",
@@ -84,9 +84,8 @@ RSpec.describe DailyScheduler do
 
       expect(todo_repo).to receive(:commit_todo_file).with("Progress scheduled tasks").and_call_original
       expect(todo_repo).to receive(:push)
-      expect(RakeLogger).to receive(:info).with("0 tasks untagged with @yesterday").ordered
-      expect(RakeLogger).to receive(:info).with("0 tasks unscheduled").ordered
-      expect(RakeLogger).to receive(:info).with("1 task scheduled for today").ordered
+      expect(RakeLogger).to receive(:info).with("1 task moved from @tuesday -> @today").ordered
+      expect(RakeLogger).to receive(:info).with("Total tasks progressed: 1").ordered
       DailyScheduler.progress(todo_repo: todo_repo)
 
       expect_tasks_saved(todo_repo, [

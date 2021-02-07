@@ -4,19 +4,19 @@ class DailyScheduler
 
     yesterday_tasks = incomplete_tasks.select { |task|
       task.contexts.include?(Context::YESTERDAY)
-    }.map { |task|
+    }.each do |task|
       task.contexts -= [Context::YESTERDAY]
-    }
+    end
 
-    today_tasks = incomplete_tasks.select(&:today?).map { |task|
+    today_tasks = incomplete_tasks.select(&:today?).each do |task|
       task.unschedule(update_scheduled_tag: true)
       task.contexts += [Context::YESTERDAY]
-    }
+    end
 
     current_day_context = Context.for_current_day # E.g. "@tuesday"
     current_day_tasks = incomplete_tasks.select { |task| task.contexts.include?(current_day_context) }
     tomorrow_tasks = incomplete_tasks.select { |task| task.contexts.include?(Context::TOMORROW) }
-    (current_day_tasks + tomorrow_tasks).uniq.map do |task|
+    (current_day_tasks + tomorrow_tasks).uniq.each do |task|
       task.contexts -= [current_day_context, Context::TOMORROW]
       task.schedule
     end
@@ -43,7 +43,7 @@ class DailyScheduler
       RakeLogger.info "#{scheduled} #{"task".pluralize(scheduled)} moved from @tomorrow -> @today"
     end
 
-    total_progressed = (yesterday_tasks + today_tasks + current_day_tasks + tomorrow_tasks).length
+    total_progressed = (yesterday_tasks + today_tasks + current_day_tasks + tomorrow_tasks).uniq.length
     RakeLogger.info "Total tasks progressed: #{total_progressed}"
   end
 end

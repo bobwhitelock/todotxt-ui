@@ -11,13 +11,8 @@ class TaskWrapper < Todotxt::Task
     self.contexts += [Context::TODAY]
   end
 
-  def unschedule(update_scheduled_tag: false)
+  def unschedule
     self.contexts -= [Context::TODAY]
-
-    if update_scheduled_tag
-      scheduled = metadata.fetch(:scheduled, 0).to_i
-      self.metadata = {**metadata, scheduled: scheduled + 1}
-    end
   end
 
   def ui_sort_key

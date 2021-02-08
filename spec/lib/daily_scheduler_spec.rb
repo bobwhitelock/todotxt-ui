@@ -133,8 +133,8 @@ RSpec.describe DailyScheduler do
       expect(todo_repo).to receive(:push)
       expect(RakeLogger).to receive(:info).with("2 tasks untagged with @yesterday").ordered
       expect(RakeLogger).to receive(:info).with("3 tasks moved from @today -> @yesterday").ordered
-      expect(RakeLogger).to receive(:info).with("3 tasks moved from @tuesday -> @today").ordered
       expect(RakeLogger).to receive(:info).with("4 tasks moved from @tomorrow -> @today").ordered
+      expect(RakeLogger).to receive(:info).with("3 tasks moved from @tuesday -> @today").ordered
       expect(RakeLogger).to receive(:info).with("2 tasks due on 2021-02-09 tagged with @today").ordered
       expect(RakeLogger).to receive(:info).with("Total tasks progressed: 8").ordered
       DailyScheduler.progress(todo_repo: todo_repo)

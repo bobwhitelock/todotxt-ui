@@ -17,9 +17,17 @@ bin/rails server -b '0.0.0.0'
 
 ## Deployment Notes
 
-- Ubuntu 16.04 on Linode
-- Dokku 0.19.13
+- Ubuntu 20.04 on Linode
+- Dokku 0.23.2
 
+### Updating Dokku
+
+Where e.g. `version=v0.23.2`:
+
+```bash
+wget https://raw.githubusercontent.com/dokku/dokku/$version/bootstrap.sh
+sudo DOKKU_TAG=$version bash bootstrap.sh
+```
 
 ### To setup for deployment
 
@@ -30,8 +38,8 @@ Below took some bashing, so may be missing a step/need adjustment.
 dokku apps:create todotxt
 dokku buildpacks:add todotxt https://github.com/heroku/heroku-buildpack-ruby.git
 # Using specific version of buildpack as suggested to fix issue at
-# https://github.com/heroku/heroku-buildpack-nodejs/issues/856. At some point
-# upgrade Dokku instead - see
+# https://github.com/heroku/heroku-buildpack-nodejs/issues/856. Apparently this
+# has been fixed but can't figure out how to get this to work - see
 # https://github.com/heroku/heroku-buildpack-nodejs/issues/856#issuecomment-731933169
 dokku buildpacks:add todotxt 'https://github.com/heroku/heroku-buildpack-nodejs.git#v174'
 dokku domains:add todotxt "$public_domain"

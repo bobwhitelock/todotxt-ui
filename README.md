@@ -11,7 +11,6 @@ Some steps may be missing ¯\\\_(ツ)\_/¯.
 git clone https://github.com/bobwhitelock/todotxt-ui.git
 cd !$
 bundle install
-cp config/application{.example,}.yml # And modify env vars.
 rake db:setup
 bin/rails server -b '0.0.0.0'
 ```

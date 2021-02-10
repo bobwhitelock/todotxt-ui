@@ -1,7 +1,7 @@
 
 # Todotxt UI
 
-![CI](https://github.com/bobwhitelock/todotxt-ui/workflows/CI/badge.svg)
+[![CI workflow badge](https://github.com/bobwhitelock/todotxt-ui/workflows/CI/badge.svg)](https://github.com/bobwhitelock/todotxt-ui/actions?query=workflow%3ACI)
 
 ## Development Notes
 

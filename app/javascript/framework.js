@@ -27,10 +27,10 @@ export function addClassEventHandler(
   handlerFunction,
   options = {}
 ) {
-  const { passThrough, runOnAttach } = options;
+  const { runOnAttach } = options;
 
   forEachWithClass(className, (element) => {
-    const runHandler = () => handlerFunction(element, passThrough);
+    const runHandler = () => handlerFunction(element);
     if (runOnAttach) {
       runHandler();
     }

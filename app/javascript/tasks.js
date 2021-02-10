@@ -8,6 +8,9 @@ import {
   scrollToTop,
 } from "framework";
 
+const tasksFormSubmitClass = "js-tasks-form-submit";
+const tasksFormTextareaClass = "js-tasks-form-textarea";
+
 turbolinksPersistScroll("js-turbolinks-persist-scroll");
 
 window.addEventListener("turbolinks:load", function () {
@@ -15,29 +18,20 @@ window.addEventListener("turbolinks:load", function () {
   const projects = JSON.parse(initialData.getAttribute("data-projects"));
   const contexts = JSON.parse(initialData.getAttribute("data-contexts"));
 
-  const tasksFormTextarea = "js-tasks-form-textarea";
-  const tasksFormSubmit = "js-tasks-form-submit";
-
   addClassEventHandler("js-scroll-to-top", "click", scrollToTop);
   addClassEventHandler("js-scroll-to-bottom", "click", scrollToBottom);
-  addClassEventHandler(tasksFormTextarea, "input", disableSubmitWhenUnchanged, {
-    passThrough: {
-      submitButtonClass: tasksFormSubmit,
-      originalContentAttr: "data-original-content",
-    },
+
+  addClassEventHandler(tasksFormTextareaClass, "input", handleTasksFormInput, {
     runOnAttach: true,
   });
-
-  addTagsAutocompletion(tasksFormTextarea, projects, contexts);
+  addTagsAutocompletion(tasksFormTextareaClass, projects, contexts);
 });
 
-function disableSubmitWhenUnchanged(
-  element,
-  { submitButtonClass, originalContentAttr }
-) {
+function handleTasksFormInput(element) {
+  const originalContentAttr = "data-original-content";
   const originalContent = element.getAttribute(originalContentAttr);
 
-  forEachWithClass(submitButtonClass, (button) => {
+  forEachWithClass(tasksFormSubmitClass, (button) => {
     if (element.value.trim() === originalContent.trim()) {
       button.setAttribute("disabled", "");
     } else {

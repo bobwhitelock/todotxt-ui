@@ -53,3 +53,12 @@ export function scrollToTop() {
 export function scrollToBottom() {
   window.scrollTo(0, document.body.scrollHeight);
 }
+
+// See https://stackoverflow.com/a/821227/2620402.
+export function enableNavigationWarning() {
+  window.onbeforeunload = () => "";
+}
+
+export function disableNavigationWarning() {
+  window.onbeforeunload = () => null;
+}

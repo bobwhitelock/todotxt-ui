@@ -6,6 +6,8 @@ import {
   forEachWithClass,
   scrollToBottom,
   scrollToTop,
+  enableNavigationWarning,
+  disableNavigationWarning,
 } from "framework";
 
 const tasksFormSubmitClass = "js-tasks-form-submit";
@@ -14,6 +16,9 @@ const tasksFormTextareaClass = "js-tasks-form-textarea";
 turbolinksPersistScroll("js-turbolinks-persist-scroll");
 
 window.addEventListener("turbolinks:load", function () {
+  // Ensure no navigation warning initially given on page load.
+  disableNavigationWarning();
+
   const initialData = document.getElementById("js-initial-data");
   const projects = JSON.parse(initialData.getAttribute("data-projects"));
   const contexts = JSON.parse(initialData.getAttribute("data-contexts"));
@@ -33,9 +38,14 @@ function handleTasksFormInput(element) {
 
   forEachWithClass(tasksFormSubmitClass, (button) => {
     if (element.value.trim() === originalContent.trim()) {
+      // When content unchanged, prevent submission and allow navigation away
+      // without warning.
       button.setAttribute("disabled", "");
+      disableNavigationWarning();
     } else {
+      // When content changed, allow submission and warn on navigation.
       button.removeAttribute("disabled");
+      enableNavigationWarning();
     }
   });
 }

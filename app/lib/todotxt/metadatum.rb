@@ -7,8 +7,8 @@ class Todotxt
       @value = convert_value(value)
     end
 
-    def ==(other_metadatum)
-      super && other_metadatum.key == key
+    def ==(other)
+      super && other.key == key
     end
 
     def to_s

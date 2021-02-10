@@ -49,7 +49,7 @@ class Todotxt
       ].compact
       "<#{parts.join(" ")}>"
     end
-    alias inspect to_s
+    alias_method :inspect, :to_s
 
     def respond_to_missing?(method, include_all)
       tasks.respond_to?(method, include_all)

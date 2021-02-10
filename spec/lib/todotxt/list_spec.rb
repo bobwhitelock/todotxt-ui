@@ -1,6 +1,8 @@
 require "spec_helper"
 require "support/todotxt_helpers"
 
+class CustomTask < Todotxt::Task; end
+
 RSpec.describe Todotxt::List do
   describe ".new" do
     it "creates a List from an array of Tasks and/or strings" do
@@ -31,8 +33,6 @@ RSpec.describe Todotxt::List do
     end
 
     context "when `task_class` Config option set" do
-      class CustomTask < Todotxt::Task; end
-
       before :each do
         Todotxt.config = Todotxt::Config.new(task_class: CustomTask)
       end

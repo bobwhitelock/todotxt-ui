@@ -78,7 +78,7 @@ class TasksController < ApplicationController
   def filters
     @filters ||= Array.wrap(params[:filters])
   end
-  alias assign_filters filters
+  alias_method :assign_filters, :filters
 
   def assign_tags
     projects = todo_repo.all_projects

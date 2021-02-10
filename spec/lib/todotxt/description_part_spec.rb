@@ -1,9 +1,11 @@
 require "spec_helper"
 
+class TestDescriptionPart < Todotxt::DescriptionPart; end
+
+class OtherTestDescriptionPart < Todotxt::DescriptionPart; end
+
 RSpec.describe Todotxt::DescriptionPart do
   describe "#==" do
-    class TestDescriptionPart < described_class; end
-
     subject { TestDescriptionPart.new("foo") }
 
     it "returns true if other part has the same class and value" do
@@ -13,7 +15,6 @@ RSpec.describe Todotxt::DescriptionPart do
     end
 
     it "returns false if other part has different class" do
-      class OtherTestDescriptionPart < described_class; end
       other_part = OtherTestDescriptionPart.new("foo")
 
       expect(subject == other_part).to be false

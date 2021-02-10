@@ -3,7 +3,7 @@ class Todotxt
     PARSER_NAME = nil
 
     attr_reader :value
-    alias to_s value
+    alias_method :to_s, :value
 
     def initialize(value)
       value = value.to_s
@@ -11,8 +11,8 @@ class Todotxt
       @value = value
     end
 
-    def ==(other_part)
-      other_part.class == self.class && other_part.value == value
+    def ==(other)
+      other.class == self.class && other.value == value
     end
 
     private

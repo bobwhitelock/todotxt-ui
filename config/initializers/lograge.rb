@@ -20,7 +20,7 @@ if Rails.env.production?
   # https://github.com/roidrage/lograge/issues/146#issuecomment-461632965.
   module ActionDispatch
     class DebugExceptions
-      alias old_log_error log_error
+      alias_method :old_log_error, :log_error
 
       def log_error(request, wrapper)
         exception = wrapper.exception

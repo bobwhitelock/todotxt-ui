@@ -2,14 +2,14 @@ class Todotxt
   module Utils
     class << self
       def delete_first(array, item = nil, &block)
-        optional_args = [item, block_given?]
+        optional_args = [item, block]
         if optional_args.none? || optional_args.all?
           raise InternalError.new("Either `item` or block must be passed")
         end
 
         item_index = if item
           array.index(item)
-        elsif block_given?
+        elsif block
           array.index(&block)
         end
 

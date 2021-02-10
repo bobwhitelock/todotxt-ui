@@ -11,7 +11,7 @@ class Todotxt
     def to_s
       "<#{self.class}: \"#{raw}\">"
     end
-    alias inspect to_s
+    alias_method :inspect, :to_s
 
     def raw
       [
@@ -138,7 +138,7 @@ class Todotxt
     def parse_and_initialize(raw_task = "")
       initialize_task_data(**Todotxt.config.parse_task(raw_task))
     end
-    alias initialize parse_and_initialize
+    alias_method :initialize, :parse_and_initialize
 
     def initialize_task_data(
       original_raw:,

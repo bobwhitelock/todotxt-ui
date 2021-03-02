@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read(File.join(File.dirname(__FILE__), ".ruby-version")).chomp
 
-gem "rails", "~> 6.1.1"
+gem "rails", "~> 6.1.3"
 # Use Puma as the app server
 gem "puma", "~> 4.3"
 # Use SCSS for stylesheets

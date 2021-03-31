@@ -9,10 +9,11 @@ Some steps may be missing ¯\\\_(ツ)\_/¯.
 
 ```bash
 git clone https://github.com/bobwhitelock/todotxt-ui.git
-cd !$
+cd todotxt-ui
 bundle install
 rake db:setup
 bin/rails server -b '0.0.0.0'
+bin/webpack-dev-server  # In separate shell.
 ```
 
 ## Deployment Notes
@@ -35,6 +36,11 @@ Below took some bashing, so may be missing a step/need adjustment.
 
 ```bash
 # Remote
+dokku plugin:install https://github.com/dokku/dokku-postgres.git
+dokku plugin:install https://github.com/michaelshobbs/dokku-hostname.git dokku-hostname
+dokku plugin:install https://github.com/michaelshobbs/dokku-logspout.git
+dokku plugin:install letsencrypt
+
 dokku apps:create todotxt
 dokku buildpacks:add todotxt https://github.com/heroku/heroku-buildpack-ruby.git
 # Using specific version of buildpack as suggested to fix issue at
@@ -44,7 +50,6 @@ dokku buildpacks:add todotxt https://github.com/heroku/heroku-buildpack-ruby.git
 dokku buildpacks:add todotxt 'https://github.com/heroku/heroku-buildpack-nodejs.git#v174'
 dokku domains:add todotxt "$public_domain"
 dokku domains:remove todotxt todotxt.li1514-40.members.linode.com
-dokku plugins:install letsencrypt
 dokku letsencrypt:cron-job --add
 
 ssh-keygen -t rsa -b 4096 -C "$email_for_app" -f ~/.ssh/id_rsa -N ''
@@ -69,16 +74,13 @@ dokku config:set todotxt \
 dokku letsencrypt todotxt
 
 # Setup database.
-dokku plugin:install https://github.com/dokku/dokku-postgres.git
 dokku postgres:create todotxt-database
 dokku postgres:link todotxt-database todotxt
 dokku run todotxt rake db:setup
 
 # Configure logs to be sent to Papertrail - see
 # http://mikebian.co/sending-dokku-container-logs-to-papertrail/.
-dokku plugin:install https://github.com/michaelshobbs/dokku-logspout.git
 dokku logspout:server syslog+tls://$papertrail_endpoint
-dokku plugin:install https://github.com/michaelshobbs/dokku-hostname.git dokku-hostname
 dokku logspout:start
 dokku ps:rebuildall
 ```

@@ -6,6 +6,7 @@ module RepoUtils
     end
     temp_file.write
     temp_file.rewind
+    allow(Figaro.env).to receive("TODO_FILE!").and_return(temp_file)
     TodoRepo.new(temp_file.path)
   end
 

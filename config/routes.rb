@@ -11,6 +11,11 @@ Rails.application.routes.draw do
     post :unschedule
   end
 
+  namespace :api do
+    get "/tasks" => "tasks#index"
+    post "/tasks" => "tasks#update"
+  end
+
   # Any other non-XHR, HTML request should render the React client.
   get "*path", to: "application#client_index_html", constraints: lambda { |request|
     !request.xhr? && request.format.html?

@@ -45,7 +45,7 @@ dokku buildpacks:add todotxt 'https://github.com/heroku/heroku-buildpack-nodejs.
 dokku domains:add todotxt "$public_domain"
 dokku domains:remove todotxt todotxt.li1514-40.members.linode.com
 dokku plugins:install letsencrypt
-dokku letsencrypt:cron-job --add todotxt
+dokku letsencrypt:cron-job --add
 
 ssh-keygen -t rsa -b 4096 -C "$email_for_app" -f ~/.ssh/id_rsa -N ''
 # <add this to GitHub's https://github.com/settings/keys page>

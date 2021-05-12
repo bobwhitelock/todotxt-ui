@@ -81,9 +81,6 @@ dokku logspout:server syslog+tls://$papertrail_endpoint
 dokku plugin:install https://github.com/michaelshobbs/dokku-hostname.git dokku-hostname
 dokku logspout:start
 dokku ps:rebuildall
-
-# Local
-git remote add prod dokku@li1514-40.members.linode.com:todotxt
 ```
 
 Also:
@@ -92,8 +89,13 @@ Also:
 
 ### To deploy
 
+Deploys should happen automatically on push to `master` on GitHub, or can be
+triggered manually locally like this:
+
 ```bash
+git remote add prod dokku@$public_domain:todotxt
 git push -f prod HEAD:master
 
-# Add any updates to `todotxt.crontab` to `/etc/cron.d/todotxt` remotely.
+# Any updates to `todotxt.crontab` locally will also need to be added to
+# `/etc/cron.d/todotxt` remotely.
 ```

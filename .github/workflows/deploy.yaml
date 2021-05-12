@@ -1,0 +1,26 @@
+# See https://dokku.com/docs/deployment/continuous-integration/github-actions/.
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloning repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Push to dokku
+        uses: dokku/github-action@v1.0.2
+        with:
+          # Always force push so deploy can work no matter what was previously
+          # deployed.
+          git_push_flags: "--force"
+          git_remote_url: "ssh://dokku@todo.bobwhitelock.co.uk/~/todotxt/"
+          ssh_private_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}

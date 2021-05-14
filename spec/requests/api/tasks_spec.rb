@@ -55,7 +55,7 @@ RSpec.describe "/api/tasks" do
       mock_todo_repo("a task")
 
       post_data = {
-        action: Delta::UPDATE,
+        type: Delta::UPDATE,
         arguments: ["a task", "updated task"]
       }
       post "/api/tasks", headers: basic_auth_header, params: post_data

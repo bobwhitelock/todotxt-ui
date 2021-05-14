@@ -6,7 +6,7 @@ class Api::TasksController < ApplicationController
   end
 
   def update
-    type = params[:action]
+    type = params[:type]
     arguments = params[:arguments]
     Delta.create!(type: type, arguments: arguments)
     render_tasks

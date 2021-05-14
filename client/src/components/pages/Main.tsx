@@ -21,6 +21,16 @@ function Main() {
   const filters: null[] = [];
   const filteredTasks = allTasks;
 
+  const scrollToTop = (event: React.FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    window.scrollTo(0, 0);
+  };
+
+  const scrollToBottom = (event: React.FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    window.scrollTo(0, document.body.scrollHeight);
+  };
+
   return (
     <div className="flex flex-wrap text-lg">
       <div className="sticky top-0 bg-gray-300 card md:static">
@@ -38,20 +48,14 @@ function Main() {
           {/* buttons on other cards. */}
           <span></span>
 
-          <IconButton
-            onClick={() => window.scrollTo(0, 0)}
-            className="md:hidden"
-          >
+          <IconButton onClick={scrollToTop} className="md:hidden">
             <Icon.ArrowThickUpCircle
               backgroundClass="text-gray-500"
               foregroundClass="text-gray-600"
             />
           </IconButton>
 
-          <IconButton
-            onClick={() => window.scrollTo(0, document.body.scrollHeight)}
-            className="md:hidden"
-          >
+          <IconButton onClick={scrollToBottom} className="md:hidden">
             <Icon.ArrowThickDownCircle
               backgroundClass="text-gray-500"
               foregroundClass="text-gray-600"

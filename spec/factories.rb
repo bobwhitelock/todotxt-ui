@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :delta do
     type { "add" }
-    arguments { ["something"] }
+    arguments { ["an argument"] * Delta::TYPE_CONFIGS[type].valid_arguments_length }
     status { Delta::UNAPPLIED }
   end
 end

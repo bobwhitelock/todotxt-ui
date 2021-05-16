@@ -165,18 +165,6 @@ RSpec.describe DeltaApplier do
       expect_tasks_saved(todo_repo, ["other task"])
     end
 
-    it "handles all delta types with any arguments" do
-      Delta::TYPES.each do |type|
-        delta = create(:delta, type: type, arguments: ["arg"] * 10)
-        todo_repo = mock_todo_repo
-        allow(todo_repo).to receive(:commit_todo_file).and_call_original
-
-        expect {
-          DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
-        }.not_to raise_error
-      end
-    end
-
     # TODO test behaviour with/without committing better - do above tests in
     # generic way so can reuse these in both situations, and actually check all
     # behaviour still correct?
@@ -184,11 +172,7 @@ RSpec.describe DeltaApplier do
       it "leaves todo repo on disk unchanged" do
         Delta::TYPES.each do |type|
           todo_repo = mock_todo_repo("some task")
-          delta = create(
-            :delta,
-            type: type,
-            arguments: ["some task", "another arg"]
-          )
+          delta = create(:delta, type: type)
 
           expect(todo_repo).not_to receive(:commit_todo_file)
           DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo, commit: false)

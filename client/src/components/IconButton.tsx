@@ -9,7 +9,7 @@ export default function IconButton({
   confirmMessage,
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (event: React.FormEvent<HTMLButtonElement>) => void;
   className?: string;
   confirmMessage?: string;
 }) {

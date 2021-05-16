@@ -41,11 +41,7 @@ class DeltaApplier
 
   def handle_delta
     handle_message = "handle_#{delta.type}"
-    if respond_to?(handle_message, include_all: true)
-      send(handle_message)
-    else
-      handle_invalid_delta
-    end
+    send(handle_message)
   end
 
   def handle_add

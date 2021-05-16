@@ -16,21 +16,17 @@ class Delta < ApplicationRecord
 
   UNAPPLIED = "unapplied"
   APPLIED = "applied"
-  INVALID = "invalid"
   STATUSES = [
     # Unapplied = Delta's change has not yet been committed.
     UNAPPLIED,
     # Applied = Delta's change has been committed, or it has been checked by
     # DeltaApplier and has no change requiring it to be committed (e.g. if 2
     # identical updates were made near simultaneously).
-    APPLIED,
-    # Invalid = Delta is of an unknown type and so cannot be handled; maybe
-    # other reasons in future.
-    INVALID
+    APPLIED
   ]
 
   validates_presence_of :type
-  validates :type, inclusion: {in: TYPES}, unless: :invalid?
+  validates :type, inclusion: {in: TYPES}
   validates :status, presence: true, inclusion: {in: STATUSES}
   validates_presence_of(:arguments)
 

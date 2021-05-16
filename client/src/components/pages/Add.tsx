@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import cn from "classnames";
 import { Redirect } from "react-router-dom";
-import { useMutation } from "react-query";
 
 import * as urls from "urls";
+import { useUpdateTasks } from "api";
 
 function Add() {
   const [rawTasks, setRawTasks] = useState("");
@@ -11,22 +11,11 @@ function Add() {
   const taskOrTasks =
     trimmedRawTasks.split("\n").length === 1 ? "Task" : "Tasks";
 
-  // XXX Abstract this away and make generic
-  // XXX Add generic error handling - show alert or similar
-  const addTasks = useMutation((rawTasks: string) =>
-    fetch("/api/tasks", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-      },
-      body: JSON.stringify({ type: "add", arguments: [rawTasks] }),
-    })
-  );
+  const addTasks = useUpdateTasks("add");
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    addTasks.mutate(rawTasks);
+    addTasks.mutate([rawTasks]);
   };
 
   if (addTasks.isSuccess) {

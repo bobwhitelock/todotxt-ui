@@ -1,20 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
 
 import * as Icon from "components/Icon";
 import * as urls from "urls";
 import IconButton from "components/IconButton";
 import TaskCard from "components/TaskCard";
-import { Task } from "types/Task";
+import { useTasks } from "api";
 
 function Main() {
   // XXX Handle isLoading and error
-  // XXX Have this return Task[]
-  const { isLoading, error, data } = useQuery("tasks", () =>
-    fetch("/api/tasks").then((response) => response.json())
-  );
-  const allTasks: Task[] = data ? data.data : [];
+  const { isLoading, error, data } = useTasks();
+  const allTasks = data ? data.data : [];
   // XXX handle filtering
   // XXX Filter out complete tasks
   // XXX handle sorting tasks to be shown

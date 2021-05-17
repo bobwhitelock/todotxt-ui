@@ -1,7 +1,9 @@
 import React from "react";
 import cn from "classnames";
+import { Link } from "react-router-dom";
 
 import * as Icon from "components/Icon";
+import * as urls from "urls";
 import IconButton from "components/IconButton";
 import { Task, isToday } from "types/Task";
 
@@ -87,13 +89,11 @@ function TaskCard({ task }: Props) {
           <Icon.Trash topClass="text-gray-600" bottomClass="text-gray-500" />
         </IconButton>
 
-        <IconButton
-          onClick={() => {
-            "update";
-          }}
-        >
-          <Icon.Edit topClass="text-gray-500" bottomClass="text-gray-600" />
-        </IconButton>
+        <Link to={urls.edit.forTask(task)}>
+          <IconButton>
+            <Icon.Edit topClass="text-gray-500" bottomClass="text-gray-600" />
+          </IconButton>
+        </Link>
 
         <IconButton
           onClick={() => {

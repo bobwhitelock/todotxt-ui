@@ -5,6 +5,7 @@ import * as Icon from "components/Icon";
 import * as urls from "urls";
 import IconButton from "components/IconButton";
 import { Task, isToday } from "types/Task";
+import { useUpdateTasks } from "api";
 
 type Props = {
   task: Task;
@@ -12,6 +13,11 @@ type Props = {
 
 function TaskCard({ task }: Props) {
   const classes = taskClasses(task);
+
+  const scheduleTask = useUpdateTasks("schedule", [task.raw]);
+  const unscheduleTask = useUpdateTasks("unschedule", [task.raw]);
+  const deleteTask = useUpdateTasks("delete", [task.raw]);
+  const completeTask = useUpdateTasks("complete", [task.raw]);
 
   return (
     <div
@@ -57,9 +63,8 @@ function TaskCard({ task }: Props) {
       <div className="flex justify-between">
         {isToday(task) ? (
           <IconButton
-            onClick={() => {
-              "unschedule";
-            }}
+            onClick={unscheduleTask.eventHandler}
+            disabled={unscheduleTask.mutation.isLoading}
           >
             <Icon.CalendarRemove
               backgroundClass="text-gray-500"
@@ -68,9 +73,8 @@ function TaskCard({ task }: Props) {
           </IconButton>
         ) : (
           <IconButton
-            onClick={() => {
-              "schedule";
-            }}
+            onClick={scheduleTask.eventHandler}
+            disabled={scheduleTask.mutation.isLoading}
           >
             <Icon.CalendarAdd
               backgroundClass="text-gray-500"
@@ -80,10 +84,8 @@ function TaskCard({ task }: Props) {
         )}
 
         <IconButton
-          onClick={() => {
-            "delete";
-          }}
-          confirmMessage="Are you sure you want to delete this task?"
+          onClick={deleteTask.eventHandler}
+          disabled={deleteTask.mutation.isLoading}
         >
           <Icon.Trash topClass="text-gray-600" bottomClass="text-gray-500" />
         </IconButton>
@@ -95,9 +97,8 @@ function TaskCard({ task }: Props) {
         </Link>
 
         <IconButton
-          onClick={() => {
-            "complete";
-          }}
+          onClick={completeTask.eventHandler}
+          disabled={completeTask.mutation.isLoading}
         >
           <Icon.Check
             foregroundClass="text-green-600"

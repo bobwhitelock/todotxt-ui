@@ -13,8 +13,8 @@ export function useTasks() {
   );
 }
 
-export function useUpdateTasks(deltaType: DeltaType) {
-  return useMutation((deltaArguments: string[]) =>
+export function useUpdateTasks(deltaType: DeltaType, deltaArguments: string[]) {
+  const mutation = useMutation(() =>
     fetch(TASKS_URL, {
       method: "POST",
       headers: {
@@ -24,4 +24,11 @@ export function useUpdateTasks(deltaType: DeltaType) {
       body: JSON.stringify({ type: deltaType, arguments: deltaArguments }),
     })
   );
+
+  const eventHandler = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    mutation.mutate();
+  };
+
+  return { mutation, eventHandler };
 }

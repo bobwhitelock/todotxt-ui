@@ -12,12 +12,10 @@ function Edit() {
   const [rawTasks, setRawTasks] = useState(originalRawTask);
   const trimmedRawTasks = rawTasks.trim();
 
-  const editTask = useUpdateTasks("update");
-
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    editTask.mutate([originalRawTask, rawTasks]);
-  };
+  const { mutation: editTask, eventHandler: onSubmit } = useUpdateTasks(
+    "update",
+    [originalRawTask, rawTasks]
+  );
 
   if (editTask.isSuccess) {
     return <Redirect to={urls.root} />;

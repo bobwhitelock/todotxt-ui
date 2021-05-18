@@ -11,12 +11,9 @@ function Add() {
   const taskOrTasks =
     trimmedRawTasks.split("\n").length === 1 ? "Task" : "Tasks";
 
-  const addTasks = useUpdateTasks("add");
-
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    addTasks.mutate([rawTasks]);
-  };
+  const { mutation: addTasks, eventHandler: onSubmit } = useUpdateTasks("add", [
+    rawTasks,
+  ]);
 
   if (addTasks.isSuccess) {
     return <Redirect to={urls.root} />;

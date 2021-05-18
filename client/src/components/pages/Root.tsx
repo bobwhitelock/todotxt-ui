@@ -6,16 +6,17 @@ import * as urls from "urls";
 import IconButton from "components/IconButton";
 import TaskCard from "components/TaskCard";
 import { useTasks } from "api";
+import { sorted } from "types/Task";
 
 function Root() {
   // XXX Handle isLoading and error
   const { isLoading, error, data } = useTasks();
-  const allTasks = data ? data.data : [];
+  const allTasks = sorted(data ? data.data : []);
+  const incompleteTasks = allTasks.filter((task) => !task.complete);
+
   // XXX handle filtering
-  // XXX Filter out complete tasks
-  // XXX handle sorting tasks to be shown
   const filters: null[] = [];
-  const filteredTasks = allTasks;
+  const filteredTasks = incompleteTasks;
 
   const scrollToTop = (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -31,7 +32,7 @@ function Root() {
     <div className="flex flex-wrap text-lg">
       <div className="sticky top-0 bg-gray-300 card md:static">
         <div className="py-2">
-          {allTasks.length} tasks ({filteredTasks.length} shown)
+          {incompleteTasks.length} tasks ({filteredTasks.length} shown)
         </div>
         <div className="flex-grow py-2">
           {/* XXX Do this better */}

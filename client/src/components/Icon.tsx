@@ -1,5 +1,3 @@
-import React from "react";
-
 // All icons in this file come from Refactoring UI v1.0.2
 // (https://refactoringui.com).
 

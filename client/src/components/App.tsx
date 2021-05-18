@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import * as urls from "urls";
 import Add from "components/pages/Add";
 import Edit from "components/pages/Edit";
-import Main from "components/pages/Main";
+import Root from "components/pages/Root";
 
 const queryClient = new QueryClient();
 
@@ -15,7 +15,7 @@ function App() {
         <Switch>
           {/* XXX Handle 404s */}
           <Route exact path={urls.root}>
-            <Main />
+            <Root />
           </Route>
           <Route exact path={urls.add}>
             <Add />

@@ -7,7 +7,7 @@ import IconButton from "components/IconButton";
 import TaskCard from "components/TaskCard";
 import { useTasks } from "api";
 
-function Main() {
+function Root() {
   // XXX Handle isLoading and error
   const { isLoading, error, data } = useTasks();
   const allTasks = data ? data.data : [];
@@ -93,4 +93,4 @@ function FilterPill({ filter }: { filter: null }) {
   return filter;
 }
 
-export default Main;
+export default Root;

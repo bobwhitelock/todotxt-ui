@@ -15,7 +15,7 @@ cd todotxt-ui
 bin/setup
 rake db:setup
 bin/rails server -b '0.0.0.0'
-bin/webpack-dev-server  # In separate shell.
+cd client && yarn start  # In separate shell.
 ```
 
 ## To deploy

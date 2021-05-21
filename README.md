@@ -10,7 +10,7 @@ Some steps may be missing ¯\\\_(ツ)\_/¯.
 ```bash
 git clone https://github.com/bobwhitelock/todotxt-ui.git
 cd todotxt-ui
-bundle install
+bin/setup
 rake db:setup
 bin/rails server -b '0.0.0.0'
 bin/webpack-dev-server  # In separate shell.

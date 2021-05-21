@@ -4,8 +4,25 @@ namespace :todotxt do
     task progress_scheduled_tasks: :environment do
       RakeLogger.info "starting"
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
-      repo.reset_to_origin
-      DailyScheduler.progress(todo_repo: repo)
+
+      attempt = 1
+      retry_config = {
+        # Set high number of tries, so will retry for an hour rather than a set
+        # number of attempts.
+        tries: 1000,
+        on: Git::GitExecuteError,
+        base_interval: 10.seconds,
+        max_elapsed_time: 1.hour,
+        on_retry: proc do |error|
+          RakeLogger.warn "Git error in `progress_scheduled_tasks`, will retry (attempt #{attempt}): #{error}"
+          attempt += 1
+        end
+      }
+
+      Retriable.retriable(**retry_config) do
+        repo.reset_to_origin
+        DailyScheduler.progress(todo_repo: repo)
+      end
     end
 
     desc "Attempt to sync unapplied local Deltas to remote repo"

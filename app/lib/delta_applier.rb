@@ -79,10 +79,6 @@ class DeltaApplier
     todo_repo.map_task(task, &:unschedule)
   end
 
-  def handle_invalid_delta
-    delta.update!(status: Delta::INVALID)
-  end
-
   def save_delta_change
     return unless commit_message
     todo_repo.commit_todo_file(commit_message)

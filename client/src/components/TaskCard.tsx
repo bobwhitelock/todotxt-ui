@@ -44,7 +44,7 @@ function TaskCard({ task }: Props) {
 
         <div className="px-2 py-2">
           <p className="text-gray-900">
-            <InlineMarkdown markdown={task.description_text} />
+            <InlineMarkdown markdown={task.descriptionText} />
           </p>
         </div>
 
@@ -58,7 +58,7 @@ function TaskCard({ task }: Props) {
         </div>
       </div>
 
-      <div className="px-2 py-1 text-gray-600">{task.creation_date}</div>
+      <div className="px-2 py-1 text-gray-600">{task.creationDate}</div>
 
       <div className="flex justify-between">
         {isToday(task) ? (

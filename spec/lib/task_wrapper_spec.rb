@@ -10,11 +10,11 @@ RSpec.describe TaskWrapper do
 
       expect(task.to_json).to eq({
         raw: raw_task,
-        description_text: "some task",
+        descriptionText: "some task",
         complete: true,
         priority: "B",
-        creation_date: "2021-04-05",
-        completion_date: "2021-04-06",
+        creationDate: "2021-04-05",
+        completionDate: "2021-04-06",
         contexts: ["@context"],
         projects: ["+proj1", "+proj2"],
         metadata: {

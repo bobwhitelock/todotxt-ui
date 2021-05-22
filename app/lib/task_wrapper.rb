@@ -32,11 +32,11 @@ class TaskWrapper < Todotxt::Task
   def to_json
     {
       raw: raw,
-      description_text: description_text,
+      descriptionText: description_text,
       complete: complete?,
       priority: priority,
-      creation_date: creation_date&.iso8601,
-      completion_date: completion_date&.iso8601,
+      creationDate: creation_date&.iso8601,
+      completionDate: completion_date&.iso8601,
       contexts: contexts,
       projects: projects,
       metadata: metadata.map do |k, v|

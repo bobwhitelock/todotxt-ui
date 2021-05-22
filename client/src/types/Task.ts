@@ -2,12 +2,12 @@ import _ from "lodash";
 
 export type Task = {
   raw: string;
-  description_text: string;
+  descriptionText: string;
   complete: boolean;
   priority: string | null;
   // XXX Handle these as dates
-  creation_date: string;
-  completion_date: string;
+  creationDate: string;
+  completionDate: string;
   contexts: string[];
   projects: string[];
   metadata: { [key: string]: string | number };
@@ -22,7 +22,7 @@ export function sorted(tasks: Task[]): Task[] {
     (task) => !isToday(task),
     "metadata.due",
     "priority",
-    "creation_date",
+    "creationDate",
     "raw",
   ]);
 }

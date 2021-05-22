@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import * as Icon from "components/Icon";
 import * as urls from "urls";
 import IconButton from "components/IconButton";
+import InlineMarkdown from "components/InlineMarkdown";
 import { Task, isToday } from "types/Task";
 import { useUpdateTasks } from "api";
 
@@ -43,8 +44,7 @@ function TaskCard({ task }: Props) {
 
         <div className="px-2 py-2">
           <p className="text-gray-900">
-            {/* XXX Handle auto-linking here */}
-            {task.description_text}
+            <InlineMarkdown markdown={task.description_text} />
           </p>
         </div>
 

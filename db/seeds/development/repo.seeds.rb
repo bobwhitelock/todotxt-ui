@@ -42,7 +42,7 @@ seed_tasks = [
   TASK_TO_BE_COMPLETED,
   TASK_TO_BE_SCHEDULED,
   TASK_TO_BE_UNSCHEDULED,
-  <<~TODOTXT.squish
+  <<~TODOTXT.squish,
     2021-04-14 a very long task that takes up lots of space -
 
     In a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole,
@@ -56,6 +56,9 @@ seed_tasks = [
     walls, and floors tiled and carpeted, provided with polished chairs, and lots
     and lots of pegs for hats and coats - the hobbit was fond of visitors.
   TODOTXT
+  "2021-04-15 # task with hash (i.e. markdown header)",
+  "2021-04-16 task with *inline* **markdown** ~~strikethrough~~"
+
 ]
 
 # Recreate repo.

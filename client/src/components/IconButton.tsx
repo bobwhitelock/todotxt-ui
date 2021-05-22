@@ -5,14 +5,11 @@ export default function IconButton({
   children,
   onClick,
   className,
-  // XXX Actually use this / use in callback and don't pass here
-  confirmMessage,
   disabled,
 }: {
   children: React.ReactNode;
   onClick?: (event: React.FormEvent<HTMLButtonElement>) => void;
   className?: string;
-  confirmMessage?: string;
   disabled?: boolean;
 }) {
   return (

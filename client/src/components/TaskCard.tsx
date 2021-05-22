@@ -84,7 +84,10 @@ function TaskCard({ task }: Props) {
         )}
 
         <IconButton
-          onClick={deleteTask.eventHandler}
+          onClick={(event) => {
+            window.confirm("Are you sure you want to delete this task?") &&
+              deleteTask.eventHandler(event);
+          }}
           disabled={deleteTask.mutation.isLoading}
         >
           <Icon.Trash topClass="text-gray-600" bottomClass="text-gray-500" />

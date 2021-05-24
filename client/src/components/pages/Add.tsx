@@ -3,10 +3,22 @@ import cn from "classnames";
 import { Redirect } from "react-router-dom";
 
 import * as urls from "urls";
+import {
+  useQueryParams,
+  getContextParams,
+  getProjectParams,
+  urlWithParams,
+} from "queryParams";
 import { useUpdateTasks } from "api";
 
 export default function Add() {
-  const [rawTasks, setRawTasks] = useState("");
+  const params = useQueryParams();
+  const contexts = getContextParams(params);
+  const projects = getProjectParams(params);
+
+  const [rawTasks, setRawTasks] = useState(
+    [...contexts, ...projects].join(" ")
+  );
   const trimmedRawTasks = rawTasks.trim();
   const taskOrTasks =
     trimmedRawTasks.split("\n").length === 1 ? "Task" : "Tasks";
@@ -16,7 +28,7 @@ export default function Add() {
   ]);
 
   if (addTasks.isSuccess) {
-    return <Redirect to={urls.root} />;
+    return <Redirect to={urlWithParams(urls.root, params)} />;
   }
 
   // TODO Debounce setting "Adding ..." text so this doesn't flash up very

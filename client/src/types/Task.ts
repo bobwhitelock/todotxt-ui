@@ -1,5 +1,7 @@
 import _ from "lodash";
 
+export type TagType = "project" | "context";
+
 export type Task = {
   raw: string;
   descriptionText: string;
@@ -25,4 +27,16 @@ export function sorted(tasks: Task[]): Task[] {
     "creationDate",
     "raw",
   ]);
+}
+
+export function stripPrefix(tag: string) {
+  return tag.replace(/^[@+]/, "");
+}
+
+export function addContextPrefix(tagWithoutPrefix: string): string {
+  return "@" + tagWithoutPrefix;
+}
+
+export function addProjectPrefix(tagWithoutPrefix: string): string {
+  return "+" + tagWithoutPrefix;
 }

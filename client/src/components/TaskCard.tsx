@@ -12,7 +12,7 @@ type Props = {
   task: Task;
 };
 
-function TaskCard({ task }: Props) {
+export default function TaskCard({ task }: Props) {
   const classes = taskClasses(task);
 
   const scheduleTask = useUpdateTasks("schedule", [task.raw]);
@@ -156,5 +156,3 @@ function taskClasses(task: Task): {
 
   return { background, text, border };
 }
-
-export default TaskCard;

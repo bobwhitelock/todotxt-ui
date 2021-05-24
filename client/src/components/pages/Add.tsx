@@ -5,7 +5,7 @@ import { Redirect } from "react-router-dom";
 import * as urls from "urls";
 import { useUpdateTasks } from "api";
 
-function Add() {
+export default function Add() {
   const [rawTasks, setRawTasks] = useState("");
   const trimmedRawTasks = rawTasks.trim();
   const taskOrTasks =
@@ -71,5 +71,3 @@ function Add() {
     </form>
   );
 }
-
-export default Add;

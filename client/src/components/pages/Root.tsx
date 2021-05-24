@@ -8,7 +8,7 @@ import TaskCard from "components/TaskCard";
 import { useTasks } from "api";
 import { sorted } from "types/Task";
 
-function Root() {
+export default function Root() {
   // XXX Handle isLoading and error
   const { isLoading, error, data } = useTasks();
   const allTasks = sorted(data ? data.data : []);
@@ -93,5 +93,3 @@ function Filters({ filters }: { filters: null[] }) {
 function FilterPill({ filter }: { filter: null }) {
   return filter;
 }
-
-export default Root;

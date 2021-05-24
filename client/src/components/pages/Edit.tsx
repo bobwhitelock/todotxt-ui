@@ -3,6 +3,7 @@ import cn from "classnames";
 import { useParams, Redirect } from "react-router-dom";
 
 import * as urls from "urls";
+import { useQueryParams, urlWithParams } from "queryParams";
 import { useUpdateTasks } from "api";
 
 // XXX DRY up this and Add
@@ -17,8 +18,9 @@ export default function Edit() {
     [originalRawTask, rawTasks]
   );
 
+  const params = useQueryParams();
   if (editTask.isSuccess) {
-    return <Redirect to={urls.root} />;
+    return <Redirect to={urlWithParams(urls.root, params)} />;
   }
 
   // TODO Debounce setting "Updating ..." text so this doesn't flash up very

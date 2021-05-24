@@ -5,7 +5,9 @@ import * as Icon from "components/Icon";
 import * as urls from "urls";
 import IconButton from "components/IconButton";
 import InlineMarkdown from "components/InlineMarkdown";
+import TagPills from "components/TagPills";
 import { Task, isToday } from "types/Task";
+import { useQueryParams, urlWithParams } from "queryParams";
 import { useUpdateTasks } from "api";
 
 type Props = {
@@ -14,6 +16,7 @@ type Props = {
 
 export default function TaskCard({ task }: Props) {
   const classes = taskClasses(task);
+  const params = useQueryParams();
 
   const scheduleTask = useUpdateTasks("schedule", [task.raw]);
   const unscheduleTask = useUpdateTasks("unschedule", [task.raw]);
@@ -49,12 +52,8 @@ export default function TaskCard({ task }: Props) {
         </div>
 
         <div className="px-2">
-          {/* XXX Handle filtering via these pills */}
-          <TagPills
-            tags={task.projects}
-            classes="text-green-700 bg-green-100"
-          />
-          <TagPills tags={task.contexts} classes="text-blue-700 bg-blue-100" />
+          <TagPills tagType="project" tags={task.projects} action="addFilter" />
+          <TagPills tagType="context" tags={task.contexts} action="addFilter" />
         </div>
       </div>
 
@@ -93,7 +92,7 @@ export default function TaskCard({ task }: Props) {
           <Icon.Trash topClass="text-gray-600" bottomClass="text-gray-500" />
         </IconButton>
 
-        <Link to={urls.edit.forTask(task)}>
+        <Link to={urlWithParams(urls.edit.forTask(task), params)}>
           <IconButton>
             <Icon.Edit topClass="text-gray-500" bottomClass="text-gray-600" />
           </IconButton>
@@ -110,18 +109,6 @@ export default function TaskCard({ task }: Props) {
         </IconButton>
       </div>
     </div>
-  );
-}
-
-function TagPills({ tags, classes }: { tags: string[]; classes: string }) {
-  return (
-    <>
-      {tags.map((tag, index) => (
-        <span className={cn("tag-pill", classes)} key={index}>
-          {tag}
-        </span>
-      ))}
-    </>
   );
 }
 

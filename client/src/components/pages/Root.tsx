@@ -5,7 +5,14 @@ import * as Icon from "components/Icon";
 import * as urls from "urls";
 import IconButton from "components/IconButton";
 import TaskCard from "components/TaskCard";
+import TagPills from "components/TagPills";
 import { useTasks } from "api";
+import {
+  useQueryParams,
+  urlWithParams,
+  getContextParams,
+  getProjectParams,
+} from "queryParams";
 import { sorted } from "types/Task";
 
 export default function Root() {
@@ -14,9 +21,19 @@ export default function Root() {
   const allTasks = sorted(data ? data.data : []);
   const incompleteTasks = allTasks.filter((task) => !task.complete);
 
-  // XXX handle filtering
-  const filters: null[] = [];
-  const filteredTasks = incompleteTasks;
+  const params = useQueryParams();
+  const contextFilters: string[] = getContextParams(params);
+  const projectFilters: string[] = getProjectParams(params);
+
+  let filteredTasks = incompleteTasks;
+  contextFilters.forEach((context) => {
+    filteredTasks = filteredTasks.filter((t) => t.contexts.includes(context));
+  });
+  projectFilters.forEach((project) => {
+    filteredTasks = filteredTasks.filter((t) => t.projects.includes(project));
+  });
+
+  const anyFilters = contextFilters.length !== 0 || projectFilters.length !== 0;
 
   const scrollToTop = (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -34,9 +51,28 @@ export default function Root() {
         <div className="py-2">
           {incompleteTasks.length} tasks ({filteredTasks.length} shown)
         </div>
+
         <div className="flex-grow py-2">
-          {/* XXX Do this better */}
-          {filters && <Filters filters={filters} />}
+          Filters:{" "}
+          <TagPills
+            tagType="project"
+            tags={projectFilters}
+            action="removeFilter"
+          />
+          <TagPills
+            tagType="context"
+            tags={contextFilters}
+            action="removeFilter"
+          />
+          <span className="text-sm">
+            {anyFilters ? (
+              <Link to="?" className="text-blue-800 hover:opacity-50">
+                Clear&nbsp;All
+              </Link>
+            ) : (
+              "(None)"
+            )}
+          </span>
         </div>
 
         <div className="flex justify-between">
@@ -59,7 +95,7 @@ export default function Root() {
             />
           </IconButton>
 
-          <Link to={urls.add}>
+          <Link to={urlWithParams(urls.add, params)}>
             <IconButton>
               <Icon.AddSquare
                 backgroundClass="text-green-300"
@@ -76,20 +112,4 @@ export default function Root() {
       ))}
     </div>
   );
-}
-
-function Filters({ filters }: { filters: null[] }) {
-  // XXX add rest here
-  return (
-    <>
-      Filters:
-      {filters.map((filter) => (
-        <FilterPill filter={filter} />
-      ))}
-    </>
-  );
-}
-
-function FilterPill({ filter }: { filter: null }) {
-  return filter;
 }

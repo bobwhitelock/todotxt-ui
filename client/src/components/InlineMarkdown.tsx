@@ -4,7 +4,7 @@ type Props = {
   markdown: string;
 };
 
-function InlineMarkdown({ markdown }: Props) {
+export default function InlineMarkdown({ markdown }: Props) {
   return (
     <span
       // Not actually dangerous since we control the source of `markdown`, and
@@ -46,5 +46,3 @@ markdownRenderer.renderer.rules.link_open = (
 
   return defaultLinkOpen(tokens, idx, options, env, self);
 };
-
-export default InlineMarkdown;

@@ -7,7 +7,7 @@ import { useUpdateTasks } from "api";
 
 // XXX DRY up this and Add
 
-function Edit() {
+export default function Edit() {
   const { rawTask: originalRawTask } = useParams<{ rawTask: string }>();
   const [rawTasks, setRawTasks] = useState(originalRawTask);
   const trimmedRawTasks = rawTasks.trim();
@@ -77,5 +77,3 @@ function Edit() {
     </form>
   );
 }
-
-export default Edit;

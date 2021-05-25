@@ -1,81 +1,22 @@
-import { useState } from "react";
-import cn from "classnames";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import * as urls from "urls";
-import { useQueryParams, urlWithParams } from "queryParams";
+import TaskForm from "components/TaskForm";
 import { useUpdateTasks } from "api";
 
-// XXX DRY up this and Add
-
 export default function Edit() {
-  const { rawTask: originalRawTask } = useParams<{ rawTask: string }>();
-  const [rawTasks, setRawTasks] = useState(originalRawTask);
-  const trimmedRawTasks = rawTasks.trim();
+  const { rawTask: initialRawTask } = useParams<{ rawTask: string }>();
 
-  const { mutation: editTask, eventHandler: onSubmit } = useUpdateTasks(
-    "update",
-    [originalRawTask, rawTasks]
-  );
+  const useUseUpdateTasksWithTasks = (rawTask: string) =>
+    useUpdateTasks("update", [initialRawTask, rawTask]);
 
-  const params = useQueryParams();
-  if (editTask.isSuccess) {
-    return <Redirect to={urlWithParams(urls.root, params)} />;
-  }
-
-  // TODO Debounce setting "Updating ..." text so this doesn't flash up very
-  // briefly.
-  const submitButtonText = editTask.isLoading
-    ? "Updating Task..."
-    : "Update Task";
+  const getSubmitButtonText = ({ loading }: { loading: boolean }) =>
+    loading ? "Updating Task..." : "Update Task";
 
   return (
-    <form
-      className="container flex flex-col h-screen px-4 py-6 mx-auto"
-      onSubmit={onSubmit}
-    >
-      {/* XXX Add autocompletion in text area */}
-      <textarea
-        className={cn(
-          "flex-grow",
-          "w-full",
-          "border-4",
-          "border-blue-200",
-          "border-solid",
-          "rounded-lg",
-          "md:flex-grow-0",
-          "md:h-64"
-        )}
-        autoFocus={true}
-        value={rawTasks}
-        onChange={(e) => setRawTasks(e.target.value)}
-      ></textarea>
-
-      <button
-        disabled={
-          trimmedRawTasks === "" ||
-          trimmedRawTasks === originalRawTask ||
-          editTask.isLoading
-        }
-        className={cn(
-          "w-full",
-          "py-3",
-          "mt-3",
-          "mb-16",
-          "rounded-lg",
-          "text-white",
-          "bg-green-600",
-          "hover:bg-green-800",
-          "focus:bg-green-800",
-          "font-bold",
-          "cursor-pointer",
-          "disabled:bg-green-600",
-          "disabled:opacity-75",
-          "disabled:cursor-auto"
-        )}
-      >
-        {submitButtonText}
-      </button>
-    </form>
+    <TaskForm
+      initialRawTask={initialRawTask}
+      useUseUpdateTasksWithTasks={useUseUpdateTasksWithTasks}
+      getSubmitButtonText={getSubmitButtonText}
+    />
   );
 }

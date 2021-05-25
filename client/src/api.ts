@@ -1,4 +1,9 @@
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import {
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+  useMutation,
+} from "react-query";
 
 import { Task } from "types/Task";
 import { DeltaType } from "types/DeltaType";
@@ -6,15 +11,30 @@ import { DeltaType } from "types/DeltaType";
 const TASKS_URL = "/api/tasks";
 const TASKS_KEY = "tasks";
 
+type TasksResponseData = { data: Task[] };
+
+export type UpdateTasksMutationResult = UseMutationResult<
+  TasksResponseData,
+  unknown,
+  void,
+  unknown
+>;
+
 // XXX Add generic error handling - show alert or similar
 
 export function useTasks() {
-  return useQuery<{ data: Task[] }, Error>(TASKS_KEY, () =>
+  return useQuery<TasksResponseData, Error>(TASKS_KEY, () =>
     fetch(TASKS_URL).then((response) => response.json())
   );
 }
 
-export function useUpdateTasks(deltaType: DeltaType, deltaArguments: string[]) {
+export function useUpdateTasks(
+  deltaType: DeltaType,
+  deltaArguments: string[]
+): {
+  mutation: UpdateTasksMutationResult;
+  eventHandler: (event: React.SyntheticEvent) => void;
+} {
   const queryClient = useQueryClient();
 
   const updateTasks = () =>

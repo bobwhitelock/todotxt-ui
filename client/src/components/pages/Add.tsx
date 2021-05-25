@@ -1,13 +1,8 @@
-import { useState } from "react";
-import cn from "classnames";
-import { Redirect } from "react-router-dom";
-
-import * as urls from "urls";
+import TaskForm from "components/TaskForm";
 import {
   useQueryParams,
   getContextParams,
   getProjectParams,
-  urlWithParams,
 } from "queryParams";
 import { useUpdateTasks } from "api";
 
@@ -15,71 +10,27 @@ export default function Add() {
   const params = useQueryParams();
   const contexts = getContextParams(params);
   const projects = getProjectParams(params);
+  const initialRawTask = [...contexts, ...projects].join(" ");
 
-  const [rawTasks, setRawTasks] = useState(
-    [...contexts, ...projects].join(" ")
-  );
-  const trimmedRawTasks = rawTasks.trim();
-  const taskOrTasks =
-    trimmedRawTasks.split("\n").length === 1 ? "Task" : "Tasks";
+  const useUseUpdateTasksWithTasks = (rawTasks: string) =>
+    useUpdateTasks("add", [rawTasks]);
 
-  const { mutation: addTasks, eventHandler: onSubmit } = useUpdateTasks("add", [
-    rawTasks,
-  ]);
-
-  if (addTasks.isSuccess) {
-    return <Redirect to={urlWithParams(urls.root, params)} />;
-  }
-
-  // TODO Debounce setting "Adding ..." text so this doesn't flash up very
-  // briefly.
-  const submitButtonText = addTasks.isLoading
-    ? `Adding ${taskOrTasks}...`
-    : `Add ${taskOrTasks}`;
+  const getSubmitButtonText = ({
+    plural,
+    loading,
+  }: {
+    plural: boolean;
+    loading: boolean;
+  }) => {
+    const taskOrTasks = plural ? "Tasks" : "Task";
+    return loading ? `Adding ${taskOrTasks}...` : `Add ${taskOrTasks}`;
+  };
 
   return (
-    <form
-      className="container flex flex-col h-screen px-4 py-6 mx-auto"
-      onSubmit={onSubmit}
-    >
-      {/* XXX Add autocompletion in text area */}
-      <textarea
-        className={cn(
-          "flex-grow",
-          "w-full",
-          "border-4",
-          "border-blue-200",
-          "border-solid",
-          "rounded-lg",
-          "md:flex-grow-0",
-          "md:h-64"
-        )}
-        autoFocus={true}
-        value={rawTasks}
-        onChange={(e) => setRawTasks(e.target.value)}
-      ></textarea>
-
-      <button
-        disabled={trimmedRawTasks === "" || addTasks.isLoading}
-        className={cn(
-          "w-full",
-          "py-3",
-          "mt-3",
-          "mb-16",
-          "rounded-lg",
-          "text-white",
-          "bg-green-600",
-          "hover:bg-green-800",
-          "focus:bg-green-800",
-          "font-bold",
-          "cursor-pointer",
-          "disabled:bg-green-600",
-          "disabled:opacity-75",
-          "disabled:cursor-auto"
-        )}
-      >
-        {submitButtonText}
-      </button>
-    </form>
+    <TaskForm
+      initialRawTask={initialRawTask}
+      useUseUpdateTasksWithTasks={useUseUpdateTasksWithTasks}
+      getSubmitButtonText={getSubmitButtonText}
+    />
   );
 }

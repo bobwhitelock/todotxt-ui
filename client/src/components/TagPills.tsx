@@ -1,6 +1,6 @@
 import TagPill from "components/TagPill";
 
-import { TagType } from "types/Task";
+import { TagType } from "types";
 
 type Props = {
   tagType: TagType;

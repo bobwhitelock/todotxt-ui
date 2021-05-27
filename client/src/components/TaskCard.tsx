@@ -6,7 +6,7 @@ import * as urls from "urls";
 import IconButton from "components/IconButton";
 import InlineMarkdown from "components/InlineMarkdown";
 import TagPills from "components/TagPills";
-import { Task, isToday } from "types/Task";
+import { Task, taskIsToday } from "types";
 import { useQueryParams, urlWithParams } from "queryParams";
 import { useUpdateTasks } from "api";
 
@@ -60,7 +60,7 @@ export default function TaskCard({ task }: Props) {
       <div className="px-2 py-1 text-gray-600">{task.creationDate}</div>
 
       <div className="flex justify-between">
-        {isToday(task) ? (
+        {taskIsToday(task) ? (
           <IconButton
             onClick={unscheduleTask.eventHandler}
             disabled={unscheduleTask.mutation.isLoading}
@@ -121,7 +121,7 @@ function taskClasses(task: Task): {
   let text = "";
   let border = "";
 
-  if (isToday(task)) {
+  if (taskIsToday(task)) {
     border = "border-blue-300";
     background = "bg-blue-200";
   }

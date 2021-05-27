@@ -1,5 +1,13 @@
 import _ from "lodash";
 
+export type DeltaType =
+  | "add"
+  | "update"
+  | "delete"
+  | "complete"
+  | "schedule"
+  | "unschedule";
+
 export type TagType = "project" | "context";
 
 export type Task = {
@@ -15,13 +23,13 @@ export type Task = {
   metadata: { [key: string]: string | number };
 };
 
-export function isToday(task: Task): boolean {
+export function taskIsToday(task: Task): boolean {
   return task.contexts.includes("@today");
 }
 
-export function sorted(tasks: Task[]): Task[] {
+export function sortTasks(tasks: Task[]): Task[] {
   return _.sortBy(tasks, [
-    (task) => !isToday(task),
+    (task) => !taskIsToday(task),
     "metadata.due",
     "priority",
     "creationDate",
@@ -29,7 +37,7 @@ export function sorted(tasks: Task[]): Task[] {
   ]);
 }
 
-export function stripPrefix(tag: string) {
+export function stripTagPrefix(tag: string) {
   return tag.replace(/^[@+]/, "");
 }
 

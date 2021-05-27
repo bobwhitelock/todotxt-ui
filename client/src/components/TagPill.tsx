@@ -7,7 +7,7 @@ import {
   appendParamIfNotPresent,
   deleteParam,
 } from "queryParams";
-import { TagType, stripPrefix } from "types/Task";
+import { TagType, stripTagPrefix } from "types";
 
 type Props = {
   tagType: TagType;
@@ -21,7 +21,7 @@ export default function TagPill({ tagType, tag, action }: Props) {
     context: "text-blue-700 bg-blue-100",
   }[tagType];
 
-  const tagWithoutPrefix = stripPrefix(tag);
+  const tagWithoutPrefix = stripTagPrefix(tag);
   const currentParams = useQueryParams();
   let linkParams = currentParams;
   if (action === "addFilter") {

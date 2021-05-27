@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import {
   useQueryParams,
   urlWithParams,
-  appendParamIfNotPresent,
-  deleteParam,
+  appendTagParam,
+  deleteTagParam,
 } from "queryParams";
-import { TagType, stripTagPrefix } from "types";
+import { TagType } from "types";
 
 type Props = {
   tagType: TagType;
@@ -21,17 +21,12 @@ export default function TagPill({ tagType, tag, action }: Props) {
     context: "text-blue-700 bg-blue-100",
   }[tagType];
 
-  const tagWithoutPrefix = stripTagPrefix(tag);
   const currentParams = useQueryParams();
   let linkParams = currentParams;
   if (action === "addFilter") {
-    linkParams = appendParamIfNotPresent(
-      currentParams,
-      tagType,
-      tagWithoutPrefix
-    );
+    linkParams = appendTagParam(currentParams, tagType, tag);
   } else if (action === "removeFilter") {
-    linkParams = deleteParam(currentParams, tagType, tagWithoutPrefix);
+    linkParams = deleteTagParam(currentParams, tagType, tag);
   }
 
   const baseElement = <span className={cn("tag-pill", classes)}>{tag}</span>;

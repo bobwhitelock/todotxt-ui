@@ -2,7 +2,7 @@ import _ from "lodash";
 import queryString from "query-string";
 import { useLocation } from "react-router";
 
-import { addContextPrefix, addProjectPrefix } from "types";
+import { TagType } from "types";
 
 type AlwaysArrayParsedQuery = {
   [key: string]: null | string[];
@@ -26,6 +26,24 @@ export function urlWithParams(
   return `${url}?${queryString.stringify(params)}`;
 }
 
+export function appendTagParam(
+  currentParams: AlwaysArrayParsedQuery,
+  tagType: TagType,
+  tag: string
+): AlwaysArrayParsedQuery {
+  const tagWithoutPrefix = stripTagPrefix(tag);
+  return appendParamIfNotPresent(currentParams, tagType, tagWithoutPrefix);
+}
+
+export function deleteTagParam(
+  currentParams: AlwaysArrayParsedQuery,
+  tagType: TagType,
+  tag: string
+) {
+  const tagWithoutPrefix = stripTagPrefix(tag);
+  return deleteParam(currentParams, tagType, tagWithoutPrefix);
+}
+
 export function getContextParams(
   queryParams: AlwaysArrayParsedQuery
 ): string[] {
@@ -46,8 +64,20 @@ function getParamValues(
   return queryParams[name] || [];
 }
 
+function stripTagPrefix(tag: string) {
+  return tag.replace(/^[@+]/, "");
+}
+
+function addContextPrefix(tagWithoutPrefix: string): string {
+  return "@" + tagWithoutPrefix;
+}
+
+function addProjectPrefix(tagWithoutPrefix: string): string {
+  return "+" + tagWithoutPrefix;
+}
+
 // Append a param with this name and value, if not already present.
-export function appendParamIfNotPresent(
+function appendParamIfNotPresent(
   queryParams: AlwaysArrayParsedQuery,
   name: string,
   value: string
@@ -64,7 +94,7 @@ export function appendParamIfNotPresent(
 }
 
 // Delete any params with this name and value.
-export function deleteParam(
+function deleteParam(
   queryParams: AlwaysArrayParsedQuery,
   name: string,
   value: string

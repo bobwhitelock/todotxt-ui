@@ -36,15 +36,3 @@ export function sortTasks(tasks: Task[]): Task[] {
     "raw",
   ]);
 }
-
-export function stripTagPrefix(tag: string) {
-  return tag.replace(/^[@+]/, "");
-}
-
-export function addContextPrefix(tagWithoutPrefix: string): string {
-  return "@" + tagWithoutPrefix;
-}
-
-export function addProjectPrefix(tagWithoutPrefix: string): string {
-  return "+" + tagWithoutPrefix;
-}

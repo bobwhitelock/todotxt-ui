@@ -5,8 +5,7 @@ import {
   useMutation,
 } from "react-query";
 
-import { Task } from "types/Task";
-import { DeltaType } from "types/DeltaType";
+import { Task, DeltaType } from "types";
 
 const TASKS_URL = "/api/tasks";
 const TASKS_KEY = "tasks";

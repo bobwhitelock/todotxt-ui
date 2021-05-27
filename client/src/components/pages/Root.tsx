@@ -13,12 +13,12 @@ import {
   getContextParams,
   getProjectParams,
 } from "queryParams";
-import { sorted } from "types/Task";
+import { sortTasks } from "types";
 
 export default function Root() {
   // XXX Handle isLoading and error
   const { isLoading, error, data } = useTasks();
-  const allTasks = sorted(data ? data.data : []);
+  const allTasks = sortTasks(data ? data.data : []);
   const incompleteTasks = allTasks.filter((task) => !task.complete);
 
   const params = useQueryParams();

@@ -2,7 +2,7 @@ import _ from "lodash";
 import queryString from "query-string";
 import { useLocation } from "react-router";
 
-import { addContextPrefix, addProjectPrefix } from "types/Task";
+import { addContextPrefix, addProjectPrefix } from "types";
 
 type AlwaysArrayParsedQuery = {
   [key: string]: null | string[];

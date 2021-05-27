@@ -1,4 +1,4 @@
-import { Task } from "types/Task";
+import { Task } from "types";
 
 export const root = "/";
 export const add = "/add";

@@ -27,3 +27,6 @@ yarn-debug.log*
 
 # Ignore SimpleCov code coverage results.
 coverage/
+
+# Lock file used by Rake tasks.
+todotxt-ui.lock

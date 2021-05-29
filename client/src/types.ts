@@ -36,3 +36,14 @@ export function sortTasks(tasks: Task[]): Task[] {
     "raw",
   ]);
 }
+
+export function pluralizeTasks(tasksOrIsPlural: Task[] | boolean): string {
+  let isPlural;
+  if (tasksOrIsPlural instanceof Array) {
+    isPlural = tasksOrIsPlural.length !== 1;
+  } else {
+    isPlural = tasksOrIsPlural;
+  }
+
+  return isPlural ? "Tasks" : "Task";
+}

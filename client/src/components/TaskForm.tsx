@@ -22,7 +22,7 @@ type Props = {
   }) => string;
 };
 
-function TaskForm({
+export function TaskForm({
   initialRawTask,
   useUseUpdateTasksWithTasks,
   getSubmitButtonText,
@@ -101,5 +101,3 @@ function TaskForm({
     </>
   );
 }
-
-export default TaskForm;

@@ -4,9 +4,9 @@ import { Helmet } from "react-helmet";
 
 import * as Icon from "components/Icon";
 import * as urls from "urls";
-import IconButton from "components/IconButton";
-import TaskCard from "components/TaskCard";
-import TagPills from "components/TagPills";
+import { IconButton } from "components/IconButton";
+import { TaskCard } from "components/TaskCard";
+import { TagPills } from "components/TagPills";
 import { useTasks } from "api";
 import {
   useQueryParams,
@@ -16,7 +16,7 @@ import {
 } from "queryParams";
 import { sortTasks, pluralizeTasks } from "types";
 
-export default function Root() {
+export function Root() {
   // XXX Handle isLoading and error
   const { isLoading, error, data } = useTasks();
   const allTasks = sortTasks(data ? data.data : []);

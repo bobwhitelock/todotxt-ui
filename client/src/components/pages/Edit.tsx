@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 
-import TaskForm from "components/TaskForm";
+import { TaskForm } from "components/TaskForm";
 import { useUpdateTasks } from "api";
 
-export default function Edit() {
+export function Edit() {
   const { rawTask: initialRawTask } = useParams<{ rawTask: string }>();
 
   const useUseUpdateTasksWithTasks = (rawTask: string) =>

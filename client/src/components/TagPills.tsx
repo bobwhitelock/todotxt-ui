@@ -1,4 +1,4 @@
-import TagPill from "components/TagPill";
+import { TagPill } from "components/TagPill";
 
 import { TagType } from "types";
 
@@ -8,7 +8,7 @@ type Props = {
   action: "addFilter" | "removeFilter";
 };
 
-function TagPills({ tagType, tags, action }: Props) {
+export function TagPills({ tagType, tags, action }: Props) {
   return (
     <>
       {tags.map((tag, index) => (
@@ -17,5 +17,3 @@ function TagPills({ tagType, tags, action }: Props) {
     </>
   );
 }
-
-export default TagPills;

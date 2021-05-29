@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 
-export default function IconButton({
+export function IconButton({
   children,
   onClick,
   className,

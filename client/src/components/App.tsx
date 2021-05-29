@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Helmet } from "react-helmet";
 
 import * as urls from "urls";
 import Add from "components/pages/Add";
@@ -11,6 +12,7 @@ const queryClient = new QueryClient();
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <Helmet defaultTitle="todotxt-ui" titleTemplate="todotxt-ui | %s" />
       <Router>
         <Switch>
           {/* XXX Handle 404s */}

@@ -4,6 +4,7 @@ import {
   getContextParams,
   getProjectParams,
 } from "queryParams";
+import { pluralizeTasks } from "types";
 import { useUpdateTasks } from "api";
 
 export default function Add() {
@@ -22,7 +23,7 @@ export default function Add() {
     plural: boolean;
     loading: boolean;
   }) => {
-    const taskOrTasks = plural ? "Tasks" : "Task";
+    const taskOrTasks = pluralizeTasks(plural);
     return loading ? `Adding ${taskOrTasks}...` : `Add ${taskOrTasks}`;
   };
 

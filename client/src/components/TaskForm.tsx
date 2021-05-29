@@ -1,6 +1,7 @@
 import { useState } from "react";
 import cn from "classnames";
 import { Redirect } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import * as urls from "urls";
 import { UpdateTasksMutationResult } from "api";
@@ -37,58 +38,67 @@ function TaskForm({
     return <Redirect to={urlWithParams(urls.root, params)} />;
   }
 
-  return (
-    <form
-      className="container flex flex-col h-screen px-4 py-6 mx-auto"
-      onSubmit={onSubmit}
-    >
-      {/* XXX Add autocompletion in text area */}
-      <textarea
-        className={cn(
-          "flex-grow",
-          "w-full",
-          "border-4",
-          "border-blue-200",
-          "border-solid",
-          "rounded-lg",
-          "md:flex-grow-0",
-          "md:h-64"
-        )}
-        autoFocus={true}
-        value={rawTasks}
-        onChange={(e) => setRawTasks(e.target.value)}
-      ></textarea>
+  // XXX Debounce changing text based on whether loading so doesn't flash very
+  // briefly?
+  const submitButtonText = getSubmitButtonText({
+    plural: trimmedRawTasks.split("\n").length !== 1,
+    loading: mutation.isLoading,
+  });
 
-      <button
-        disabled={
-          trimmedRawTasks === "" ||
-          trimmedRawTasks === initialRawTask ||
-          mutation.isLoading
-        }
-        className={cn(
-          "w-full",
-          "py-3",
-          "mt-3",
-          "mb-16",
-          "rounded-lg",
-          "text-white",
-          "bg-green-600",
-          "hover:bg-green-800",
-          "focus:bg-green-800",
-          "font-bold",
-          "cursor-pointer",
-          "disabled:bg-green-600",
-          "disabled:opacity-75",
-          "disabled:cursor-auto"
-        )}
+  return (
+    <>
+      <Helmet>
+        <title>{submitButtonText}</title>
+      </Helmet>
+
+      <form
+        className="container flex flex-col h-screen px-4 py-6 mx-auto"
+        onSubmit={onSubmit}
       >
-        {/* XXX Debounce changing text based on whether loading so doesn't flash very briefly? */}
-        {getSubmitButtonText({
-          plural: trimmedRawTasks.split("\n").length !== 1,
-          loading: mutation.isLoading,
-        })}
-      </button>
-    </form>
+        {/* XXX Add autocompletion in text area */}
+        <textarea
+          className={cn(
+            "flex-grow",
+            "w-full",
+            "border-4",
+            "border-blue-200",
+            "border-solid",
+            "rounded-lg",
+            "md:flex-grow-0",
+            "md:h-64"
+          )}
+          autoFocus={true}
+          value={rawTasks}
+          onChange={(e) => setRawTasks(e.target.value)}
+        ></textarea>
+
+        <button
+          disabled={
+            trimmedRawTasks === "" ||
+            trimmedRawTasks === initialRawTask ||
+            mutation.isLoading
+          }
+          className={cn(
+            "w-full",
+            "py-3",
+            "mt-3",
+            "mb-16",
+            "rounded-lg",
+            "text-white",
+            "bg-green-600",
+            "hover:bg-green-800",
+            "focus:bg-green-800",
+            "font-bold",
+            "cursor-pointer",
+            "disabled:bg-green-600",
+            "disabled:opacity-75",
+            "disabled:cursor-auto"
+          )}
+        >
+          {submitButtonText}
+        </button>
+      </form>
+    </>
   );
 }
 

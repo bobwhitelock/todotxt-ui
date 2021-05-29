@@ -3,13 +3,13 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Helmet } from "react-helmet";
 
 import * as urls from "urls";
-import Add from "components/pages/Add";
-import Edit from "components/pages/Edit";
-import Root from "components/pages/Root";
+import { Add } from "components/pages/Add";
+import { Edit } from "components/pages/Edit";
+import { Root } from "components/pages/Root";
 
 const queryClient = new QueryClient();
 
-export default function App() {
+export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Helmet defaultTitle="todotxt-ui" titleTemplate="todotxt-ui | %s" />

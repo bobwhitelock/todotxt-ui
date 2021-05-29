@@ -1,4 +1,4 @@
-import TaskForm from "components/TaskForm";
+import { TaskForm } from "components/TaskForm";
 import {
   useQueryParams,
   getContextParams,
@@ -7,7 +7,7 @@ import {
 import { pluralizeTasks } from "types";
 import { useUpdateTasks } from "api";
 
-export default function Add() {
+export function Add() {
   const params = useQueryParams();
   const contexts = getContextParams(params);
   const projects = getProjectParams(params);

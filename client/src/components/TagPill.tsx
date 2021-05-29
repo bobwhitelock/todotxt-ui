@@ -15,7 +15,7 @@ type Props = {
   action: "addFilter" | "removeFilter";
 };
 
-export default function TagPill({ tagType, tag, action }: Props) {
+export function TagPill({ tagType, tag, action }: Props) {
   const classes = {
     project: "text-green-700 bg-green-100",
     context: "text-blue-700 bg-blue-100",

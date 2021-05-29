@@ -4,7 +4,7 @@ type Props = {
   markdown: string;
 };
 
-export default function InlineMarkdown({ markdown }: Props) {
+export function InlineMarkdown({ markdown }: Props) {
   return (
     <span
       // Not actually dangerous since we control the source of `markdown`, and

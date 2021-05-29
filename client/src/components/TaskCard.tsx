@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 import * as Icon from "components/Icon";
 import * as urls from "urls";
-import IconButton from "components/IconButton";
-import InlineMarkdown from "components/InlineMarkdown";
-import TagPills from "components/TagPills";
+import { IconButton } from "components/IconButton";
+import { InlineMarkdown } from "components/InlineMarkdown";
+import { TagPills } from "components/TagPills";
 import { Task, taskIsToday } from "types";
 import { useQueryParams, urlWithParams } from "queryParams";
 import { useUpdateTasks } from "api";
@@ -14,7 +14,7 @@ type Props = {
   task: Task;
 };
 
-export default function TaskCard({ task }: Props) {
+export function TaskCard({ task }: Props) {
   const classes = taskClasses(task);
   const params = useQueryParams();
 

@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 import * as urls from "urls";
 import { UpdateTasksMutationResult } from "api";
 import { useQueryParams, urlWithParams } from "queryParams";
+import { TaskEditor } from "components/TaskEditor";
 
 type Props = {
   initialRawTask: string;
@@ -55,23 +56,7 @@ export function TaskForm({
         className="container flex flex-col h-screen px-4 py-6 mx-auto"
         onSubmit={onSubmit}
       >
-        {/* XXX Add autocompletion in text area */}
-        <textarea
-          className={cn(
-            "flex-grow",
-            "w-full",
-            "border-4",
-            "border-blue-200",
-            "border-solid",
-            "rounded-lg",
-            "md:flex-grow-0",
-            "md:h-64"
-          )}
-          autoFocus={true}
-          value={rawTasks}
-          onChange={(e) => setRawTasks(e.target.value)}
-        ></textarea>
-
+        <TaskEditor rawTasks={rawTasks} setRawTasks={setRawTasks} />
         <button
           disabled={
             trimmedRawTasks === "" ||

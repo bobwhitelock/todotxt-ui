@@ -44,13 +44,15 @@ namespace :todotxt do
     desc "Attempt to sync unapplied local Deltas to remote repo"
     task sync_deltas: :environment do
       deltas = Delta.pending
-      exit true if deltas.empty?
+      # Only log (apart from logging errors) if any Deltas found, to avoid
+      # verbose and unhelpful logs.
+      should_log = deltas.any?
       deltas_count = deltas.length
-      RakeLogger.info "Found #{deltas_count} unapplied Deltas"
+      RakeLogger.info "Found #{deltas_count} unapplied Deltas" if should_log
 
       lock_file = File.new(LOCK_FILE, File::CREAT | File::RDWR, 0o644)
       lock_file.flock(File::LOCK_EX | File::LOCK_NB) # Get exclusive, non-blocking lock.
-      RakeLogger.info "Obtained lock"
+      RakeLogger.info "Obtained lock" if should_log
 
       repo = TodoRepo.new(Figaro.env.TODO_FILE!)
 
@@ -58,14 +60,14 @@ namespace :todotxt do
         repo.reset_to_origin
         DeltaApplier.apply(deltas: deltas, todo_repo: repo)
         repo.push
-        RakeLogger.info "#{deltas_count} deltas applied"
+        RakeLogger.info "#{deltas_count} deltas applied" if should_log
       rescue Git::GitExecuteError => e
         RakeLogger.warn "Git error in `sync_deltas`, resetting all Deltas: #{e}"
         deltas.update(status: Delta::UNAPPLIED)
         repo.reset_to_origin
       ensure
         lock_file.flock(File::LOCK_UN)
-        RakeLogger.info "Released lock"
+        RakeLogger.info "Released lock" if should_log
       end
     end
   end

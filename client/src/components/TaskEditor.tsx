@@ -1,6 +1,15 @@
 import cn from "classnames";
-import { Editor, EditorState, ContentState } from "draft-js";
+import createMentionPlugin from "@draft-js-plugins/mention";
+import Editor from "@draft-js-plugins/editor";
+import { EditorState, ContentState } from "draft-js";
 import { useState, useRef, useEffect } from "react";
+
+import { TagMentionSuggestions } from "components/TagMentionSuggestions";
+import { availableContextsForTasks, availableProjectsForTasks } from "types";
+import { useTasks } from "api";
+
+const contextMentionPlugin = createMentionPlugin({});
+const projectMentionPlugin = createMentionPlugin({ mentionTrigger: "+" });
 
 type Props = {
   rawTasks: string;
@@ -13,6 +22,11 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
       EditorState.createWithContent(ContentState.createFromText(rawTasks))
     )
   );
+
+  // XXX Need to handle isLoading and error, and/or DRY up more with
+  // `client/src/components/pages/Root.tsx`
+  const { data } = useTasks();
+  const tasks = data ? data.data : [];
 
   const editor = useRef<Editor>(null);
   const focusEditor = () => editor?.current?.focus();
@@ -39,12 +53,21 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
       <Editor
         ref={editor}
         editorState={editorState}
+        plugins={[contextMentionPlugin, projectMentionPlugin]}
         onChange={(state) => {
           setEditorState(state);
           setRawTasks(state.getCurrentContent().getPlainText());
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+      />
+      <TagMentionSuggestions
+        tags={availableContextsForTasks(tasks)}
+        plugin={contextMentionPlugin}
+      />
+      <TagMentionSuggestions
+        tags={availableProjectsForTasks(tasks)}
+        plugin={projectMentionPlugin}
       />
     </div>
   );

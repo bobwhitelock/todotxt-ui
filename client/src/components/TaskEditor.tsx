@@ -58,7 +58,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
     []
   );
 
-  const chars = CHARACTERS.filter((c) =>
+  const contexts = CHARACTERS.filter((c) =>
     c.toLowerCase().startsWith(search.toLowerCase())
   ).slice(0, 10);
 
@@ -68,19 +68,19 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
         switch (event.key) {
           case "ArrowDown":
             event.preventDefault();
-            const prevIndex = index >= chars.length - 1 ? 0 : index + 1;
+            const prevIndex = index >= contexts.length - 1 ? 0 : index + 1;
             setIndex(prevIndex);
             break;
           case "ArrowUp":
             event.preventDefault();
-            const nextIndex = index <= 0 ? chars.length - 1 : index - 1;
+            const nextIndex = index <= 0 ? contexts.length - 1 : index - 1;
             setIndex(nextIndex);
             break;
           case "Tab":
           case "Enter":
             event.preventDefault();
             Transforms.select(editor, target);
-            insertMention(editor, chars[index]);
+            insertMention(editor, contexts[index]);
             // @ts-expect-error
             setTarget(null);
             break;
@@ -96,7 +96,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
   );
 
   useEffect(() => {
-    if (target && chars.length > 0) {
+    if (target && contexts.length > 0) {
       const el = ref.current;
       const domRange = ReactEditor.toDOMRange(editor, target);
       const rect = domRange.getBoundingClientRect();
@@ -105,7 +105,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
       // @ts-expect-error
       el.style.left = `${rect.left + window.pageXOffset}px`;
     }
-  }, [chars.length, editor, index, search, target]);
+  }, [contexts.length, editor, index, search, target]);
 
   return (
     <Slate
@@ -143,18 +143,23 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
         renderElement={renderElement}
         onKeyDown={onKeyDown}
         placeholder="Enter some text..."
+        autoFocus={true}
         className={cn(
           "flex-grow",
           "w-full",
           "border-4",
+          // isFocused ? "border-blue-300" : "border-blue-200",
           "border-blue-200",
+          "focus:border-blue-300",
           "border-solid",
+          "bg-white",
           "rounded-lg",
           "md:flex-grow-0",
-          "md:h-64"
+          "md:h-64",
+          "cursor-text"
         )}
       />
-      {target && chars.length > 0 && (
+      {target && contexts.length > 0 && (
         <Portal>
           <div
             // @ts-expect-error
@@ -170,7 +175,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
               boxShadow: "0 1px 5px rgba(0,0,0,.2)",
             }}
           >
-            {chars.map((char, i) => (
+            {contexts.map((char, i) => (
               <div
                 key={char}
                 style={{

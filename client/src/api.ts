@@ -5,7 +5,7 @@ import {
   useMutation,
 } from "react-query";
 
-import { Task, DeltaType } from "types";
+import { Task, DeltaType, sortTasks } from "types";
 
 const TASKS_URL = "/api/tasks";
 const TASKS_KEY = "tasks";
@@ -22,9 +22,11 @@ export type UpdateTasksMutationResult = UseMutationResult<
 // XXX Add generic error handling - show alert or similar
 
 export function useTasks() {
-  return useQuery<TasksResponseData, Error>(TASKS_KEY, () =>
+  const { data, ...rest } = useQuery<TasksResponseData, Error>(TASKS_KEY, () =>
     fetch(TASKS_URL).then((response) => response.json())
   );
+  const tasks = sortTasks(data ? data.data : []);
+  return { tasks, ...rest };
 }
 
 export function useUpdateTasks(

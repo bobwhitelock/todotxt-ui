@@ -14,13 +14,12 @@ import {
   getContextParams,
   getProjectParams,
 } from "queryParams";
-import { sortTasks, pluralizeTasks } from "types";
+import { pluralizeTasks } from "types";
 
 export function Root() {
   // XXX Handle isLoading and error
-  const { isLoading, error, data } = useTasks();
-  const allTasks = sortTasks(data ? data.data : []);
-  const incompleteTasks = allTasks.filter((task) => !task.complete);
+  const { isLoading, error, tasks } = useTasks();
+  const incompleteTasks = tasks.filter((task) => !task.complete);
 
   const params = useQueryParams();
   const contextFilters: string[] = getContextParams(params);

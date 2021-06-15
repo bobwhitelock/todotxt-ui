@@ -1,5 +1,19 @@
 import _ from "lodash";
 
+// TODO Make these configurable - see
+// https://github.com/bobwhitelock/todotxt-ui/issues/122.
+const ALWAYS_AVAILABLE_CONTEXTS = [
+  "@today",
+  "@tomorrow",
+  "@monday",
+  "@tuesday",
+  "@wednesday",
+  "@thursday",
+  "@friday",
+  "@saturday",
+  "@sunday",
+];
+
 export type DeltaType =
   | "add"
   | "update"
@@ -46,4 +60,25 @@ export function pluralizeTasks(tasksOrIsPlural: Task[] | boolean): string {
   }
 
   return isPlural ? "Tasks" : "Task";
+}
+
+export function availableContextsForTasks(tasks: Task[]): string[] {
+  return _(tasks)
+    .flatMap((task) => task.contexts)
+    .concat(ALWAYS_AVAILABLE_CONTEXTS)
+    .sortBy()
+    .sortedUniq()
+    .value();
+}
+
+export function availableProjectsForTasks(tasks: Task[]): string[] {
+  return _(tasks)
+    .flatMap((task) => task.projects)
+    .sortBy()
+    .sortedUniq()
+    .value();
+}
+
+export function stripTagPrefix(tag: string): string {
+  return tag.replace(/^[@+]/, "");
 }

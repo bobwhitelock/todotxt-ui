@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 RSpec.describe Todotxt::Utils do
   describe ".delete_first" do

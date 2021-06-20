@@ -11,6 +11,15 @@ RSpec.describe TaskWrapper do
       expect(task.to_json).to eq({
         raw: raw_task,
         descriptionText: "some task",
+        parsedDescription: [
+          {text: "some task"},
+          {context: "@context"},
+          {project: "+proj1"},
+          {project: "+proj2"},
+          {metadatum: {key: "due", value: "2021-07-07"}},
+          {metadatum: {key: "str", value: "foo"}},
+          {metadatum: {key: "int", value: 5}}
+        ],
         complete: true,
         priority: "B",
         creationDate: "2021-04-05",

@@ -33,6 +33,7 @@ class TaskWrapper < Todotxt::Task
     {
       raw: raw,
       descriptionText: description_text,
+      parsedDescription: parsed_description,
       complete: complete?,
       priority: priority,
       creationDate: creation_date&.iso8601,
@@ -40,7 +41,7 @@ class TaskWrapper < Todotxt::Task
       contexts: contexts,
       projects: projects,
       metadata: metadata.map do |k, v|
-        [k, v.respond_to?(:iso8601) ? v.iso8601 : v]
+        [k, Todotxt::Metadatum.serialize_value(v)]
       end.to_h
     }
   end

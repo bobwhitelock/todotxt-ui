@@ -13,7 +13,14 @@ import {
 import cn from "classnames";
 
 import { useTasks } from "api";
-import { availableContextsForTasks, stripTagPrefix } from "types";
+import {
+  Task,
+  availableContextsForTasks,
+  stripTagPrefix,
+  partIsContext,
+  partToString,
+} from "types";
+import { intersperse } from "utilities";
 
 type MentionElement = {
   type: "mention";
@@ -36,15 +43,44 @@ const Portal = ({ children }) => {
 };
 
 type Props = {
-  rawTasks: string;
+  currentTask: Task | undefined;
   setRawTasks: (rawTasks: string) => void;
+  contexts: string[];
+  projects: string[];
 };
 
 // XXX Remove all `ts-expect-error` in this file
 
-export function TaskEditor({ rawTasks, setRawTasks }: Props) {
+export function TaskEditor({
+  currentTask,
+  setRawTasks,
+  contexts,
+  projects,
+}: Props) {
   const ref = useRef<HTMLDivElement | null>();
-  const [value, setValue] = useState<Descendant[]>(initialValue);
+
+  const [value, setValue] = useState<Descendant[]>([
+    {
+      // type: "paragraph",
+      children: currentTask
+        ? intersperse(
+            currentTask.parsedDescription.map((part) => {
+              if (partIsContext(part)) {
+                return {
+                  type: "mention",
+                  character: stripTagPrefix(part.context),
+                  children: [{ text: "" }],
+                };
+              } else {
+                return { text: partToString(part) };
+              }
+            }),
+            () => ({ text: " " })
+          )
+        : [{ text: "" }],
+    },
+  ]);
+
   const [target, setTarget] = useState<Range | undefined>();
   const [index, setIndex] = useState(0);
   const [search, setSearch] = useState("");
@@ -58,7 +94,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
   const { tasks } = useTasks();
   const availableContexts = availableContextsForTasks(tasks);
 
-  const contexts = availableContexts
+  const contextSuggestions = availableContexts
     .map(stripTagPrefix)
     .filter((c) => c.toLowerCase().startsWith(search.toLowerCase()))
     .slice(0, 10);
@@ -69,19 +105,21 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
         switch (event.key) {
           case "ArrowDown":
             event.preventDefault();
-            const prevIndex = index >= contexts.length - 1 ? 0 : index + 1;
+            const prevIndex =
+              index >= contextSuggestions.length - 1 ? 0 : index + 1;
             setIndex(prevIndex);
             break;
           case "ArrowUp":
             event.preventDefault();
-            const nextIndex = index <= 0 ? contexts.length - 1 : index - 1;
+            const nextIndex =
+              index <= 0 ? contextSuggestions.length - 1 : index - 1;
             setIndex(nextIndex);
             break;
           case "Tab":
           case "Enter":
             event.preventDefault();
             Transforms.select(editor, target);
-            insertMention(editor, contexts[index]);
+            insertMention(editor, contextSuggestions[index]);
             // @ts-expect-error
             setTarget(null);
             break;
@@ -93,11 +131,11 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
         }
       }
     },
-    [index, target, contexts, editor]
+    [index, target, contextSuggestions, editor]
   );
 
   useEffect(() => {
-    if (target && contexts.length > 0) {
+    if (target && contextSuggestions.length > 0) {
       const el = ref.current;
       const domRange = ReactEditor.toDOMRange(editor, target);
       const rect = domRange.getBoundingClientRect();
@@ -106,7 +144,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
       // @ts-expect-error
       el.style.left = `${rect.left + window.pageXOffset}px`;
     }
-  }, [contexts.length, editor, index, search, target]);
+  }, [contextSuggestions.length, editor, index, search, target]);
 
   return (
     <Slate
@@ -114,6 +152,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
       value={value}
       onChange={(value) => {
         setValue(value);
+        console.log("value [euyrjfzk]:", value); // eslint-disable-line no-console
         const { selection } = editor;
 
         if (selection && Range.isCollapsed(selection)) {
@@ -143,7 +182,6 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
       <Editable
         renderElement={renderElement}
         onKeyDown={onKeyDown}
-        placeholder="Enter some text..."
         autoFocus={true}
         className={cn(
           "flex-grow",
@@ -160,7 +198,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
           "cursor-text"
         )}
       />
-      {target && contexts.length > 0 && (
+      {target && contextSuggestions.length > 0 && (
         <Portal>
           <div
             // @ts-expect-error
@@ -176,7 +214,7 @@ export function TaskEditor({ rawTasks, setRawTasks }: Props) {
               boxShadow: "0 1px 5px rgba(0,0,0,.2)",
             }}
           >
-            {contexts.map((char, i) => (
+            {contextSuggestions.map((char, i) => (
               <div
                 key={char}
                 style={{

@@ -19,7 +19,7 @@ class Todotxt
         priority && "(#{priority})",
         completion_date,
         creation_date,
-        *parsed_description
+        *internal_parsed_description
       ].select { |x| x }.join(" ")
     end
 
@@ -40,11 +40,15 @@ class Todotxt
     end
 
     def description
-      join_parts(parsed_description)
+      join_parts(internal_parsed_description)
     end
 
     def description_text
       join_parts(description_parts_of_type(Text))
+    end
+
+    def parsed_description
+      internal_parsed_description.map(&:to_h)
     end
 
     def contexts
@@ -104,8 +108,8 @@ class Todotxt
     end
 
     def description=(new_description)
-      self.parsed_description =
-        self.class.new(new_description).send(:parsed_description)
+      self.internal_parsed_description =
+        self.class.new(new_description).send(:internal_parsed_description)
     end
 
     def contexts=(new_contexts)
@@ -133,7 +137,7 @@ class Todotxt
 
     attr_accessor :original_raw
     attr_reader :complete
-    attr_accessor :parsed_description
+    attr_accessor :internal_parsed_description
 
     def parse_and_initialize(raw_task = "")
       initialize_task_data(**Todotxt.config.parse_task(raw_task))
@@ -149,7 +153,7 @@ class Todotxt
       creation_date: nil
     )
       @original_raw = original_raw
-      @parsed_description = description
+      @internal_parsed_description = description
       @complete = !!complete
       @priority = priority&.to_s
       @completion_date = completion_date
@@ -161,7 +165,7 @@ class Todotxt
     end
 
     def description_parts_of_type(type)
-      parsed_description.select { |part| part.is_a?(type) }
+      internal_parsed_description.select { |part| part.is_a?(type) }
     end
 
     def decrement_priority_char(delta)
@@ -183,7 +187,7 @@ class Todotxt
     )
       tags_to_include = new_tags.map { |tag_args| tag_class.new(*tag_args) }
 
-      parsed_description.map! { |part|
+      internal_parsed_description.map! { |part|
         if !part.is_a?(tag_class)
           # Leave other types of tags unchanged.
           part
@@ -197,7 +201,7 @@ class Todotxt
 
       # Add any new tags.
       tags_to_include.each do |tag|
-        parsed_description << tag
+        internal_parsed_description << tag
       end
     end
   end

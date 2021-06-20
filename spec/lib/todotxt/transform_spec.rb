@@ -33,12 +33,17 @@ RSpec.describe Todotxt::Transform do
       {word: "stuff"},
       {code_block: [
         {word: "with"},
+        {word: "some"},
         {word: "code"}
       ]}
     ])).to eq(description: [
-      Todotxt::Text.new("do things"),
+      Todotxt::Text.new("do"),
+      Todotxt::Text.new("things"),
       Todotxt::Context.new("@home"),
-      Todotxt::Text.new("and other stuff `with code`")
+      Todotxt::Text.new("and"),
+      Todotxt::Text.new("other"),
+      Todotxt::Text.new("stuff"),
+      Todotxt::Text.new("`with some code`")
     ])
   end
 

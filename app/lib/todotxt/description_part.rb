@@ -15,6 +15,10 @@ class Todotxt
       other.class == self.class && other.value == value
     end
 
+    def to_h
+      {hash_key => value}
+    end
+
     private
 
     def validate_value!(value)
@@ -30,6 +34,10 @@ class Todotxt
 
     def parser_name
       self.class::PARSER_NAME
+    end
+
+    def hash_key
+      self.class.to_s.downcase.split("::").last.to_sym
     end
   end
 end

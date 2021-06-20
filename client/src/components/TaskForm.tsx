@@ -7,9 +7,12 @@ import * as urls from "urls";
 import { UpdateTasksMutationResult } from "api";
 import { useQueryParams, urlWithParams } from "queryParams";
 import { TaskEditor } from "components/TaskEditor";
+import { Task } from "types";
 
 type Props = {
-  initialRawTask: string;
+  currentTask?: Task;
+  contexts?: string[];
+  projects?: string[];
   useUseUpdateTasksWithTasks: (rawTasks: string) => {
     mutation: UpdateTasksMutationResult;
     eventHandler: (event: React.SyntheticEvent) => void;
@@ -23,11 +26,17 @@ type Props = {
   }) => string;
 };
 
+// XXX See https://docs.slatejs.org/walkthroughs/06-saving-to-a-database for
+// saving stuff - and maybe read rest of docs as well
+
 export function TaskForm({
-  initialRawTask,
+  currentTask,
+  contexts,
+  projects,
   useUseUpdateTasksWithTasks,
   getSubmitButtonText,
 }: Props) {
+  const initialRawTask = currentTask?.raw || "";
   const [rawTasks, setRawTasks] = useState(initialRawTask);
   const trimmedRawTasks = rawTasks.trim();
 
@@ -56,7 +65,12 @@ export function TaskForm({
         className="container flex flex-col h-screen px-4 py-6 mx-auto"
         onSubmit={onSubmit}
       >
-        <TaskEditor rawTasks={rawTasks} setRawTasks={setRawTasks} />
+        <TaskEditor
+          currentTask={currentTask}
+          setRawTasks={setRawTasks}
+          contexts={contexts || []}
+          projects={projects || []}
+        />
         <button
           disabled={
             trimmedRawTasks === "" ||

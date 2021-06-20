@@ -11,7 +11,6 @@ export function Add() {
   const params = useQueryParams();
   const contexts = getContextParams(params);
   const projects = getProjectParams(params);
-  const initialRawTask = [...contexts, ...projects].join(" ");
 
   const useUseUpdateTasksWithTasks = (rawTasks: string) =>
     useUpdateTasks("add", [rawTasks]);
@@ -29,9 +28,10 @@ export function Add() {
 
   return (
     <TaskForm
-      initialRawTask={initialRawTask}
       useUseUpdateTasksWithTasks={useUseUpdateTasksWithTasks}
       getSubmitButtonText={getSubmitButtonText}
+      contexts={contexts}
+      projects={projects}
     />
   );
 }

@@ -24,10 +24,14 @@ RSpec.describe Todotxt::Task do
       expect(task.projects).to eq([])
       expect(task.metadata).to eq({})
       expect(task.raw).to eq(raw_task)
+      expect(task.parsed_description).to eq([
+        {text: "do things"},
+        {context: "@home"}
+      ])
     end
 
     it "parses a complex todotxt task into a Task" do
-      raw_task = "x (B) 2020-08-02 2019-07-01 do things @home and other stuff +important +housework foo:bar"
+      raw_task = "x (B) 2020-08-02 2019-07-01 do things @home and other stuff +important +housework foo:bar scheduled:2 due:2021-06-19"
 
       task = described_class.new(raw_task)
 
@@ -36,13 +40,23 @@ RSpec.describe Todotxt::Task do
       expect(task.completion_date).to eq(Date.new(2020, 8, 2))
       expect(task.creation_date).to eq(Date.new(2019, 7, 1))
       expect(task.description).to eq(
-        "do things @home and other stuff +important +housework foo:bar"
+        "do things @home and other stuff +important +housework foo:bar scheduled:2 due:2021-06-19"
       )
       expect(task.description_text).to eq("do things and other stuff")
       expect(task.contexts).to eq(["@home"])
       expect(task.projects).to eq(["+important", "+housework"])
-      expect(task.metadata).to eq(foo: "bar")
+      expect(task.metadata).to eq(foo: "bar", scheduled: 2, due: Date.new(2021, 6, 19))
       expect(task.raw).to eq(raw_task)
+      expect(task.parsed_description).to eq([
+        {text: "do things"},
+        {context: "@home"},
+        {text: "and other stuff"},
+        {project: "+important"},
+        {project: "+housework"},
+        {metadatum: {key: "foo", value: "bar"}},
+        {metadatum: {key: "scheduled", value: 2}},
+        {metadatum: {key: "due", value: "2021-06-19"}}
+      ])
     end
 
     it "parses task metadata as appropriate values" do
@@ -98,7 +112,7 @@ RSpec.describe Todotxt::Task do
       end
 
       it "does nothing special with backticks" do
-        raw_task = "some text `with a @context and +project`"
+        raw_task = "2021-06-19 some text `with a @context and +project`"
 
         task = described_class.new(raw_task)
 
@@ -108,7 +122,13 @@ RSpec.describe Todotxt::Task do
         expect(task.description_text).to eq("some text `with a and")
         expect(task.contexts).to eq(["@context"])
         expect(task.projects).to eq(["+project`"])
-        expect(task.raw).to eq("some text `with a @context and +project`")
+        expect(task.raw).to eq("2021-06-19 some text `with a @context and +project`")
+        expect(task.parsed_description).to eq([
+          {text: "some text `with a"},
+          {context: "@context"},
+          {text: "and"},
+          {project: "+project`"}
+        ])
       end
     end
 
@@ -122,7 +142,7 @@ RSpec.describe Todotxt::Task do
       end
 
       it "parses anything within backticks as just text" do
-        raw_task = "` @context and +project ` some more text `key:value`@realcontext ``"
+        raw_task = "2021-06-19 ` @context and +project ` some more text `key:value`@realcontext ``"
 
         task = described_class.new(raw_task)
 
@@ -134,8 +154,13 @@ RSpec.describe Todotxt::Task do
         )
         expect(task.contexts).to eq(["@realcontext"])
         expect(task.raw).to eq(
-          "`@context and +project` some more text `key:value` @realcontext ``"
+          "2021-06-19 `@context and +project` some more text `key:value` @realcontext ``"
         )
+        expect(task.parsed_description).to eq([
+          {text: "`@context and +project` some more text `key:value`"},
+          {context: "@realcontext"},
+          {text: "``"}
+        ])
       end
     end
   end

@@ -15,6 +15,17 @@ class Todotxt
       "#{key}:#{value}"
     end
 
+    def to_h
+      {hash_key => {
+        key: key.to_s,
+        value: self.class.serialize_value(value)
+      }}
+    end
+
+    def self.serialize_value(value)
+      value.respond_to?(:iso8601) ? value.iso8601 : value
+    end
+
     private
 
     def convert_value(value)

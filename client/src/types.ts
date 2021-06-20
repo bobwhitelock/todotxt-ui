@@ -24,9 +24,17 @@ export type DeltaType =
 
 export type TagType = "project" | "context";
 
+type Text = { text: string };
+type Context = { context: string };
+type Project = { project: string };
+type Metadatum = { metadatum: { key: string; value: number | string } };
+
+type DescriptionPart = Text | Context | Project | Metadatum;
+
 export type Task = {
   raw: string;
   descriptionText: string;
+  parsedDescription: DescriptionPart[];
   complete: boolean;
   priority: string | null;
   // XXX Handle these as dates
@@ -81,4 +89,41 @@ export function availableProjectsForTasks(tasks: Task[]): string[] {
 
 export function stripTagPrefix(tag: string): string {
   return tag.replace(/^[@+]/, "");
+}
+
+export function partIsText(part: DescriptionPart): part is Text {
+  return (part as Text).text !== undefined;
+}
+
+export function partIsContext(part: DescriptionPart): part is Context {
+  return (part as Context).context !== undefined;
+}
+
+export function partIsProject(part: DescriptionPart): part is Project {
+  return (part as Project).project !== undefined;
+}
+
+export function partIsMetadatum(part: DescriptionPart): part is Metadatum {
+  return (part as Metadatum).metadatum !== undefined;
+}
+
+export function partToString(part: DescriptionPart): string {
+  if (partIsText(part)) {
+    return part.text;
+  }
+
+  if (partIsContext(part)) {
+    return part.context;
+  }
+
+  if (partIsProject(part)) {
+    return part.project;
+  }
+
+  if (partIsMetadatum(part)) {
+    const { key, value } = part.metadatum;
+    return `${key}:${value}`;
+  }
+
+  throw new Error(`Unhandled DescriptionPart type: ${part}`);
 }

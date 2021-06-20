@@ -20,7 +20,10 @@ class Todotxt
       parser_output = parser.parse(raw_task)
       transform_output = transform.apply(parser_output)
 
-      {original_raw: raw_task, **transform_output[:task]}
+      parsed_task = transform_output[:task]
+      parsed_task[:description] = merge_adjacent_text(parsed_task[:description])
+
+      {original_raw: raw_task, **parsed_task}
     end
 
     def parser
@@ -31,6 +34,22 @@ class Todotxt
 
     def transform
       @transform ||= Transform.new
+    end
+
+    def merge_adjacent_text(parts)
+      merged_parts = []
+
+      parts.each do |part|
+        last_part = merged_parts.last
+        if last_part.is_a?(Text) && part.is_a?(Text)
+          combined_text = Text.new([last_part.value, part.value].join(" "))
+          merged_parts[-1] = combined_text
+        else
+          merged_parts << part
+        end
+      end
+
+      merged_parts
     end
   end
 end

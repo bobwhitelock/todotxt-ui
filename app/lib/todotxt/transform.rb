@@ -6,13 +6,8 @@ class Todotxt
       Date.new(year.to_i, month.to_i, day.to_i)
     end
 
-    rule(description: sequence(:parts)) do
-      {description: Transform.merge_words_in_parts(parts)}
-    end
-
     rule(code_block: sequence(:words)) do
-      merged_words = Transform.merge_words_in_parts(words)[0].value
-      Text.new("`#{merged_words}`")
+      Text.new("`#{words.join(" ")}`")
     end
     rule(code_block: simple(:word)) { Text.new(word) }
 
@@ -23,22 +18,6 @@ class Todotxt
 
     rule(metadatum: {key: simple(:key), value: simple(:value)}) do
       Metadatum.new(key, value)
-    end
-
-    def self.merge_words_in_parts(parts)
-      merged_parts = []
-
-      parts.each do |part|
-        last_part = merged_parts.last
-        if last_part.is_a?(Text) && part.is_a?(Text)
-          combined_text = Text.new([last_part.value, part.value].join(" "))
-          merged_parts[-1] = combined_text
-        else
-          merged_parts << part
-        end
-      end
-
-      merged_parts
     end
   end
 end

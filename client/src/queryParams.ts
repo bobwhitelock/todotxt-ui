@@ -3,6 +3,7 @@ import queryString from "query-string";
 import { useLocation } from "react-router";
 
 import { TagType } from "types";
+import { stripTagPrefix } from "utilities";
 
 type AlwaysArrayParsedQuery = {
   [key: string]: null | string[];
@@ -62,10 +63,6 @@ function getParamValues(
   name: string
 ): string[] {
   return queryParams[name] || [];
-}
-
-function stripTagPrefix(tag: string) {
-  return tag.replace(/^[@+]/, "");
 }
 
 function addContextPrefix(tagWithoutPrefix: string): string {

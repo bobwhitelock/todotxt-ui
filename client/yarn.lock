@@ -11088,6 +11088,10 @@ tr46@^2.0.2:
   dependencies:
     punycode "^2.1.1"
 
+"tributejs@https://github.com/bobwhitelock/tribute.git#works-for-me":
+  version "5.1.3"
+  resolved "https://github.com/bobwhitelock/tribute.git#bca99353865940cba5c5fe48025d151ab557b7b6"
+
 tryer@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"

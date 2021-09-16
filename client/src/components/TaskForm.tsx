@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import cn from "classnames";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import _ from "lodash";
+import Tribute from "tributejs";
+import "../../node_modules/tributejs/dist/tribute.css";
 
 import * as urls from "urls";
-import { UpdateTasksMutationResult } from "api";
+import { UpdateTasksMutationResult, useTasks } from "api";
 import { useQueryParams, urlWithParams } from "queryParams";
+import { availableContextsForTasks, availableProjectsForTasks } from "types";
+import { stripTagPrefix } from "utilities";
+
+const TRIBUTE_REPLACED_EVENT = "tribute-replaced";
 
 type Props = {
   initialRawTask: string;
@@ -33,6 +40,59 @@ export function TaskForm({
   const { mutation, eventHandler: onSubmit } =
     useUseUpdateTasksWithTasks(rawTasks);
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const { tasks } = useTasks();
+
+  // This dance is needed so `useEffect` below doesn't continuously rerun
+  // (which makes it impossible to interact with the Tribute autocomplete),
+  // because reference to `tasks` above keeps changing despite actual tasks
+  // staying the same. See
+  // https://www.benmvp.com/blog/object-array-dependencies-react-useEffect-hook/#option-4---do-it-yourself.
+  const tasksRef = useRef(tasks);
+  if (!_.isEqual(tasksRef.current, tasks)) {
+    tasksRef.current = tasks;
+  }
+
+  const tributeEventListener = () => {
+    const current = textareaRef.current;
+    current && setRawTasks(current.value);
+  };
+
+  useEffect(() => {
+    const current = textareaRef.current;
+    if (!current) {
+      return;
+    }
+
+    const tasks = tasksRef.current;
+    const projects = availableProjectsForTasks(tasks).map(stripTagPrefix);
+    const contexts = availableContextsForTasks(tasks).map(stripTagPrefix);
+
+    const tribute = new Tribute({
+      collection: [
+        { values: toTributeValues(projects), trigger: "+" },
+        { values: toTributeValues(contexts), trigger: "@" },
+      ],
+      noMatchTemplate: () => '<span class:"hidden"></span>',
+      spaceSelectsMatch: true,
+    });
+
+    tribute.attach(current);
+
+    // Needed otherwise React doesn't know Tribute has updated the textarea
+    // content on autocompletion.
+    current.addEventListener(TRIBUTE_REPLACED_EVENT, tributeEventListener);
+
+    return () => {
+      if (!current) {
+        return;
+      }
+      tribute.detach(current);
+      current.removeEventListener(TRIBUTE_REPLACED_EVENT, tributeEventListener);
+    };
+  }, [textareaRef, tasksRef]);
+
   const params = useQueryParams();
   if (mutation.isSuccess) {
     return <Redirect to={urlWithParams(urls.root, params)} />;
@@ -55,8 +115,8 @@ export function TaskForm({
         className="container flex flex-col h-screen px-4 py-6 mx-auto"
         onSubmit={onSubmit}
       >
-        {/* XXX Add autocompletion in text area */}
         <textarea
+          ref={textareaRef}
           className={cn(
             "flex-grow",
             "w-full",
@@ -100,4 +160,8 @@ export function TaskForm({
       </form>
     </>
   );
+}
+
+function toTributeValues(array: string[]) {
+  return array.map((i) => ({ key: i, value: i }));
 }

@@ -11,6 +11,7 @@ import { UpdateTasksMutationResult, useTasks } from "api";
 import { useQueryParams, urlWithParams } from "queryParams";
 import { availableContextsForTasks, availableProjectsForTasks } from "types";
 import { stripTagPrefix } from "utilities";
+import { useNavigationWarning } from "hooks";
 
 const TRIBUTE_REPLACED_EVENT = "tribute-replaced";
 
@@ -93,6 +94,11 @@ export function TaskForm({
     };
   }, [textareaRef, tasksRef]);
 
+  const formIsClean =
+    trimmedRawTasks === "" || trimmedRawTasks === initialRawTask;
+
+  useNavigationWarning(!formIsClean);
+
   const params = useQueryParams();
   if (mutation.isSuccess) {
     return <Redirect to={urlWithParams(urls.root, params)} />;
@@ -134,11 +140,7 @@ export function TaskForm({
         ></textarea>
 
         <button
-          disabled={
-            trimmedRawTasks === "" ||
-            trimmedRawTasks === initialRawTask ||
-            mutation.isLoading
-          }
+          disabled={formIsClean || mutation.isLoading}
           className={cn(
             "w-full",
             "py-3",

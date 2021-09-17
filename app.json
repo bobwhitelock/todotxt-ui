@@ -1,7 +1,0 @@
-{
-  "scripts": {
-    "dokku": {
-      "predeploy": "cd client && yarn install && yarn build"
-    }
-  }
-}

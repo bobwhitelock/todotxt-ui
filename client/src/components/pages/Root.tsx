@@ -17,8 +17,8 @@ import {
 import { pluralizeTasks } from "types";
 
 export function Root() {
-  // XXX Handle isLoading and error
-  const { isLoading, error, tasks } = useTasks();
+  // TODO Handle isLoading and error
+  const { tasks } = useTasks();
   const incompleteTasks = tasks.filter((task) => !task.complete);
 
   const params = useQueryParams();

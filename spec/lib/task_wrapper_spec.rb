@@ -1,8 +1,6 @@
 require "rails_helper"
 
 RSpec.describe TaskWrapper do
-  # XXX Move this in to main Task class instead (if yes, maybe include
-  # `description` too)?
   describe "#to_json" do
     it "returns key properties of Task as a hash" do
       raw_task = "x (B) 2021-04-06 2021-04-05 some task @context +proj1 +proj2 due:2021-07-07 str:foo int:5"

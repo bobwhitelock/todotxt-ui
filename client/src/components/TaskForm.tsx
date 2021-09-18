@@ -104,8 +104,6 @@ export function TaskForm({
     return <Redirect to={urlWithParams(urls.root, params)} />;
   }
 
-  // XXX Debounce changing text based on whether loading so doesn't flash very
-  // briefly?
   const submitButtonText = getSubmitButtonText({
     plural: trimmedRawTasks.split("\n").length !== 1,
     loading: mutation.isLoading,

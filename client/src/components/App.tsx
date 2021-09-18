@@ -15,7 +15,6 @@ export function App() {
       <Helmet defaultTitle="todotxt-ui" titleTemplate="%s | todotxt-ui" />
       <Router>
         <Switch>
-          {/* XXX Handle 404s */}
           <Route exact path={urls.root}>
             <Root />
           </Route>

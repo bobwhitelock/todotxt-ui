@@ -1,7 +1,5 @@
 import _ from "lodash";
 
-// TODO Make these configurable - see
-// https://github.com/bobwhitelock/todotxt-ui/issues/122.
 const ALWAYS_AVAILABLE_CONTEXTS = [
   "@today",
   "@tomorrow",
@@ -33,7 +31,6 @@ export type Task = {
   descriptionText: string;
   complete: boolean;
   priority: string | null;
-  // XXX Handle these as dates
   creationDate: string;
   completionDate: string;
   contexts: string[];

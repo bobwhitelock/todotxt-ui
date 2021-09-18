@@ -7,8 +7,6 @@ module.exports = {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
       },
 
-      // XXX Update all styles to use new Tailwind palette, and can then remove
-      // reverting to old palette here.
       colors: {
         gray: {
           100: "#f7fafc",

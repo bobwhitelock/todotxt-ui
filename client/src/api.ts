@@ -21,8 +21,6 @@ export type UpdateTasksMutationResult = UseMutationResult<
   unknown
 >;
 
-// XXX Add generic error handling - show alert or similar
-
 function useMeta() {
   const { data, ...rest } = useQuery<MetaResponseData, Error>(
     "meta",

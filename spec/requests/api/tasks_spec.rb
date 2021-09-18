@@ -9,7 +9,6 @@ RSpec.describe "/api/tasks" do
   include ApiTestUtils
 
   describe "GET /api/tasks" do
-    # XXX Should do anything to the tasks? or leave this to the frontend?
     it "returns all tasks in the repo" do
       mock_auth_config
       mock_todo_repo("a task", "another task", "x a complete task")
@@ -38,7 +37,7 @@ RSpec.describe "/api/tasks" do
     end
   end
 
-  # XXX Also test POST with invalid task? Should return 422?
+  # TODO Also test POST with invalid task - should return 422
   describe "POST /api/tasks" do
     it "creates a delta for the given change and returns the new tasks" do
       mock_auth_config
@@ -50,7 +49,6 @@ RSpec.describe "/api/tasks" do
       }
       post "/api/tasks", headers: basic_auth_header, params: post_data
 
-      # XXX DRY this up?
       expect(response.status).to eq(200)
       response_json = JSON.parse(response.body).deep_symbolize_keys
       raw_tasks = response_json[:data].map { |t| t[:raw] }

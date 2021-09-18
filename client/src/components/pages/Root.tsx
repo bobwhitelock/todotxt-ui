@@ -17,7 +17,6 @@ import {
 import { pluralizeTasks } from "types";
 
 export function Root() {
-  // TODO Handle isLoading and error
   const { tasks } = useTasks();
   const incompleteTasks = tasks.filter((task) => !task.complete);
 
@@ -120,7 +119,6 @@ export function Root() {
         </div>
 
         {filteredTasks.map((task, index) => (
-          // XXX Better index than this? Need to generate and send ID from server?
           <TaskCard task={task} key={`${index}:${task.raw}`} />
         ))}
       </div>

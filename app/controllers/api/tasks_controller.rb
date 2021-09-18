@@ -1,11 +1,11 @@
 class Api::TasksController < ApplicationController
   before_action :set_default_response_format
 
-  def index
+  def show
     render_tasks
   end
 
-  def update
+  def create
     type = params[:type]
     arguments = params[:arguments]
     Delta.create!(type: type, arguments: arguments)

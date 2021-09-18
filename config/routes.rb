@@ -3,8 +3,7 @@ Rails.application.routes.draw do
   # https://guides.rubyonrails.org/routing.html
 
   namespace :api do
-    get "/tasks" => "tasks#index"
-    post "/tasks" => "tasks#update"
+    resource :tasks, only: [:show, :create]
   end
 
   # Any other non-XHR, HTML request should render the React client.

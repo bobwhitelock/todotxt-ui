@@ -29,7 +29,9 @@ export function TagPill({ tagType, tag, action }: Props) {
     linkParams = deleteTagParam(currentParams, tagType, tag);
   }
 
-  const baseElement = <span className={cn("tag-pill", classes)}>{tag}</span>;
+  const baseElement = (
+    <span className={cn("tag-pill", "break-all", classes)}>{tag}</span>
+  );
 
   if (linkParams === currentParams) {
     return baseElement;

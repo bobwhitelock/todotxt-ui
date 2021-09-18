@@ -36,7 +36,7 @@ export function TaskCard({ task }: Props) {
       <div className="flex-grow">
         <div className="float-right px-1 py-2 text-gray-600">
           {Object.entries(task.metadata).map(([tag, value]) => (
-            <span className="px-1" key={tag}>
+            <span className="px-1 break-all" key={tag}>
               {tag}:{value}
             </span>
           ))}

@@ -1,9 +1,7 @@
-
 # Deployment
 
 This describes my current setup for deploying Todotxt UI, using
 [Dokku](https://github.com/dokku/dokku).
-
 
 ## Versions
 
@@ -18,7 +16,6 @@ To update Dokku, where e.g. `version=v0.23.2`:
 wget https://raw.githubusercontent.com/dokku/dokku/$version/bootstrap.sh
 sudo DOKKU_TAG=$version bash bootstrap.sh
 ```
-
 
 ## To setup for deployment
 
@@ -77,8 +74,8 @@ dokku ps:rebuildall
 ```
 
 Also:
-- Set up DNS to point to this instance at `$public_domain`
 
+- Set up DNS to point to this instance at `$public_domain`
 
 ## To deploy
 

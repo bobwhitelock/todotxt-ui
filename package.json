@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "build": "cd client && yarn install && yarn build"
+    "build": "cd client && yarn install && yarn build",
+    "prettier": "prettier . --write"
   }
 }

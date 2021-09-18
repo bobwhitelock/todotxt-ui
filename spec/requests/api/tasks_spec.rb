@@ -2,21 +2,11 @@ require "base64"
 
 require "rails_helper"
 require "support/repo_utils"
+require "support/api_test_utils"
 
 RSpec.describe "/api/tasks" do
   include RepoUtils
-
-  let(:test_username) { "user" }
-  let(:test_password) { "password" }
-
-  def mock_auth_config
-    allow(Figaro.env).to receive("AUTH_USER!").and_return(test_username)
-    allow(Figaro.env).to receive("AUTH_PASSWORD!").and_return(test_password)
-  end
-
-  def basic_auth_header
-    {Authorization: "Basic #{Base64.encode64("#{test_username}:#{test_password}")}"}
-  end
+  include ApiTestUtils
 
   describe "GET /api/tasks" do
     # XXX Should do anything to the tasks? or leave this to the frontend?

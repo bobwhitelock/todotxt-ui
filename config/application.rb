@@ -34,8 +34,5 @@ module TodotxtUi
 
     config.generators.assets = false
     config.generators.helper = false
-
-    # XXX Insecure, remove/change before deploy!
-    config.action_controller.forgery_protection_origin_check = false
   end
 end

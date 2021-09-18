@@ -14,6 +14,10 @@ const ALWAYS_AVAILABLE_CONTEXTS = [
   "@sunday",
 ];
 
+export type Meta = {
+  csrfToken: string;
+};
+
 export type DeltaType =
   | "add"
   | "update"

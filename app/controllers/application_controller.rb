@@ -1,7 +1,4 @@
 class ApplicationController < ActionController::Base
-  # XXX Insecure, remove/change before deploy!
-  skip_before_action :verify_authenticity_token
-
   http_basic_authenticate_with(
     name: Figaro.env.AUTH_USER!,
     password: Figaro.env.AUTH_PASSWORD!,

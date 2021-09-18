@@ -5,12 +5,14 @@ import {
   useMutation,
 } from "react-query";
 
-import { Task, DeltaType, sortTasks } from "types";
+import { Meta, Task, DeltaType, sortTasks } from "types";
 
 const TASKS_URL = "/api/tasks";
 const TASKS_KEY = "tasks";
 
 type TasksResponseData = { data: Task[] };
+
+type MetaResponseData = { data: Meta };
 
 export type UpdateTasksMutationResult = UseMutationResult<
   TasksResponseData,
@@ -20,6 +22,21 @@ export type UpdateTasksMutationResult = UseMutationResult<
 >;
 
 // XXX Add generic error handling - show alert or similar
+
+function useMeta() {
+  const { data, ...rest } = useQuery<MetaResponseData, Error>(
+    "meta",
+    () => fetch("/api/meta").then((response) => response.json()),
+    {
+      // Should only need to fetch this once, so minimize refetching.
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  );
+  const meta = data ? data.data : null;
+  return { meta, ...rest };
+}
 
 export function useTasks() {
   const { data, ...rest } = useQuery<TasksResponseData, Error>(TASKS_KEY, () =>
@@ -36,6 +53,7 @@ export function useUpdateTasks(
   mutation: UpdateTasksMutationResult;
   eventHandler: (event: React.SyntheticEvent) => void;
 } {
+  const { meta } = useMeta();
   const queryClient = useQueryClient();
 
   const updateTasks = () =>
@@ -44,6 +62,7 @@ export function useUpdateTasks(
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        "X-CSRF-TOKEN": meta?.csrfToken || "",
       },
       body: JSON.stringify({ type: deltaType, arguments: deltaArguments }),
     }).then((response) => response.json());

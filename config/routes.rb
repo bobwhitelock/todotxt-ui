@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   # https://guides.rubyonrails.org/routing.html
 
   namespace :api do
+    resource :meta, only: :show
     resource :tasks, only: [:show, :create]
   end
 

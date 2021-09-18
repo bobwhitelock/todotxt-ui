@@ -31,14 +31,6 @@ Rails.application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
-  # Debug mode disables concatenation and preprocessing of assets.
-  # This option may cause significant delays in view rendering with a large
-  # number of complex assets.
-  config.assets.debug = true
-
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
-
   # Log to stderr in development.
   config.logger = Logger.new($stderr)
 
@@ -48,4 +40,8 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Skip this in development so React app at localhost:3001 can make requests
+  # to Rails app at localhost:3000.
+  config.action_controller.forgery_protection_origin_check = false
 end

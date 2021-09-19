@@ -1,6 +1,6 @@
 class TodoRepo
   attr_reader :list
-  delegate :all_contexts, :all_projects, to: :list
+  delegate :all_contexts, :all_projects, :file, to: :list
   delegate :push, to: :repo
 
   def initialize(todo_file)
@@ -50,21 +50,21 @@ class TodoRepo
   def commit_todo_file(message)
     return false unless list.dirty?
     list.save
-    repo.add(todo_file)
+    repo.add(file)
     repo.commit(message)
     true
   end
 
-  private
-
-  def todo_file
-    list.file
+  def file_name
+    File.basename(file)
   end
+
+  private
 
   def repo
     @_repo ||=
       begin
-        todo_dir = File.dirname(todo_file)
+        todo_dir = File.dirname(file)
         # TODO Handle this being nil, i.e. repo not found.
         repo_dir = find_repo_root_dir(todo_dir)
         repo = Git.open(repo_dir)

@@ -44,7 +44,9 @@ export function TaskForm({
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { tasks } = useTasks();
+  const { todoFiles } = useTasks();
+  // XXX Just use first todo file for now.
+  const tasks = todoFiles[0] ? todoFiles[0].tasks : [];
 
   // This dance is needed so `useEffect` below doesn't continuously rerun
   // (which makes it impossible to interact with the Tribute autocomplete),

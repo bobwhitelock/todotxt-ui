@@ -5,12 +5,12 @@ import {
   useMutation,
 } from "react-query";
 
-import { Meta, Task, DeltaType, sortTasks } from "types";
+import { Meta, TodoFile, DeltaType, sortTasks } from "types";
 
 const TASKS_URL = "/api/tasks";
 const TASKS_KEY = "tasks";
 
-type TasksResponseData = { data: Task[] };
+type TasksResponseData = { data: TodoFile[] };
 
 type MetaResponseData = { data: Meta };
 
@@ -40,8 +40,10 @@ export function useTasks() {
   const { data, ...rest } = useQuery<TasksResponseData, Error>(TASKS_KEY, () =>
     fetch(TASKS_URL).then((response) => response.json())
   );
-  const tasks = sortTasks(data ? data.data : []);
-  return { tasks, ...rest };
+  const todoFiles = data
+    ? data.data.map((tf) => ({ ...tf, tasks: sortTasks(tf.tasks) }))
+    : [];
+  return { todoFiles, ...rest };
 }
 
 export function useUpdateTasks(

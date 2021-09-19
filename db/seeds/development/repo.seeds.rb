@@ -85,7 +85,7 @@ in_todo_repo "git remote add origin git@github.com:bobwhitelock/todotxt-ui_test-
 
 # Create todo files.
 #
-# Also set as the `TODO_FILE` to use in development in
+# Also set as the `TODO_FILES` to use in development in
 # `config/application.yml`.
 seed_todo_file("todo.txt", todo_file_seed_tasks)
 seed_todo_file("backlog.txt", backlog_file_seed_tasks)

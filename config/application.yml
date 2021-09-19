@@ -5,13 +5,19 @@ auth_user: bob
 auth_password: password
 
 development:
-  todo_file: /home/bob/src/bobwhitelock/todotxt-ui/tmp/todo_repo/todo.txt
+  todo_files:
+    - /home/bob/src/bobwhitelock/todotxt-ui/tmp/todo_repo/todo.txt
+    - /home/bob/src/bobwhitelock/todotxt-ui/tmp/todo_repo/backlog.txt
   git_email: bob.whitelock1+todotxt-dev@gmail.com
 
 test:
-  todo_file: /path/to/todo.txt
+  todo_files:
+    - /path/to/todo.txt
+    - /path/to/backlog.txt
   git_email: bob.whitelock1+todotxt-test@gmail.com
 
 production:
-  todo_file: /repo/todo/next_actions.todo
+  todo_files:
+    - /repo/todo/next_actions.todo
+    - /repo/todo/backlog.todo
   git_email: bob.whitelock1+todotxt@gmail.com

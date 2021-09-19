@@ -1,13 +1,16 @@
 import { useTasks } from "api";
 import { TasksGrid } from "components/TasksGrid";
+import { Tabs } from "components/Tabs";
 
 export function Root() {
   const { todoFiles } = useTasks();
 
-  if (!todoFiles[0]) {
-    return <span>Loading...</span>;
-  }
+  const tabConfigs = todoFiles.map((todoFile) => {
+    return {
+      name: todoFile.fileName,
+      content: <TasksGrid todoFile={todoFile} />,
+    };
+  });
 
-  // XXX Just use first todo file for now.
-  return <TasksGrid todoFile={todoFiles[0]} />;
+  return <Tabs tabs={tabConfigs} />;
 }

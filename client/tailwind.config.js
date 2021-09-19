@@ -150,6 +150,11 @@ module.exports = {
         // Additions.
         "disabled",
       ],
+      margin: [
+        "responsive",
+        // Additions.
+        "last",
+      ],
     },
   },
   plugins: [],

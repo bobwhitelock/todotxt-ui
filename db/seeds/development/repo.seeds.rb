@@ -13,7 +13,13 @@ def in_todo_repo(command)
   system! "cd #{TODO_REPO} && #{command}"
 end
 
-seed_tasks = [
+def seed_todo_file(file_name, seed_tasks)
+  todo_file = TODO_REPO.join(file_name).to_s
+  file_content = seed_tasks.join("\n") + "\n"
+  IO.write(todo_file, file_content)
+end
+
+todo_file_seed_tasks = [
   "2021-03-22 simple task 1",
   "2021-03-23 simple task 2",
   "2021-03-24 simple task 3",
@@ -58,7 +64,12 @@ seed_tasks = [
   TODOTXT
   "2021-04-15 # task with hash (i.e. markdown header)",
   "2021-04-16 task with *inline* **markdown** ~~strikethrough~~"
+]
 
+backlog_file_seed_tasks = [
+  "2020-09-18 some backlog task @home",
+  "2020-06-05 another backlog task @code +todotxt-ui",
+  "2020-04-11 task for later @work"
 ]
 
 # Recreate repo.
@@ -72,13 +83,13 @@ rescue
 end
 in_todo_repo "git remote add origin git@github.com:bobwhitelock/todotxt-ui_test-repo.git"
 
-# Create todo file.
+# Create todo files.
 #
 # Also set as the `TODO_FILE` to use in development in
 # `config/application.yml`.
-todo_file = TODO_REPO.join("todo.txt").to_s
-todo_file_content = seed_tasks.join("\n") + "\n"
-IO.write(todo_file, todo_file_content)
+seed_todo_file("todo.txt", todo_file_seed_tasks)
+seed_todo_file("backlog.txt", backlog_file_seed_tasks)
+
 in_todo_repo "git add ."
 in_todo_repo "git commit -m 'Initial commit'"
 in_todo_repo "git push --force"

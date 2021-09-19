@@ -26,6 +26,11 @@ export type DeltaType =
 
 export type TagType = "project" | "context";
 
+export type TodoFile = {
+  fileName: string;
+  tasks: Task[];
+};
+
 export type Task = {
   raw: string;
   descriptionText: string;

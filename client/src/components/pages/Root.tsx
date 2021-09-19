@@ -17,7 +17,9 @@ import {
 import { pluralizeTasks } from "types";
 
 export function Root() {
-  const { tasks } = useTasks();
+  const { todoFiles } = useTasks();
+  // XXX Just use first todo file for now.
+  const tasks = todoFiles[0] ? todoFiles[0].tasks : [];
   const incompleteTasks = tasks.filter((task) => !task.complete);
 
   const params = useQueryParams();

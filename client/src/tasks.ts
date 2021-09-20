@@ -1,5 +1,11 @@
 import _ from "lodash";
 
+import {
+  AlwaysArrayParsedQuery,
+  getContextParams,
+  getProjectParams,
+} from "queryParams";
+
 const ALWAYS_AVAILABLE_CONTEXTS = [
   "@today",
   "@tomorrow",
@@ -41,6 +47,28 @@ export function sortTasks(tasks: Task[]): Task[] {
     "creationDate",
     "raw",
   ]);
+}
+
+export function incompleteTasks(tasks: Task[]): Task[] {
+  return tasks.filter((task) => !task.complete);
+}
+
+export function filterTasks({
+  tasks,
+  params,
+}: {
+  tasks: Task[];
+  params: AlwaysArrayParsedQuery;
+}): Task[] {
+  let filteredTasks = incompleteTasks(tasks);
+  getContextParams(params).forEach((context) => {
+    filteredTasks = filteredTasks.filter((t) => t.contexts.includes(context));
+  });
+  getProjectParams(params).forEach((project) => {
+    filteredTasks = filteredTasks.filter((t) => t.projects.includes(project));
+  });
+
+  return filteredTasks;
 }
 
 export function pluralizeTasks(tasksOrIsPlural: Task[] | boolean): string {

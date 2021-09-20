@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import cn from "classnames";
+import _ from "lodash";
 
 type Props = {
   tabs: TabConfig[];
@@ -8,6 +9,8 @@ type Props = {
 type TabConfig = {
   name: string;
   content: ReactNode;
+  subheader: ReactNode;
+  onSelect: () => void;
 };
 
 // Component adapted from
@@ -20,6 +23,12 @@ export function Tabs({ tabs }: Props) {
     // Set the first open tab, once there are any tabs to select.
     setOpenTab(firstTab.name);
   }
+
+  const openTabConfig = _.find(tabs, (tab) => tab.name === openTab);
+  React.useEffect(() => {
+    openTabConfig && openTabConfig.onSelect();
+  }, [openTabConfig]);
+
   if (!firstTab) {
     return <span>Loading...</span>;
   }
@@ -30,44 +39,52 @@ export function Tabs({ tabs }: Props) {
     <>
       <div className="flex flex-wrap">
         <div className="w-full">
-          <ul
-            className="flex flex-row flex-wrap pt-3 pb-4 mb-0 list-none"
-            role="tablist"
-          >
-            {tabs.map((tab) => (
-              <li
-                key={tab.name}
-                className="flex-auto mr-2 -mb-px text-center last:mr-0"
-              >
-                <button
-                  className={cn([
-                    "text-xs",
-                    "font-bold",
-                    "uppercase",
-                    "px-5",
-                    "py-3",
-                    "shadow-lg",
-                    "rounded",
-                    "block",
-                    "leading-normal",
-                    "w-full",
-                    isOpen(tab)
-                      ? "text-white bg-green-600"
-                      : "text-green-600 bg-white",
-                  ])}
-                  onClick={() => {
-                    setOpenTab(tab.name);
-                  }}
-                  data-toggle="tab"
-                  role="tablist"
+          <div className="sticky md:static top-0 bg-gray-300 border-b-2 border-gray-400 p-2">
+            <ul
+              className="flex flex-row flex-wrap pt-1 pb-2 mb-0 list-none"
+              role="tablist"
+            >
+              {tabs.map((tab) => (
+                <li
+                  key={tab.name}
+                  className="flex-auto mr-2 -mb-px text-center last:mr-0"
                 >
-                  {tab.name}
-                </button>
-              </li>
-            ))}
-          </ul>
+                  <button
+                    className={cn([
+                      "text-xs",
+                      "font-bold",
+                      "uppercase",
+                      "px-5",
+                      "py-3",
+                      "shadow-lg",
+                      "rounded",
+                      "block",
+                      "leading-normal",
+                      "w-full",
+                      isOpen(tab)
+                        ? "text-white bg-green-600"
+                        : "text-green-600 bg-white",
+                    ])}
+                    onClick={() => {
+                      setOpenTab(tab.name);
+                    }}
+                    data-toggle="tab"
+                    role="tablist"
+                  >
+                    {tab.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
 
-          <div className="relative flex flex-col w-full min-w-0 mb-6 break-words bg-white rounded shadow-lg">
+            {tabs.map((tab) => (
+              <div key={tab.name} className={isOpen(tab) ? "block" : "hidden"}>
+                {tab.subheader}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col w-full min-w-0 mb-6 break-words bg-white rounded shadow-lg">
             <div className="flex-auto">
               <div className="tab-content tab-space">
                 {tabs.map((tab) => (

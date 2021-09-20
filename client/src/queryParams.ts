@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 import { TagType } from "types";
 import { stripTagPrefix } from "utilities";
 
-type AlwaysArrayParsedQuery = {
+export type AlwaysArrayParsedQuery = {
   [key: string]: null | string[];
 };
 

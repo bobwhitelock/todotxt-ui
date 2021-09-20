@@ -6,7 +6,7 @@ import * as urls from "urls";
 import { IconButton } from "components/IconButton";
 import { InlineMarkdown } from "components/InlineMarkdown";
 import { TagPills } from "components/TagPills";
-import { Task, taskIsToday } from "types";
+import { Task, taskIsToday } from "tasks";
 import { useQueryParams, urlWithParams } from "queryParams";
 import { useUpdateTasks } from "api";
 

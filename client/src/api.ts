@@ -5,7 +5,8 @@ import {
   useMutation,
 } from "react-query";
 
-import { Meta, TodoFile, DeltaType, sortTasks } from "types";
+import { Meta, DeltaType } from "types";
+import { TodoFile, sortTasks } from "tasks";
 
 const TASKS_URL = "/api/tasks";
 const TASKS_KEY = "tasks";

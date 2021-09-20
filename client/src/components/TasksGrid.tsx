@@ -13,7 +13,7 @@ import {
   getContextParams,
   getProjectParams,
 } from "queryParams";
-import { TodoFile, pluralizeTasks } from "types";
+import { TodoFile, pluralizeTasks } from "tasks";
 
 type Props = {
   todoFile: TodoFile;

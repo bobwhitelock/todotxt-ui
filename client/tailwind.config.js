@@ -122,9 +122,35 @@ module.exports = {
     },
   },
   variants: {
-    backgroundColor: ["responsive", "hover", "focus", "disabled"],
-    cursor: ["responsive", "disabled"],
-    opacity: ["responsive", "hover", "focus", "disabled"],
+    // See
+    // https://tailwindcss.com/docs/configuring-variants#default-variants-reference
+    // for default variants for overriding.
+    extend: {
+      backgroundColor: [
+        "responsive",
+        "dark",
+        "group-hover",
+        "focus-within",
+        "hover",
+        "focus",
+        // Additions.
+        "disabled",
+      ],
+      cursor: [
+        "responsive",
+        // Additions.
+        "disabled",
+      ],
+      opacity: [
+        "responsive",
+        "group-hover",
+        "focus-within",
+        "hover",
+        "focus",
+        // Additions.
+        "disabled",
+      ],
+    },
   },
   plugins: [],
   purge: [

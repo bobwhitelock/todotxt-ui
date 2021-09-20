@@ -4,7 +4,7 @@ import {
   getContextParams,
   getProjectParams,
 } from "queryParams";
-import { pluralizeTasks } from "types";
+import { pluralizeTasks } from "tasks";
 import { useUpdateTasks } from "api";
 
 export function Add() {

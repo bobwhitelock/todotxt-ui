@@ -10,7 +10,7 @@ import "../../node_modules/tributejs/dist/tribute.css";
 import * as urls from "urls";
 import { UpdateTasksMutationResult, useTasks } from "api";
 import { useQueryParams, urlWithParams } from "queryParams";
-import { availableContextsForTasks, availableProjectsForTasks } from "types";
+import { availableContextsForTasks, availableProjectsForTasks } from "tasks";
 import { stripTagPrefix } from "utilities";
 import { useNavigationWarning } from "hooks";
 

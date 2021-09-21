@@ -41,13 +41,13 @@ export function Tabs({ tabs }: Props) {
         <div className="w-full">
           <div className="sticky md:static top-0 bg-gray-300 border-b-2 border-gray-400 p-2">
             <ul
-              className="flex flex-row flex-wrap pt-1 pb-2 mb-0 list-none"
+              className="flex flex-row flex-wrap mb-0 list-none"
               role="tablist"
             >
               {tabs.map((tab) => (
                 <li
                   key={tab.name}
-                  className="flex-auto mr-2 -mb-px text-center last:mr-0"
+                  className="flex-auto pt-1 pb-2 mr-2 -mb-px text-center last:mr-0"
                 >
                   <button
                     className={cn([

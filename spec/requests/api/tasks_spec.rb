@@ -43,7 +43,7 @@ RSpec.describe "/api/tasks" do
     it "includes changes from unapplied deltas" do
       mock_auth_config
       repo = mock_todo_repo("a task")
-      create(:delta, type: :add, arguments: ["another task"])
+      create(:delta, type: :add, arguments: {task: "another task"})
       now = Time.local(2021, 2, 9)
       Timecop.freeze(now)
 
@@ -65,7 +65,7 @@ RSpec.describe "/api/tasks" do
 
       post_data = {
         type: Delta::UPDATE,
-        arguments: ["a task", "updated task"]
+        arguments: {task: "a task", new_task: "updated task"}
       }
       post "/api/tasks", headers: basic_auth_header, params: post_data
 

@@ -8,29 +8,26 @@ RSpec.describe Delta do
     it { should validate_inclusion_of(:status).in_array(Delta::STATUSES) }
     it { should validate_presence_of(:arguments) }
 
-    it "validates correct number of arguments passed for each type of Delta" do
-      one_arg_update_delta = build(:delta, type: Delta::UPDATE, arguments: ["one"])
-      two_arg_update_delta = build(:delta, type: Delta::UPDATE, arguments: ["one", "two"])
-      other_delta_types = Delta::TYPES - [Delta::UPDATE]
-      one_arg_other_deltas = other_delta_types.map do |t|
-        build(:delta, type: t, arguments: ["one"])
-      end
-      two_arg_other_deltas = other_delta_types.map do |t|
-        build(:delta, type: t, arguments: ["one", "two"])
-      end
+    it "validates correct arguments passed for each type of Delta" do
+      missing_argument_delta = build(
+        :delta, type: Delta::UPDATE, arguments: {task: "one"}
+      )
+      extra_argument_delta = build(
+        :delta, type: Delta::ADD, arguments: {task: "one", new_task: "two"}
+      )
+      correct_delta = build(
+        :delta, type: Delta::UPDATE, arguments: {task: "one", new_task: "two"}
+      )
 
-      expect(one_arg_update_delta).to be_invalid
-      expect(one_arg_update_delta.errors[:arguments]).to eq([
-        "This type of Delta expects 2 arguments"
+      expect(missing_argument_delta).to be_invalid
+      expect(missing_argument_delta.errors[:arguments]).to eq([
+        "This type of Delta expects these arguments: 'task', 'new_task'"
       ])
-      expect(two_arg_update_delta).to be_valid
-      one_arg_other_deltas.each { |d| expect(d).to be_valid }
-      two_arg_other_deltas.each do |d|
-        expect(d).to be_invalid
-        expect(d.errors[:arguments]).to eq([
-          "This type of Delta expects 1 argument"
-        ])
-      end
+      expect(extra_argument_delta).to be_invalid
+      expect(extra_argument_delta.errors[:arguments]).to eq([
+        "This type of Delta expects these arguments: 'task'"
+      ])
+      expect(correct_delta).to be_valid
     end
   end
 

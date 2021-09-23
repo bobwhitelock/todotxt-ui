@@ -18,10 +18,24 @@ export function TaskCard({ task }: Props) {
   const classes = taskClasses(task);
   const params = useQueryParams();
 
-  const scheduleTask = useUpdateTasks("schedule", [task.raw]);
-  const unscheduleTask = useUpdateTasks("unschedule", [task.raw]);
-  const deleteTask = useUpdateTasks("delete", [task.raw]);
-  const completeTask = useUpdateTasks("complete", [task.raw]);
+  const args = { task: task.raw };
+
+  const scheduleTask = useUpdateTasks({
+    type: "schedule",
+    arguments: args,
+  });
+  const unscheduleTask = useUpdateTasks({
+    type: "unschedule",
+    arguments: args,
+  });
+  const deleteTask = useUpdateTasks({
+    type: "delete",
+    arguments: args,
+  });
+  const completeTask = useUpdateTasks({
+    type: "complete",
+    arguments: args,
+  });
 
   return (
     <div

@@ -14,7 +14,10 @@ export function Edit() {
   }
 
   const useUseUpdateTasksWithTasks = (rawTask: string) =>
-    useUpdateTasks("update", [initialRawTask, rawTask]);
+    useUpdateTasks({
+      type: "update",
+      arguments: { task: initialRawTask, newTask: rawTask },
+    });
 
   const getSubmitButtonText = ({ loading }: { loading: boolean }) =>
     loading ? "Updating Task..." : "Update Task";

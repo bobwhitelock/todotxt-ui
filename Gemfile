@@ -31,6 +31,7 @@ group :development do
   gem "spring-watcher-listen"
   gem "pry-rails"
   gem "seedbank"
+  gem "js-routes"
 end
 
 group :test do

@@ -5,7 +5,7 @@ import {
   useMutation,
 } from "react-query";
 
-import { Meta, DeltaType } from "types";
+import { Meta, Delta } from "types";
 import { TodoFile, sortTasks } from "tasks";
 
 const TASKS_URL = "/api/tasks";
@@ -47,10 +47,7 @@ export function useTasks() {
   return { todoFiles, ...rest };
 }
 
-export function useUpdateTasks(
-  deltaType: DeltaType,
-  deltaArguments: string[]
-): {
+export function useUpdateTasks(delta: Delta): {
   mutation: UpdateTasksMutationResult;
   eventHandler: (event: React.SyntheticEvent) => void;
 } {
@@ -65,7 +62,7 @@ export function useUpdateTasks(
         "Content-Type": "application/json;charset=UTF-8",
         "X-CSRF-TOKEN": meta?.csrfToken || "",
       },
-      body: JSON.stringify({ type: deltaType, arguments: deltaArguments }),
+      body: JSON.stringify(delta),
     }).then((response) => response.json());
 
   const mutation = useMutation(updateTasks, {

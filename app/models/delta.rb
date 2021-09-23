@@ -1,12 +1,5 @@
 class Delta < ApplicationRecord
-  class TypeConfig
-    attr_reader :valid_arguments_length
-
-    def initialize(valid_arguments_length: 1)
-      @valid_arguments_length = valid_arguments_length
-    end
-  end
-
+  # Types.
   ADD = "add"
   UPDATE = "update"
   DELETE = "delete"
@@ -14,16 +7,20 @@ class Delta < ApplicationRecord
   SCHEDULE = "schedule"
   UNSCHEDULE = "unschedule"
 
-  TYPE_CONFIGS = {
-    ADD => {},
-    UPDATE => {valid_arguments_length: 2},
-    DELETE => {},
-    COMPLETE => {},
-    SCHEDULE => {},
-    UNSCHEDULE => {}
-  }.transform_values { |c| TypeConfig.new(**c) }
+  # Argument names.
+  TASK = "task"
+  NEW_TASK = "new_task"
 
-  TYPES = TYPE_CONFIGS.keys
+  ARGUMENT_DEFINITIONS = {
+    ADD => [TASK],
+    UPDATE => [TASK, NEW_TASK],
+    DELETE => [TASK],
+    COMPLETE => [TASK],
+    SCHEDULE => [TASK],
+    UNSCHEDULE => [TASK]
+  }
+
+  TYPES = ARGUMENT_DEFINITIONS.keys
 
   UNAPPLIED = "unapplied"
   APPLIED = "applied"
@@ -40,7 +37,7 @@ class Delta < ApplicationRecord
   validates :type, inclusion: {in: TYPES}
   validates :status, presence: true, inclusion: {in: STATUSES}
   validates_presence_of(:arguments)
-  validate :validate_correct_number_of_arguments
+  validate :validate_arguments
 
   scope :pending, -> { where(status: UNAPPLIED).order("created_at") }
 
@@ -50,21 +47,29 @@ class Delta < ApplicationRecord
     end
   end
 
+  def task
+    arguments.fetch("task")
+  end
+
+  def new_task
+    arguments.fetch("new_task")
+  end
+
   private
 
   delegate :valid_arguments_length, to: :type_config
 
-  def validate_correct_number_of_arguments
+  def validate_arguments
     return unless arguments
 
-    if arguments.length != valid_arguments_length
-      argument_or_arguments = "argument".pluralize(valid_arguments_length)
-      message = "This type of Delta expects #{valid_arguments_length} #{argument_or_arguments}"
+    if arguments.keys != expected_arguments
+      expected_args_string = expected_arguments.map { |arg| "'#{arg}'" }.join(", ")
+      message = "This type of Delta expects these arguments: #{expected_args_string}"
       errors.add(:arguments, message)
     end
   end
 
-  def type_config
-    TYPE_CONFIGS[type]
+  def expected_arguments
+    ARGUMENT_DEFINITIONS[type]
   end
 end

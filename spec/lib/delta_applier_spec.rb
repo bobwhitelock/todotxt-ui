@@ -16,7 +16,7 @@ RSpec.describe DeltaApplier do
       delta = create(
         :delta,
         type: Delta::ADD,
-        arguments: ["some task\nanother task"],
+        arguments: {task: "some task\nanother task"},
         status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo("other task")
@@ -37,7 +37,7 @@ RSpec.describe DeltaApplier do
       delta = create(
         :delta,
         type: Delta::UPDATE,
-        arguments: ["old task", "new task"],
+        arguments: {task: "old task", new_task: "new task"},
         status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo("other task", "old task")
@@ -53,7 +53,7 @@ RSpec.describe DeltaApplier do
       delta = create(
         :delta,
         type: Delta::DELETE,
-        arguments: ["some task"],
+        arguments: {task: "some task"},
         status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo("other task", "some task")
@@ -71,7 +71,7 @@ RSpec.describe DeltaApplier do
       delta = create(
         :delta,
         type: Delta::COMPLETE,
-        arguments: ["2020-05-05 some task"],
+        arguments: {task: "2020-05-05 some task"},
         status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo("other task", "2020-05-05 some task")
@@ -90,7 +90,7 @@ RSpec.describe DeltaApplier do
       delta = create(
         :delta,
         type: Delta::SCHEDULE,
-        arguments: ["some task"],
+        arguments: {task: "some task"},
         status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo("other task", "some task")
@@ -106,7 +106,7 @@ RSpec.describe DeltaApplier do
       delta = create(
         :delta,
         type: Delta::UNSCHEDULE,
-        arguments: ["some task @today @another-tag"],
+        arguments: {task: "some task @today @another-tag"},
         status: Delta::UNAPPLIED
       )
       todo_repo = mock_todo_repo("other task", "some task @today @another-tag")
@@ -125,7 +125,7 @@ RSpec.describe DeltaApplier do
         create(
           :delta,
           type: Delta::ADD,
-          arguments: ["some task #{i}"],
+          arguments: {task: "some task #{i}"},
           status: Delta::UNAPPLIED
         )
       }
@@ -146,7 +146,9 @@ RSpec.describe DeltaApplier do
 
     it "handles delta with no effect" do
       # Update Delta with old task not present in repo should have no effect.
-      delta = create(:delta, type: Delta::UPDATE, arguments: ["foo", "bar"])
+      delta = create(
+        :delta, type: Delta::UPDATE, arguments: {task: "foo", new_task: "bar"}
+      )
       todo_repo = mock_todo_repo("other task")
 
       expect(todo_repo.list).not_to receive(:save)

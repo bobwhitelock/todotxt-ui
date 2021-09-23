@@ -14,7 +14,7 @@ export function Add() {
   const initialRawTask = [...contexts, ...projects].join(" ");
 
   const useUseUpdateTasksWithTasks = (rawTasks: string) =>
-    useUpdateTasks("add", [rawTasks]);
+    useUpdateTasks({ type: "add", arguments: { task: rawTasks } });
 
   const getSubmitButtonText = ({
     plural,

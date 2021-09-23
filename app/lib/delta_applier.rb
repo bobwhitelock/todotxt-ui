@@ -46,7 +46,7 @@ class DeltaApplier
 
   def handle_add
     today = Time.now.strftime("%F")
-    new_tasks = delta.arguments.first.lines.map(&:strip).reject(&:empty?)
+    new_tasks = delta.task.lines.map(&:strip).reject(&:empty?)
     new_tasks.each do |task|
       task_with_timestamp = "#{today} #{task}"
       todo_repo.add_task(task_with_timestamp)
@@ -54,29 +54,23 @@ class DeltaApplier
   end
 
   def handle_update
-    old_task = delta.arguments.first
-    new_task = delta.arguments.second.squish
-    todo_repo.replace_task(old_task, new_task)
+    todo_repo.replace_task(delta.task, delta.new_task)
   end
 
   def handle_delete
-    task = delta.arguments.first
-    todo_repo.delete_task(task)
+    todo_repo.delete_task(delta.task)
   end
 
   def handle_complete
-    task = delta.arguments.first
-    todo_repo.complete_task(task)
+    todo_repo.complete_task(delta.task)
   end
 
   def handle_schedule
-    task = delta.arguments.first
-    todo_repo.map_task(task, &:schedule)
+    todo_repo.map_task(delta.task, &:schedule)
   end
 
   def handle_unschedule
-    task = delta.arguments.first
-    todo_repo.map_task(task, &:unschedule)
+    todo_repo.map_task(delta.task, &:unschedule)
   end
 
   def save_delta_change

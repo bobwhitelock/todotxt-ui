@@ -19,30 +19,26 @@ class Api::TasksController < ApplicationController
   end
 
   def render_tasks
-    todo_repos.each do |repo|
-      # TODO: DeltaApplier modifying repo instance in place rather than
-      # returning new one is a gotcha, only reason this works and can be seen
-      # in response is because of caching in `todo_repos` below.
-      DeltaApplier.apply(
-        todo_repo: repo,
-        deltas: Delta.pending,
-        commit: false
-      )
-    end
+    # TODO: DeltaApplier modifying repo instance in place rather than
+    # returning new one is a gotcha, only reason this works and can be seen
+    # in response is because of caching in `todo_repo` below.
+    DeltaApplier.apply(
+      todo_repo: todo_repo,
+      deltas: Delta.pending,
+      commit: false
+    )
 
     render json: {
-      data: todo_repos.map do |repo|
+      data: todo_repo.files.map do |file_path|
         {
-          fileName: repo.file_name,
-          tasks: repo.list.map(&:to_json)
+          filePath: file_path,
+          tasks: todo_repo.list_for_file(file_path).map(&:to_json)
         }
       end
     }
   end
 
-  def todo_repos
-    @_todo_repos ||= YAML.safe_load(Figaro.env.TODO_FILES!).map do |file_path|
-      TodoRepo.new(file_path)
-    end
+  def todo_repo
+    @_todo_repo ||= TodoRepo.new(YAML.safe_load(Figaro.env.TODO_FILES!))
   end
 end

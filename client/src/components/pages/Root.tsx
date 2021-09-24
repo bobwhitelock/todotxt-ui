@@ -6,7 +6,12 @@ import { useQueryParams } from "queryParams";
 import { TasksGrid } from "components/TasksGrid";
 import { Tabs } from "components/Tabs";
 import { TasksToolbar } from "components/TasksToolbar";
-import { incompleteTasks, filterTasks, pluralizeTasks } from "tasks";
+import {
+  incompleteTasks,
+  filterTasks,
+  pluralizeTasks,
+  todoFileBasename,
+} from "tasks";
 
 export function Root() {
   const params = useQueryParams();
@@ -15,12 +20,13 @@ export function Root() {
   const [title, setTitle] = React.useState<null | string>(null);
 
   const tabConfigs = todoFiles.map((todoFile) => {
+    const fileName = todoFileBasename(todoFile);
     return {
-      name: todoFile.fileName,
+      name: fileName,
       content: <TasksGrid todoFile={todoFile} />,
       subheader: <TasksToolbar todoFile={todoFile} />,
       onSelect: () => {
-        const { tasks, fileName } = todoFile;
+        const { tasks } = todoFile;
         const filteredTasksCount = filterTasks({ tasks, params }).length;
         const incompleteTasks_ = incompleteTasks(tasks);
         const incompleteTasksCount = incompleteTasks_.length;

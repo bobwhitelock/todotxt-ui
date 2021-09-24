@@ -19,7 +19,7 @@ const ALWAYS_AVAILABLE_CONTEXTS = [
 ];
 
 export type TodoFile = {
-  fileName: string;
+  filePath: string;
   tasks: Task[];
 };
 
@@ -34,6 +34,10 @@ export type Task = {
   projects: string[];
   metadata: { [key: string]: string | number };
 };
+
+export function todoFileBasename(todoFile: TodoFile): string {
+  return todoFile.filePath.split(/[\\/]/).pop() ?? "";
+}
 
 export function taskIsToday(task: Task): boolean {
   return task.contexts.includes("@today");

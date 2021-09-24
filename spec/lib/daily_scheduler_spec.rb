@@ -16,7 +16,7 @@ RSpec.describe DailyScheduler do
     end
 
     it "removes tag from tasks tagged with @yesterday" do
-      todo_repo = mock_todo_repo(
+      todo_repo = mock_single_file_todo_repo(
         "some important task @yesterday",
         "other task",
         "another important task @yesterday scheduled:1"
@@ -36,7 +36,7 @@ RSpec.describe DailyScheduler do
     end
 
     it "unschedules tasks tagged with @today" do
-      todo_repo = mock_todo_repo(
+      todo_repo = mock_single_file_todo_repo(
         "some important task @today",
         "other task",
         "another important task @today scheduled:1"
@@ -56,7 +56,7 @@ RSpec.describe DailyScheduler do
     end
 
     it "schedules tasks tagged with @tomorrow for today" do
-      todo_repo = mock_todo_repo(
+      todo_repo = mock_single_file_todo_repo(
         "some important task @tomorrow",
         "other task",
         "another important task @tomorrow scheduled:1"
@@ -76,7 +76,7 @@ RSpec.describe DailyScheduler do
     end
 
     it "schedules tasks tagged with current day of the week for today" do
-      todo_repo = mock_todo_repo(
+      todo_repo = mock_single_file_todo_repo(
         "some important task @tuesday",
         "other task",
         "another important task @wednesday scheduled:1"
@@ -96,7 +96,7 @@ RSpec.describe DailyScheduler do
     end
 
     it "schedules tasks due today for today" do
-      todo_repo = mock_todo_repo(
+      todo_repo = mock_single_file_todo_repo(
         "some important task due:2021-02-09",
         "other task",
         "another important task due:2021-02-10 scheduled:1"
@@ -118,7 +118,7 @@ RSpec.describe DailyScheduler do
     it "handles all transitions in combination" do
       # Some of these combinations of contexts on a single Task are probably
       # not that useful in practise, but should still be handled correctly.
-      todo_repo = mock_todo_repo(
+      todo_repo = mock_single_file_todo_repo(
         "task 1 @yesterday",
         "task 2 @today scheduled:2",
         "task 3 @tomorrow",

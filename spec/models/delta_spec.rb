@@ -10,22 +10,28 @@ RSpec.describe Delta do
 
     it "validates correct arguments passed for each type of Delta" do
       missing_argument_delta = build(
-        :delta, type: Delta::UPDATE, arguments: {task: "one"}
+        :delta,
+        type: Delta::UPDATE,
+        arguments: {task: "one", file: "/some/file.txt"}
       )
       extra_argument_delta = build(
-        :delta, type: Delta::ADD, arguments: {task: "one", new_task: "two"}
+        :delta,
+        type: Delta::ADD,
+        arguments: {task: "one", new_task: "two", file: "/some/file.txt"}
       )
       correct_delta = build(
-        :delta, type: Delta::UPDATE, arguments: {task: "one", new_task: "two"}
+        :delta,
+        type: Delta::UPDATE,
+        arguments: {task: "one", new_task: "two", file: "/some/file.txt"}
       )
 
       expect(missing_argument_delta).to be_invalid
       expect(missing_argument_delta.errors[:arguments]).to eq([
-        "This type of Delta expects these arguments: 'task', 'new_task'"
+        "This type of Delta expects these arguments: 'task', 'new_task', 'file'"
       ])
       expect(extra_argument_delta).to be_invalid
       expect(extra_argument_delta.errors[:arguments]).to eq([
-        "This type of Delta expects these arguments: 'task'"
+        "This type of Delta expects these arguments: 'task', 'file'"
       ])
       expect(correct_delta).to be_valid
     end

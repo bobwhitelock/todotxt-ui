@@ -1,6 +1,6 @@
 class TodoRepo
   attr_reader :list
-  delegate :all_contexts, :all_projects, :file, to: :list
+  delegate :file, to: :list
   delegate :push, to: :repo
 
   def initialize(todo_file)

@@ -10,7 +10,9 @@ env:
   POSTGRES_HOST: localhost
   RAILS_ENV: test
 
-on: [push]
+on:
+  - push
+  - pull_request
 
 jobs:
   build:

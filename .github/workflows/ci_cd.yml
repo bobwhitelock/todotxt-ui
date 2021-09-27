@@ -3,7 +3,7 @@
 # - https://github.community/t/postgres-error-could-not-connect-to-server-no-such-file-or-directory/18040/4;
 # - https://dokku.com/docs/deployment/continuous-integration/github-actions/.
 
-name: CI
+name: CI/CD
 
 env:
   POSTGRES_USER: postgres

@@ -1,6 +1,7 @@
-# Adapted from
-# https://dev.to/vvo/a-rails-and-postgresql-setup-for-github-actions-ci-nc8 and
-# https://github.community/t/postgres-error-could-not-connect-to-server-no-such-file-or-directory/18040/4.
+# Adapted from:
+# - https://dev.to/vvo/a-rails-and-postgresql-setup-for-github-actions-ci-nc8;
+# - https://github.community/t/postgres-error-could-not-connect-to-server-no-such-file-or-directory/18040/4;
+# - https://dokku.com/docs/deployment/continuous-integration/github-actions/.
 
 name: CI
 
@@ -9,6 +10,7 @@ env:
   POSTGRES_PASSWORD: postgres
   POSTGRES_HOST: localhost
   RAILS_ENV: test
+  SHOULD_DEPLOY: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
 on:
   - push
@@ -33,6 +35,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          # Required to avoid error as "pushing a git repository from a shallow
+          # clone does not work" - see https://github.com/dokku/github-action.
+          fetch-depth: 0
       - name: Install Ruby version specified in `.ruby-version`
         # This will use by default the .ruby-version file in your repository.
         uses: eregon/use-ruby-action@master
@@ -71,3 +77,13 @@ jobs:
           bundle exec rspec
       - name: Run `standard` for Ruby
         run: bundle exec standardrb
+
+      - if: ${{ env.SHOULD_DEPLOY }}
+        name: Push to dokku
+        uses: dokku/github-action@v1.0.2
+        with:
+          # Always force push so deploy can work no matter what was previously
+          # deployed.
+          git_push_flags: "--force"
+          git_remote_url: "ssh://dokku@todo.bobwhitelock.co.uk/~/todotxt/"
+          ssh_private_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}

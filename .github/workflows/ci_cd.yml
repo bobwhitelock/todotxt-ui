@@ -89,6 +89,8 @@ jobs:
           bundle exec rspec
       - name: Run `standard` for Ruby
         run: bundle exec standardrb
+      - name: Smoke test `yarn run build`
+        run: yarn run build
 
       - if: fromJSON(env.SHOULD_DEPLOY)
         name: Push to dokku

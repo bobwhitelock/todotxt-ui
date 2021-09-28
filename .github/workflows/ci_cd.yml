@@ -1,7 +1,8 @@
 # Adapted from:
 # - https://dev.to/vvo/a-rails-and-postgresql-setup-for-github-actions-ci-nc8;
 # - https://github.community/t/postgres-error-could-not-connect-to-server-no-such-file-or-directory/18040/4;
-# - https://dokku.com/docs/deployment/continuous-integration/github-actions/.
+# - https://dokku.com/docs/deployment/continuous-integration/github-actions/;
+# - https://kevsoft.net/2020/06/10/running-github-action-steps-and-jobs-only-on-push-to-master.html.
 
 name: CI/CD
 
@@ -35,7 +36,9 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - if: ${{ env.SHOULD_DEPLOY }}
+      # `fromJSON` needed, here and below, to convert string environment
+      # variable (which is always truthy) to boolean.
+      - if: fromJSON(env.SHOULD_DEPLOY)
         name: Cancel all but latest deploy
         uses: styfle/cancel-workflow-action@0.9.1
         with:
@@ -87,7 +90,7 @@ jobs:
       - name: Run `standard` for Ruby
         run: bundle exec standardrb
 
-      - if: ${{ env.SHOULD_DEPLOY }}
+      - if: fromJSON(env.SHOULD_DEPLOY)
         name: Push to dokku
         uses: dokku/github-action@v1.0.2
         with:

@@ -26,7 +26,7 @@ seed_tasks = [
   "2021-03-31 task with a due date due:2021-08-13",
   "2021-04-01 another task with a due date due:2021-08-11",
   "2021-04-02 task that has previously been scheduled scheduled:3",
-  "2021-04-03 task from yesterday @yesterday scheduled:1",
+  "2021-04-03 task from yesterday @yesterday scheduled:1 due:2021-04-04",
   "2021-04-04 task for today @today",
   "2021-04-05 task for tomorrow @tomorrow",
   "2021-04-06 task for Monday @monday",

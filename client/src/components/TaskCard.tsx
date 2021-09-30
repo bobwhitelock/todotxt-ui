@@ -34,7 +34,7 @@ export function TaskCard({ task }: Props) {
       )}
     >
       <div className="flex-grow">
-        <div className="float-right px-1 py-2 text-gray-600">
+        <div className="text-right px-1 pt-1 text-gray-600">
           {Object.entries(task.metadata).map(([tag, value]) => (
             <span className="px-1 break-all" key={tag}>
               {tag}:{value}
@@ -45,7 +45,7 @@ export function TaskCard({ task }: Props) {
           </span>
         </div>
 
-        <div className="px-2 py-2">
+        <div className="px-2 pt-1">
           <p className="text-gray-900">
             <InlineMarkdown markdown={task.descriptionText} />
           </p>

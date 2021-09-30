@@ -12,7 +12,7 @@
 /tmp/*
 
 
-/public/assets
+/public/
 .byebug_history
 
 # Ignore master key for decrypting credentials and more.

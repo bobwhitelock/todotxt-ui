@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import cn from "classnames";
 import { Redirect } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import _ from "lodash";
 import Tribute from "tributejs";
 import "../../node_modules/tributejs/dist/tribute.css";

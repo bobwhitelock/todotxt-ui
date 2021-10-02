@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import _ from "lodash";
 import Tribute from "tributejs";
+import { DateTime } from "luxon";
 import "../../node_modules/tributejs/dist/tribute.css";
 
 import * as urls from "urls";
@@ -74,6 +75,10 @@ export function TaskForm({
       collection: [
         { values: toTributeValues(projects), trigger: "+" },
         { values: toTributeValues(contexts), trigger: "@" },
+        {
+          values: dateSuggestionsForTribute(),
+          trigger: "due:",
+        },
       ],
       noMatchTemplate: () => '<span class:"hidden"></span>',
       spaceSelectsMatch: true,
@@ -164,4 +169,27 @@ export function TaskForm({
 
 function toTributeValues(array: string[]) {
   return array.map((i) => ({ key: i, value: i }));
+}
+
+function dateSuggestionsForTribute() {
+  const dateSuggestions: [
+    string,
+    Partial<Record<"days" | "weeks" | "months", number>>
+  ][] = [
+    ["today", {}],
+    ["tomorrow", { days: 1 }],
+    ["day after tomorrow", { days: 2 }],
+    ["1 week", { weeks: 1 }],
+    ["2 weeks", { weeks: 2 }],
+    ["1 month", { months: 1 }],
+  ];
+
+  const today = DateTime.local();
+  return dateSuggestions.map(([description, date]) => {
+    const isoDate = today.plus(date).toISODate();
+    return {
+      key: `${description} (${isoDate})`,
+      value: isoDate,
+    };
+  });
 }

@@ -185,8 +185,8 @@ function dateSuggestionsForTribute() {
   ];
 
   const today = DateTime.local();
-  return dateSuggestions.map(([description, date]) => {
-    const isoDate = today.plus(date).toISODate();
+  return dateSuggestions.map(([description, dateDelta]) => {
+    const isoDate = today.plus(dateDelta).toISODate();
     return {
       key: `${description} (${isoDate})`,
       value: isoDate,

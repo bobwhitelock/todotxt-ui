@@ -7,7 +7,7 @@ import Tribute from "tributejs";
 import { DateTime } from "luxon";
 import "../../node_modules/tributejs/dist/tribute.css";
 
-import * as urls from "urls";
+import * as paths from "paths";
 import { UpdateTasksMutationResult, useTasks } from "api";
 import { useQueryParams, urlWithParams } from "queryParams";
 import { availableContextsForTasks, availableProjectsForTasks } from "tasks";
@@ -108,7 +108,7 @@ export function TaskForm({
 
   const params = useQueryParams();
   if (mutation.isSuccess) {
-    return <Navigate to={urlWithParams(urls.root, params)} />;
+    return <Navigate to={urlWithParams(paths.root({}), params)} />;
   }
 
   const submitButtonText = getSubmitButtonText({

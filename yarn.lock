@@ -10733,6 +10733,11 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
+static-path@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/static-path/-/static-path-0.0.3.tgz#01a22efdfb0411a907da68923a67d41061dda339"
+  integrity sha512-8o81ywgwIL5OP3ljpW4GAquf2UlHIigHIXTEbksSegouso8/TRRuhCwnBig9iNNGSYtgn7zZQdTi/4NN7Umteg==
+
 "statuses@>= 1.4.0 < 2", "statuses@>= 1.5.0 < 2", statuses@~1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"

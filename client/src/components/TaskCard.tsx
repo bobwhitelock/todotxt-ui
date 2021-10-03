@@ -2,7 +2,7 @@ import cn from "classnames";
 import { Link } from "react-router-dom";
 
 import * as Icon from "components/Icon";
-import * as urls from "urls";
+import * as paths from "paths";
 import { IconButton } from "components/IconButton";
 import { InlineMarkdown } from "components/InlineMarkdown";
 import { TagPills } from "components/TagPills";
@@ -106,7 +106,7 @@ export function TaskCard({ task }: Props) {
           <Icon.Trash topClass="text-gray-600" bottomClass="text-gray-500" />
         </IconButton>
 
-        <Link to={urlWithParams(urls.edit.forTask(task), params)}>
+        <Link to={urlWithParams(paths.edit({ task }), params)}>
           <IconButton>
             <Icon.Edit topClass="text-gray-500" bottomClass="text-gray-600" />
           </IconButton>

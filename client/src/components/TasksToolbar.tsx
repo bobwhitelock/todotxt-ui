@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import * as Icon from "components/Icon";
-import * as urls from "urls";
+import * as paths from "paths";
 import { IconButton } from "components/IconButton";
 import { TagPills } from "components/TagPills";
 import {
@@ -86,7 +86,7 @@ export function TasksToolbar({ todoFile: { tasks } }: Props) {
           />
         </IconButton>
 
-        <Link to={urlWithParams(urls.add, params)}>
+        <Link to={urlWithParams(paths.add({}), params)}>
           <IconButton>
             <Icon.AddSquare
               backgroundClass="text-green-300"

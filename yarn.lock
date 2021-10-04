@@ -1977,13 +1977,6 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-helmet@^6.1.2":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@types/react-helmet/-/react-helmet-6.1.2.tgz#e9d7d16b29e4ec5716711c52c35c3cec45819eac"
-  integrity sha512-dcfAZNlWb5JYFbO9CGfrPWLJAyFcT6UeR3u35eBbv8liY2Rg4K7fM1G5+HnwVgot+C+kVwXAZ8pLEn2jsMfTDg==
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-router-dom@^5.3.0":
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-5.3.0.tgz#8c4e0aa0ccaf638ba965829ad29a10ac3cbe2212"
@@ -11692,8 +11685,10 @@ watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
+    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"

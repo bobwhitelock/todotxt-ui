@@ -18,7 +18,7 @@
     "@types/node": "^16.11.1",
     "@types/query-string": "^6.3.0",
     "@types/react": "^17.0.30",
-    "@types/react-dom": "^17.0.9",
+    "@types/react-dom": "^17.0.10",
     "@types/react-router-dom": "^5.3.1",
     "autoprefixer": "^9",
     "classnames": "^2.3.1",

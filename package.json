@@ -13,7 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.176",
-    "@types/luxon": "^2.0.5",
+    "@types/luxon": "^2.0.6",
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^16.11.6",
     "@types/query-string": "^6.3.0",

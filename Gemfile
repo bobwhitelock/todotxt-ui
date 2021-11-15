@@ -7,7 +7,7 @@ gem "rails", "~> 6.1.3"
 # Use Puma as the app server
 gem "puma", "~> 5.5"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem "jbuilder", "~> 2.7"
+gem "jbuilder", "~> 2.11"
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

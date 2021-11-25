@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://127.0.0.1:3000",
   "dependencies": {
-    "@craco/craco": "^6.4.1",
+    "@craco/craco": "^6.4.2",
     "@sentry/react": "^6.15.0",
     "@sentry/tracing": "^6.15.0",
     "@tailwindcss/postcss7-compat": "^2.1.4",

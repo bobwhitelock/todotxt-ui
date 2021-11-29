@@ -66,7 +66,7 @@ jobs:
         run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
         id: nvm
       - name: Install required Node.js version
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
       - name: Get Yarn cache directory path

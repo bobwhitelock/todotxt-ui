@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
@@ -15,17 +15,11 @@ export function App() {
       <HelmetProvider>
         <Helmet defaultTitle="todotxt-ui" titleTemplate="%s | todotxt-ui" />
         <Router>
-          <Switch>
-            <Route exact path={urls.root}>
-              <Root />
-            </Route>
-            <Route exact path={urls.add}>
-              <Add />
-            </Route>
-            <Route exact path={urls.edit.template}>
-              <Edit />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path={urls.root} element={<Root />} />
+            <Route path={urls.add} element={<Add />} />
+            <Route path={urls.edit.template} element={<Edit />} />
+          </Routes>
         </Router>
       </HelmetProvider>
     </QueryClientProvider>

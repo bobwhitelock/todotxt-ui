@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import cn from "classnames";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import _ from "lodash";
 import Tribute from "tributejs";
@@ -106,7 +106,7 @@ export function TaskForm({
 
   const params = useQueryParams();
   if (mutation.isSuccess) {
-    return <Redirect to={urlWithParams(urls.root, params)} />;
+    return <Navigate to={urlWithParams(urls.root, params)} />;
   }
 
   const submitButtonText = getSubmitButtonText({

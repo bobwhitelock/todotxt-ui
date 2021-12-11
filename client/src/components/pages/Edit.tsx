@@ -3,14 +3,14 @@ import { Navigate } from "react-router-dom";
 import { TaskForm } from "components/TaskForm";
 import { useUpdateTasks } from "api";
 import { useDecodedParams } from "hooks";
-import * as urls from "urls";
+import * as paths from "paths";
 
 export function Edit() {
   const { rawTask: initialRawTask } = useDecodedParams();
   if (!initialRawTask) {
     // We should never be here without this param, if we somehow are just go
     // back to the root page.
-    return <Navigate to={urls.root} />;
+    return <Navigate to={paths.root({})} />;
   }
 
   const useUseUpdateTasksWithTasks = (rawTask: string) =>

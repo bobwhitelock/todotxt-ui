@@ -18,7 +18,7 @@ function TodoFilePage() {
   const { todoFiles } = useTasks();
   const params = useQueryParams();
 
-  const { todoFile: currentTodoFileName } = useParams<{ todoFile: string }>();
+  const { todoFile: currentTodoFileName } = useParams();
   const currentTodoFile = _.find(
     todoFiles,
     (todoFile) => todoFile.fileName === currentTodoFileName

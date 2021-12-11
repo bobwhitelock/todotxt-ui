@@ -6,15 +6,16 @@ import * as paths from "paths";
 import { IconButton } from "components/IconButton";
 import { InlineMarkdown } from "components/InlineMarkdown";
 import { TagPills } from "components/TagPills";
-import { Task, taskIsToday } from "tasks";
+import { Task, taskIsToday, TodoFile } from "tasks";
 import { useQueryParams, urlWithParams } from "queryParams";
 import { useUpdateTasks } from "api";
 
 type Props = {
+  todoFile: TodoFile;
   task: Task;
 };
 
-export function TaskCard({ task }: Props) {
+export function TaskCard({ todoFile, task }: Props) {
   const classes = taskClasses(task);
   const params = useQueryParams();
 
@@ -48,7 +49,7 @@ export function TaskCard({ task }: Props) {
       )}
     >
       <div className="flex-grow">
-        <div className="text-right px-1 pt-1 text-gray-600">
+        <div className="px-1 pt-1 text-right text-gray-600">
           {Object.entries(task.metadata).map(([tag, value]) => (
             <span className="px-1 break-all" key={tag}>
               {tag}:{value}
@@ -106,7 +107,9 @@ export function TaskCard({ task }: Props) {
           <Icon.Trash topClass="text-gray-600" bottomClass="text-gray-500" />
         </IconButton>
 
-        <Link to={urlWithParams(paths.edit({ task }), params)}>
+        <Link
+          to={urlWithParams(paths.todoFileEdit({ todoFile, task }), params)}
+        >
           <IconButton>
             <Icon.Edit topClass="text-gray-500" bottomClass="text-gray-600" />
           </IconButton>

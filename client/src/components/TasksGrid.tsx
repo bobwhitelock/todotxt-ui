@@ -6,14 +6,19 @@ type Props = {
   todoFile: TodoFile;
 };
 
-export function TasksGrid({ todoFile: { tasks } }: Props) {
+export function TasksGrid({ todoFile }: Props) {
+  const { tasks } = todoFile;
   const params = useQueryParams();
   const filteredTasks = filterTasks({ tasks, params });
 
   return (
     <div className="flex flex-wrap text-lg">
       {filteredTasks.map((task, index) => (
-        <TaskCard task={task} key={`${index}:${task.raw}`} />
+        <TaskCard
+          todoFile={todoFile}
+          task={task}
+          key={`${index}:${task.raw}`}
+        />
       ))}
     </div>
   );

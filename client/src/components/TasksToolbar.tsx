@@ -17,7 +17,9 @@ type Props = {
   todoFile: TodoFile;
 };
 
-export function TasksToolbar({ todoFile: { tasks } }: Props) {
+export function TasksToolbar({ todoFile }: Props) {
+  const { tasks } = todoFile;
+
   const params = useQueryParams();
 
   const contextFilters = getContextParams(params);
@@ -86,7 +88,7 @@ export function TasksToolbar({ todoFile: { tasks } }: Props) {
           />
         </IconButton>
 
-        <Link to={urlWithParams(paths.add({}), params)}>
+        <Link to={urlWithParams(paths.todoFileAdd({ todoFile }), params)}>
           <IconButton>
             <Icon.AddSquare
               backgroundClass="text-green-300"

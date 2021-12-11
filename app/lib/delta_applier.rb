@@ -49,33 +49,35 @@ class DeltaApplier
     new_tasks = delta.task.lines.map(&:strip).reject(&:empty?)
     new_tasks.each do |task|
       task_with_timestamp = "#{today} #{task}"
-      todo_repo.add_task(task_with_timestamp)
+      todo_repo.add_task(file: delta.file, raw_task: task_with_timestamp)
     end
   end
 
   def handle_update
-    todo_repo.replace_task(delta.task, delta.new_task)
+    todo_repo.replace_task(
+      file: delta.file, old_raw_task: delta.task, new_raw_task: delta.new_task
+    )
   end
 
   def handle_delete
-    todo_repo.delete_task(delta.task)
+    todo_repo.delete_task(file: delta.file, raw_task: delta.task)
   end
 
   def handle_complete
-    todo_repo.complete_task(delta.task)
+    todo_repo.complete_task(file: delta.file, raw_task: delta.task)
   end
 
   def handle_schedule
-    todo_repo.map_task(delta.task, &:schedule)
+    todo_repo.map_task(file: delta.file, raw_task: delta.task, &:schedule)
   end
 
   def handle_unschedule
-    todo_repo.map_task(delta.task, &:unschedule)
+    todo_repo.map_task(file: delta.file, raw_task: delta.task, &:unschedule)
   end
 
   def save_delta_change
     return unless commit_message
-    todo_repo.commit_todo_file(commit_message)
+    todo_repo.commit_todo_files(commit_message)
     delta.update!(status: Delta::APPLIED)
   end
 end

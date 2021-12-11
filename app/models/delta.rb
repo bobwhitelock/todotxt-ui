@@ -10,14 +10,15 @@ class Delta < ApplicationRecord
   # Argument names.
   TASK = "task"
   NEW_TASK = "new_task"
+  FILE = "file"
 
   ARGUMENT_DEFINITIONS = {
-    ADD => [TASK],
-    UPDATE => [TASK, NEW_TASK],
-    DELETE => [TASK],
-    COMPLETE => [TASK],
-    SCHEDULE => [TASK],
-    UNSCHEDULE => [TASK]
+    ADD => [TASK, FILE],
+    UPDATE => [TASK, NEW_TASK, FILE],
+    DELETE => [TASK, FILE],
+    COMPLETE => [TASK, FILE],
+    SCHEDULE => [TASK, FILE],
+    UNSCHEDULE => [TASK, FILE]
   }
 
   TYPES = ARGUMENT_DEFINITIONS.keys
@@ -53,6 +54,10 @@ class Delta < ApplicationRecord
 
   def new_task
     arguments.fetch("new_task")
+  end
+
+  def file
+    arguments.fetch("file")
   end
 
   private

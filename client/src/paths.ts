@@ -4,6 +4,10 @@ import { Task, TodoFile } from "tasks";
 
 type TodoFileParams = { todoFile: TodoFile };
 
+// XXX Stash other changes, define todo file specific routes here, update app
+// to use, commit in separate commit, then can pop and continue with other
+// stuff
+
 export const root = path("/");
 export const rootAdd = path("/add");
 

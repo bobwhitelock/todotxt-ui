@@ -1,9 +1,7 @@
 class TodoRepo
-  attr_reader :list
-  delegate :file, to: :list
   delegate :push, to: :repo
 
-  def initialize(todo_file)
+  def initialize(todo_files)
     # TODO Defining this global config here seems the best place to both have
     # tests pass without jumping through hoops, and avoid this warning which
     # occurs if put this in an initializer: `DEPRECATION WARNING:
@@ -15,31 +13,44 @@ class TodoRepo
       task_class: TaskWrapper
     )
 
-    @list = Todotxt::List.load(todo_file)
+    @files_to_lists = todo_files.map do |todo_file|
+      [todo_file, Todotxt::List.load(todo_file)]
+    end.to_h
   end
 
+  def files
+    files_to_lists.keys
+  end
+
+  def list_for_file(file)
+    files_to_lists.fetch(file)
+  end
+
+  # XXX update/replace usage
   def incomplete_tasks
     list.select(&:incomplete?)
   end
 
-  def add_task(raw_task)
-    list << raw_task
+  def add_task(file:, raw_task:)
+    list_for_file(file) << raw_task
   end
 
-  def delete_task(raw_task)
-    list.delete_if { |t| t.equals_raw_task(raw_task) }
+  def delete_task(file:, raw_task:)
+    list_for_file(file).delete_if { |t| t.equals_raw_task(raw_task) }
   end
 
-  def replace_task(old_raw_task, new_raw_task)
-    map_task(old_raw_task) { |task| task.raw = new_raw_task }
+  def replace_task(file:, old_raw_task:, new_raw_task:)
+    map_task(file: file, raw_task: old_raw_task) do |task|
+      task.raw = new_raw_task
+    end
   end
 
-  def complete_task(raw_task)
-    map_task(raw_task, &:complete!)
+  def complete_task(file:, raw_task:)
+    map_task(file: file, raw_task: raw_task, &:complete!)
   end
 
-  def map_task(raw_task, &block)
-    list.select { |t| t.equals_raw_task(raw_task) }.map(&block)
+  def map_task(file:, raw_task:, &block)
+    list_for_file(file).select { |t| t.equals_raw_task(raw_task) }.map(&block)
   end
 
   def reset_to_origin
@@ -47,24 +58,34 @@ class TodoRepo
     repo.reset_hard("origin/master")
   end
 
-  def commit_todo_file(message)
-    return false unless list.dirty?
-    list.save
-    repo.add(file)
+  def commit_todo_files(message)
+    return false unless any_list_dirty?
+    lists.each do |list|
+      list.save
+      repo.add(list.file)
+    end
     repo.commit(message)
     true
   end
 
-  def file_name
-    File.basename(file)
+  private
+
+  attr_reader :files_to_lists
+
+  def lists
+    files_to_lists.values
   end
 
-  private
+  def any_list_dirty?
+    lists.map { |list| list.dirty? }.any?
+  end
 
   def repo
     @_repo ||=
       begin
-        todo_dir = File.dirname(file)
+        # TODO This won't work if there are no files, and nothing will work as
+        # expected if the files are not all in the same repo.
+        todo_dir = File.dirname(files.first)
         # TODO Handle this being nil, i.e. repo not found.
         repo_dir = find_repo_root_dir(todo_dir)
         repo = Git.open(repo_dir)

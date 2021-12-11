@@ -19,7 +19,7 @@ const ALWAYS_AVAILABLE_CONTEXTS = [
 ];
 
 export type TodoFile = {
-  fileName: string;
+  filePath: string;
   tasks: Task[];
 };
 
@@ -34,6 +34,64 @@ export type Task = {
   projects: string[];
   metadata: { [key: string]: string | number };
 };
+
+// import React from "react";
+// import { Helmet } from "react-helmet-async";
+
+// import { useTasks } from "api";
+// import { useQueryParams } from "queryParams";
+// import { TasksGrid } from "components/TasksGrid";
+// import { Tabs } from "components/Tabs";
+// import { TasksToolbar } from "components/TasksToolbar";
+// import {
+//   incompleteTasks,
+//   filterTasks,
+//   pluralizeTasks,
+//   todoFileBasename,
+// } from "tasks";
+
+// export function Root() {
+//   const params = useQueryParams();
+
+//   const { todoFiles } = useTasks();
+//   const [title, setTitle] = React.useState<null | string>(null);
+
+//   const tabConfigs = todoFiles.map((todoFile) => {
+//     const fileName = todoFileBasename(todoFile);
+//     return {
+//       name: fileName,
+//       content: <TasksGrid todoFile={todoFile} />,
+//       subheader: <TasksToolbar todoFile={todoFile} />,
+//       onSelect: () => {
+//         const { tasks } = todoFile;
+//         const filteredTasksCount = filterTasks({ tasks, params }).length;
+//         const incompleteTasks_ = incompleteTasks(tasks);
+//         const incompleteTasksCount = incompleteTasks_.length;
+//         const taskOrTasks = pluralizeTasks(incompleteTasks_);
+
+//         const tasksSummary =
+//           filteredTasksCount === incompleteTasksCount
+//             ? `${incompleteTasksCount} ${taskOrTasks}`
+//             : `${filteredTasksCount}/${incompleteTasksCount} ${taskOrTasks}`;
+//         setTitle(`${tasksSummary} | ${fileName}`);
+//       },
+//     };
+//   });
+
+//   return (
+//     <>
+//       <Helmet>
+//         <title>{title}</title>
+//       </Helmet>
+
+//       <Tabs tabs={tabConfigs} />
+//     </>
+//   );
+// }
+// XXX Might need in `client/src/components/pages/TodoFile.tsx`, something like above
+export function todoFileBasename(todoFile: TodoFile): string {
+  return todoFile.filePath.split(/[\\/]/).pop() ?? "";
+}
 
 export function taskIsToday(task: Task): boolean {
   return task.contexts.includes("@today");

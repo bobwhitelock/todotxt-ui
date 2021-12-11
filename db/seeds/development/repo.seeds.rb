@@ -1,4 +1,6 @@
 TODO_REPO = Rails.root.join("tmp/todo_repo")
+TODO_FILE = TODO_REPO.join("todo.txt").to_s
+BACKLOG_FILE = TODO_REPO.join("backlog.txt").to_s
 
 TASK_TO_BE_DELETED = "task to be deleted"
 TASK_TO_BE_COMPLETED = "task to be completed"
@@ -13,10 +15,9 @@ def in_todo_repo(command)
   system! "cd #{TODO_REPO} && #{command}"
 end
 
-def seed_todo_file(file_name, seed_tasks)
-  todo_file = TODO_REPO.join(file_name).to_s
+def seed_todo_file(file_path, seed_tasks)
   file_content = seed_tasks.join("\n") + "\n"
-  IO.write(todo_file, file_content)
+  IO.write(file_path, file_content)
 end
 
 todo_file_seed_tasks = [
@@ -87,8 +88,8 @@ in_todo_repo "git remote add origin git@github.com:bobwhitelock/todotxt-ui_test-
 #
 # Also set as the `TODO_FILES` to use in development in
 # `config/application.yml`.
-seed_todo_file("todo.txt", todo_file_seed_tasks)
-seed_todo_file("backlog.txt", backlog_file_seed_tasks)
+seed_todo_file(TODO_FILE, todo_file_seed_tasks)
+seed_todo_file(BACKLOG_FILE, backlog_file_seed_tasks)
 
 in_todo_repo "git add ."
 in_todo_repo "git commit -m 'Initial commit'"

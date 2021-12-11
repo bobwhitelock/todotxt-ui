@@ -13,18 +13,19 @@ RSpec.describe DeltaApplier do
     it "handles `add` delta" do
       now = Time.local(2020, 6, 6)
       Timecop.freeze(now)
+      todo_repo = mock_single_file_todo_repo("other task")
+      file = todo_repo.files.first
       delta = create(
         :delta,
         type: Delta::ADD,
-        arguments: {task: "some task\nanother task"},
+        arguments: {task: "some task\nanother task", file: file},
         status: Delta::UNAPPLIED
       )
-      todo_repo = mock_todo_repo("other task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Create task(s)").and_call_original
+      expect(todo_repo).to receive(:commit_todo_files).with("Create task(s)").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, [
+      expect_tasks_saved(todo_repo.list_for_file(file), [
         "other task",
         "2020-06-06 some task",
         "2020-06-06 another task"
@@ -34,52 +35,57 @@ RSpec.describe DeltaApplier do
 
     # TODO also test update delta with only one argument is gracefully handled?
     it "handles `update` delta" do
+      todo_repo = mock_single_file_todo_repo("other task", "old task")
+      file = todo_repo.files.first
       delta = create(
         :delta,
         type: Delta::UPDATE,
-        arguments: {task: "old task", new_task: "new task"},
+        arguments: {task: "old task", new_task: "new task", file: file},
         status: Delta::UNAPPLIED
       )
-      todo_repo = mock_todo_repo("other task", "old task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Update task").and_call_original
+      expect(todo_repo).to receive(:commit_todo_files).with("Update task").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, ["other task", "new task"])
+      expect_tasks_saved(
+        todo_repo.list_for_file(file), ["other task", "new task"]
+      )
       expect(delta.reload).to be_applied
     end
 
     it "handles `delete` delta" do
+      todo_repo = mock_single_file_todo_repo("other task", "some task")
+      file = todo_repo.files.first
       delta = create(
         :delta,
         type: Delta::DELETE,
-        arguments: {task: "some task"},
+        arguments: {task: "some task", file: file},
         status: Delta::UNAPPLIED
       )
-      todo_repo = mock_todo_repo("other task", "some task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Delete task").and_call_original
+      expect(todo_repo).to receive(:commit_todo_files).with("Delete task").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, ["other task"])
+      expect_tasks_saved(todo_repo.list_for_file(file), ["other task"])
       expect(delta.reload).to be_applied
     end
 
     it "handles `complete` delta" do
       now = Time.local(2020, 6, 6)
       Timecop.freeze(now)
+      todo_repo = mock_single_file_todo_repo("other task", "2020-05-05 some task")
+      file = todo_repo.files.first
       delta = create(
         :delta,
         type: Delta::COMPLETE,
-        arguments: {task: "2020-05-05 some task"},
+        arguments: {task: "2020-05-05 some task", file: file},
         status: Delta::UNAPPLIED
       )
-      todo_repo = mock_todo_repo("other task", "2020-05-05 some task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Complete task").and_call_original
+      expect(todo_repo).to receive(:commit_todo_files).with("Complete task").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, [
+      expect_tasks_saved(todo_repo.list_for_file(file), [
         "other task",
         "x 2020-06-06 2020-05-05 some task"
       ])
@@ -87,54 +93,61 @@ RSpec.describe DeltaApplier do
     end
 
     it "handles `schedule` delta" do
+      todo_repo = mock_single_file_todo_repo("other task", "some task")
+      file = todo_repo.files.first
       delta = create(
         :delta,
         type: Delta::SCHEDULE,
-        arguments: {task: "some task"},
+        arguments: {task: "some task", file: file},
         status: Delta::UNAPPLIED
       )
-      todo_repo = mock_todo_repo("other task", "some task")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Add task to today list").and_call_original
+      expect(todo_repo).to receive(:commit_todo_files).with("Add task to today list").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, ["other task", "some task @today"])
+      expect_tasks_saved(
+        todo_repo.list_for_file(file), ["other task", "some task @today"]
+      )
       expect(delta.reload).to be_applied
     end
 
     it "handles `unschedule` delta" do
+      todo_repo = mock_single_file_todo_repo("other task", "some task @today @another-tag")
+      file = todo_repo.files.first
       delta = create(
         :delta,
         type: Delta::UNSCHEDULE,
-        arguments: {task: "some task @today @another-tag"},
+        arguments: {task: "some task @today @another-tag", file: file},
         status: Delta::UNAPPLIED
       )
-      todo_repo = mock_todo_repo("other task", "some task @today @another-tag")
 
-      expect(todo_repo).to receive(:commit_todo_file).with("Remove task from today list").and_call_original
+      expect(todo_repo).to receive(:commit_todo_files).with("Remove task from today list").and_call_original
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, ["other task", "some task @another-tag"])
+      expect_tasks_saved(
+        todo_repo.list_for_file(file), ["other task", "some task @another-tag"]
+      )
       expect(delta.reload).to be_applied
     end
 
     it "handles multiple deltas" do
       now = Time.local(2020, 6, 6)
       Timecop.freeze(now)
+      todo_repo = mock_single_file_todo_repo("other task")
+      file = todo_repo.files.first
       deltas = (1..3).map { |i|
         create(
           :delta,
           type: Delta::ADD,
-          arguments: {task: "some task #{i}"},
+          arguments: {task: "some task #{i}", file: file},
           status: Delta::UNAPPLIED
         )
       }
-      todo_repo = mock_todo_repo("other task")
 
-      expect(todo_repo).to receive(:commit_todo_file).thrice.with("Create task(s)").and_call_original
+      expect(todo_repo).to receive(:commit_todo_files).thrice.with("Create task(s)").and_call_original
       DeltaApplier.apply(deltas: deltas, todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, [
+      expect_tasks_saved(todo_repo.list_for_file(file), [
         "other task",
         "2020-06-06 some task 1",
         "2020-06-06 some task 2",
@@ -145,26 +158,31 @@ RSpec.describe DeltaApplier do
     end
 
     it "handles delta with no effect" do
+      todo_repo = mock_single_file_todo_repo("other task")
+      file = todo_repo.files.first
+      list = todo_repo.list_for_file(file)
       # Update Delta with old task not present in repo should have no effect.
       delta = create(
-        :delta, type: Delta::UPDATE, arguments: {task: "foo", new_task: "bar"}
+        :delta,
+        type: Delta::UPDATE,
+        arguments: {task: "foo", new_task: "bar", file: file}
       )
-      todo_repo = mock_todo_repo("other task")
 
-      expect(todo_repo.list).not_to receive(:save)
+      expect(list).not_to receive(:save)
       DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, ["other task"])
+      expect_tasks_saved(list, ["other task"])
       expect(delta.reload).to be_applied
     end
 
     it "handles no deltas" do
-      todo_repo = mock_todo_repo("other task")
+      todo_repo = mock_single_file_todo_repo("other task")
+      list = todo_repo.list_for_file(todo_repo.files.first)
 
-      expect(todo_repo).not_to receive(:commit_todo_file)
+      expect(todo_repo).not_to receive(:commit_todo_files)
       DeltaApplier.apply(deltas: [], todo_repo: todo_repo)
 
-      expect_tasks_saved(todo_repo, ["other task"])
+      expect_tasks_saved(list, ["other task"])
     end
 
     # TODO test behaviour with/without committing better - do above tests in
@@ -173,10 +191,12 @@ RSpec.describe DeltaApplier do
     context "when `commit: false` passed" do
       it "leaves todo repo on disk unchanged" do
         Delta::TYPES.each do |type|
-          todo_repo = mock_todo_repo("some task")
+          todo_repo = mock_single_file_todo_repo("some task")
+          file = todo_repo.files.first
           delta = create(:delta, type: type)
+          delta.update!(arguments: {**delta.arguments, file: file})
 
-          expect(todo_repo).not_to receive(:commit_todo_file)
+          expect(todo_repo).not_to receive(:commit_todo_files)
           DeltaApplier.apply(deltas: [delta], todo_repo: todo_repo, commit: false)
           expect(delta.reload).to be_unapplied
         end

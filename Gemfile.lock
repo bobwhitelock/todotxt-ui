@@ -221,7 +221,7 @@ GEM
       rake (>= 10.0)
     sentry-raven (3.1.2)
       faraday (>= 1.0)
-    shoulda-matchers (5.0.0)
+    shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
     simplecov (0.21.2)
       docile (~> 1.1)

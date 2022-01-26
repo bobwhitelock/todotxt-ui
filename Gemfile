@@ -5,7 +5,7 @@ ruby File.read(File.join(File.dirname(__FILE__), ".ruby-version")).chomp
 
 gem "rails", "~> 6.1.4"
 # Use Puma as the app server
-gem "puma", "~> 5.5"
+gem "puma", "~> 5.6"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.11"
 # Use Active Model has_secure_password

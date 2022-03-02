@@ -46,7 +46,7 @@ jobs:
           access_token: ${{ github.token }}
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           # Required to avoid error as "pushing a git repository from a shallow
           # clone does not work" - see https://github.com/dokku/github-action.

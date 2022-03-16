@@ -66,9 +66,7 @@ class Todotxt
     def save(file_path = nil)
       save_file = file_path || file
       verify_file!(save_file)
-      File.open(save_file, "w") do |f|
-        f.write(as_string)
-      end
+      File.write(save_file, as_string)
       self.original_tasks = tasks
     end
 

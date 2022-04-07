@@ -1519,6 +1519,15 @@
     "@sentry/utils" "6.16.1"
     tslib "^1.9.3"
 
+"@sentry/hub@6.19.5":
+  version "6.19.5"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.19.5.tgz#978849b003ff130225540355fddfdc3feb4fc7a8"
+  integrity sha512-aMpsQFOcsdkfjbruIretxetmU+XbQNrheaFHJSOt1hB4LZr1fU4M29wKkK5Hj5ELiaNcC23u+0G7y5Nizwzsnw==
+  dependencies:
+    "@sentry/types" "6.19.5"
+    "@sentry/utils" "6.19.5"
+    tslib "^1.9.3"
+
 "@sentry/minimal@6.16.1":
   version "6.16.1"
   resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.16.1.tgz#6a9506a92623d2ff1fc17d60989688323326772e"
@@ -1526,6 +1535,15 @@
   dependencies:
     "@sentry/hub" "6.16.1"
     "@sentry/types" "6.16.1"
+    tslib "^1.9.3"
+
+"@sentry/minimal@6.19.5":
+  version "6.19.5"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.19.5.tgz#a1b08eadde9e77e063346d5f3170a58aa1da0916"
+  integrity sha512-zcYGEuqPbLo1gHeYHalna7rNPZIA6+U9dPCDgQpM2GgIGhAxJxvyx57ducatxRQgdPtljn5/VPDxdACiwoc+Jg==
+  dependencies:
+    "@sentry/hub" "6.19.5"
+    "@sentry/types" "6.19.5"
     tslib "^1.9.3"
 
 "@sentry/react@^6.16.1":
@@ -1540,15 +1558,15 @@
     hoist-non-react-statics "^3.3.2"
     tslib "^1.9.3"
 
-"@sentry/tracing@^6.16.1":
-  version "6.16.1"
-  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-6.16.1.tgz#32fba3e07748e9a955055afd559a65996acb7d71"
-  integrity sha512-MPSbqXX59P+OEeST+U2V/8Hu/8QjpTUxTNeNyTHWIbbchdcMMjDbXTS3etCgajZR6Ro+DHElOz5cdSxH6IBGlA==
+"@sentry/tracing@^6.19.5":
+  version "6.19.5"
+  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-6.19.5.tgz#dfce99842768ff7bde73d1368a848b72e83a734b"
+  integrity sha512-8jozVkPMj3I7emgmKWCRr0DvblZHwJ2SS5qCAA5gmKo6uNTVwwe6Sh1ovETJ/rrZ72YGfpeC/yYBcNpst8I+iQ==
   dependencies:
-    "@sentry/hub" "6.16.1"
-    "@sentry/minimal" "6.16.1"
-    "@sentry/types" "6.16.1"
-    "@sentry/utils" "6.16.1"
+    "@sentry/hub" "6.19.5"
+    "@sentry/minimal" "6.19.5"
+    "@sentry/types" "6.19.5"
+    "@sentry/utils" "6.19.5"
     tslib "^1.9.3"
 
 "@sentry/types@6.16.1":
@@ -1556,12 +1574,25 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.16.1.tgz#4917607115b30315757c2cf84f80bac5100b8ac0"
   integrity sha512-Wh354g30UsJ5kYJbercektGX4ZMc9MHU++1NjeN2bTMnbofEcpUDWIiKeulZEY65IC1iU+1zRQQgtYO+/hgCUQ==
 
+"@sentry/types@6.19.5":
+  version "6.19.5"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.19.5.tgz#628e76351209a5e4fcaa94bcbe56fe788d65ea15"
+  integrity sha512-G5bGj0ZXRPDrEAxuNO6Jyeq/OG6v9msoE9C/xy1r6JMvVTxX000TmLGKjK1NqqrBbVWdcyFbT3jhJgae0uyBVA==
+
 "@sentry/utils@6.16.1":
   version "6.16.1"
   resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.16.1.tgz#1b9e14c2831b6e8b816f7021b9876133bf2be008"
   integrity sha512-7ngq/i4R8JZitJo9Sl8PDnjSbDehOxgr1vsoMmerIsyRZ651C/8B+jVkMhaAPgSdyJ0AlE3O7DKKTP1FXFw9qw==
   dependencies:
     "@sentry/types" "6.16.1"
+    tslib "^1.9.3"
+
+"@sentry/utils@6.19.5":
+  version "6.19.5"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.19.5.tgz#507312fff2f7332debc8e54240e3b5c6d94db768"
+  integrity sha512-VuNraZZzEu/qVI11CMiRcSa+JVNwOuUe4HfZrDmnJbfrTpbQgjAdScnekEHLaGILGm8lQ8M2qeOxqfNF6kRn9w==
+  dependencies:
+    "@sentry/types" "6.19.5"
     tslib "^1.9.3"
 
 "@sinonjs/commons@^1.7.0":

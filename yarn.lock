@@ -9621,10 +9621,10 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
-react-query@^3.34.16:
-  version "3.34.16"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.34.16.tgz#279ea180bcaeaec49c7864b29d1711ee9f152594"
-  integrity sha512-7FvBvjgEM4YQ8nPfmAr+lJfbW95uyW/TVjFoi2GwCkF33/S8ajx45tuPHPFGWs4qYwPy1mzwxD4IQfpUDrefNQ==
+react-query@^3.39.2:
+  version "3.39.2"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.2.tgz#9224140f0296f01e9664b78ed6e4f69a0cc9216f"
+  integrity sha512-F6hYDKyNgDQfQOuR1Rsp3VRzJnWHx6aRnnIZHMNGGgbL3SBgpZTDg8MQwmxOgpCAoqZJA+JSNCydF1xGJqKOCA==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
